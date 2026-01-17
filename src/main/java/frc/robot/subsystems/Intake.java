@@ -46,7 +46,7 @@ public class Intake extends SubsystemBase {
   private final PositionVoltage m_positionRequest = new PositionVoltage(0).withSlot(0);
 
   /** Creates a new Intake. */
-  public Intake() {}
+  public Intake() {
 
     // Create motors
     intakeMotor = new TalonFX(intakeMotorID, GeneralConstants.CANBUS_NAME);

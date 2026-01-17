@@ -46,7 +46,7 @@ public class Shooter extends SubsystemBase {
   private final PositionVoltage m_positionRequest = new PositionVoltage(0).withSlot(0);
 
   /** Creates a new Shooter. */
-  public Shooter() {}
+  public Shooter() {
 
     // Create motors
     shooterMotor = new TalonFX(shooterMotorID, GeneralConstants.CANBUS_NAME);

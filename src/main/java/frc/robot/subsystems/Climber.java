@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GeneralConstants;
 
 public class Climber extends SubsystemBase {
+
   // Declare constants
   private final double DRIVE_DEADBAND = 0.001; // Deadband for the drive motor. Values smaller than this will be rounded
                                                // to zero
@@ -46,7 +47,7 @@ public class Climber extends SubsystemBase {
   private final PositionVoltage m_positionRequest = new PositionVoltage(0).withSlot(0);
 
   /** Creates a new Climber. */
-  public Climber() {}
+  public Climber() {
 
     // Create motors
     climberMotor = new TalonFX(climberMotorID, GeneralConstants.CANBUS_NAME);
@@ -91,4 +92,5 @@ public class Climber extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
 }

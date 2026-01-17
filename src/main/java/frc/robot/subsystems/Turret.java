@@ -46,13 +46,13 @@ public class Turret extends SubsystemBase {
   private final PositionVoltage m_positionRequest = new PositionVoltage(0).withSlot(0);
 
   /** Creates a new Turret. */
-  public Turret() {}
+  public Turret() {
 
     // Create motors
     turretMotor = new TalonFX(turretMotorID, GeneralConstants.CANBUS_NAME);
 
     // Create turret motor configuration
-    var iturretConfigs = new TalonFXConfiguration();
+    var turretConfigs = new TalonFXConfiguration();
 
     // Set turret motor output configuration
     var turretOutputConfigs = turretConfigs.MotorOutput;
