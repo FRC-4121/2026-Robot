@@ -43,7 +43,8 @@ public class Intake extends SubsystemBase {
   private double drive_kD = 0.0;
 
   // Declare motor output requests
-  private final PositionVoltage m_positionRequest = new PositionVoltage(0).withSlot(0);
+  private final DutyCycleOut requestRotateDuty = new DutyCycleOut(0.0);
+  private final DutyCycleOut requestIntakeDuty = new DutyCycleOut(0.0);
 
   /** Creates a new Intake. */
   public Intake() {
@@ -86,9 +87,30 @@ public class Intake extends SubsystemBase {
 
   }
 
+  /**
+   * Runs intake motor
+   * @param speed speed and direction of the motor rotation (+ = clockwise)
+   */
+  public void runIntake(double speed) {
+    intakeMotor.setControl(new DutyCycleOut(speed));
+  }
+
+  /**
+   * Halts intake motor
+   */
+  public void stopIntake(){
+    intakeMotor.stopMotor();
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  /**
+   * Activate intake motor
+   */
+  public void setIntakeSpeed(double intakeSpeed) {
+    intakeMotor.setControl(requestIntakeDuty.withOutput(intakeSpeed));
   }
 }
