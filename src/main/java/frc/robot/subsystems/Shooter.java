@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -48,6 +49,8 @@ public class Shooter extends SubsystemBase {
 
   // Declare motor output requests
   private final DutyCycleOut m_dutyRequest = new DutyCycleOut(0);
+  private final VelocityVoltage m_velocityRequest = new VelocityVoltage(0).withSlot(0);
+
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -60,7 +63,7 @@ public class Shooter extends SubsystemBase {
     InitializeMotors();
 
     // Set follower to follow lead motor
-    //shooterMotorFollow.setControl(new Follower(shooterMotorLead.getDeviceID(), true));
+    shooterMotorFollow.setControl(new Follower(shooterMotorLead.getDeviceID(), MotorAlignmentValue.Opposed));
   
   }
 
@@ -120,7 +123,7 @@ public class Shooter extends SubsystemBase {
       System.out.println("Could not apply follower elevator motor configs. Error code: " + shooterFollowStatus.toString());
       DriverStation.reportError("Could not apply follower elevator motor configs.", false);
     } else {
-      System.out.println("Successfully applied follower elevator motor configs. Error code: " + shooterLeadStatus.toString());
+      System.out.println("Successfully applied follower elevator motor configs. Error code: " + shooterFollowStatus.toString());
     }
     shooterMotorFollow.getConfigurator().setPosition(0);
 

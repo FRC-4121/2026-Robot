@@ -91,11 +91,54 @@ public final class Constants {
    */
   public static final class MechanismConstants {
 
-    // Set elevator constants
-    public static final double ElevatorSpeed = 0.5;
+    // Set climber constants
+    
+    // Set shooter constants
+    public static final int SHOOTER_LEAD = 1;
+    public static final int SHOOTER_FOLLOW = 0;
 
-    //Set CClaw constants
-    public static final double RotateSpeed = 0.5;
+    public static final double kP_Shoot = 0.00015; //was 0.1
+    public static final double kI_Shoot = 0.0000;
+    public static final double kD_Shoot = 0;
+    public static final double kF_Shoot = -1;
+
+    public static final int kPIDLoopIdxShoot = 0;
+    public static final int kTimeoutMsShoot = 20;
+    public static final int kShooterMaxRPM = 6100;
+
+    public static final double kShooterSpeed = -1.0;
+
+    // Set hopper/indexer constants
+
+
+    //Set turret constants
+    public static final int TURRET = 9;
+
+    public static final double kTalonFXPPR = 2048;
+    public static final double kTurretEncoderPPR = 10.5;
+    public static final int TURRET_LIMIT_SWITCH  = 2;
+
+    public static final double kTurretMinAngle = -90;
+    public static final double kTurretMaxAngle = 90;
+        //0 is centered
+
+    public static final double kP_Turret = 0.01;
+    public static final double kI_Turret = 0.0000;
+    public static final double kD_Turret = 0.000;
+
+    public static final double kP_TurretLock = 0.00115;
+    public static final double kI_TurretLock = 0.0005;//try .0006
+    public static final double kD_TurretLock = 0.000055;//try 0.000007
+
+    public static final double kTurretAngleTolerance = 2.0;
+
+    public static final double kTurretGearReduction = .5;
+    public static final double kTurretSprocketRatio = 16.0/120;
+    public static final double kTurretDiskDia = 13.75;
+
+    public static final double kTurretSpeedManual = 0.10;//positive is counterclockwise
+    public static final double kTurretSpeedAuto = 1.0;
+    public static final double kTurretSpeedLock = 0.0625;
 
   }
 
