@@ -7,10 +7,12 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -28,10 +30,12 @@ public class Shooter extends SubsystemBase {
                                                // to zero
 
   // Declare CAN ID for motor
-  private final int shooterMotorID = 21;
+  private final int masterMotorID = 21;
+  private final int slaveMotorID = 22;
 
   // Declare motor variables
-  private TalonFX shooterMotor;
+  private TalonFX masterMotor;
+  private TalonFX slaveMotor;
 
   // Declare Phoenix PID controller gains
   private double drive_kG = 0.0;
@@ -43,29 +47,39 @@ public class Shooter extends SubsystemBase {
   private double drive_kD = 0.0;
 
   // Declare motor output requests
-  private final PositionVoltage m_positionRequest = new PositionVoltage(0).withSlot(0);
+  private final DutyCycleOut requestRotateDuty = new DutyCycleOut(0.0);
+  private final DutyCycleOut requestShooterDuty = new DutyCycleOut(0.0);
 
   /** Creates a new Shooter. */
   public Shooter() {
 
     // Create motors
-    shooterMotor = new TalonFX(shooterMotorID, GeneralConstants.CANBUS_NAME);
+    masterMotor = new TalonFX(masterMotorID, GeneralConstants.CANBUS_NAME);
+    slaveMotor = new TalonFX(slaveMotorID, GeneralConstants.CANBUS_NAME);
+
+    slaveMotor.setControl(new Follower(masterMotorID, MotorAlignmentValue.Opposed));
 
     // Create shooter motor configuration
-    var shooterConfigs = new TalonFXConfiguration();
+    var masterConfigs = new TalonFXConfiguration();
+    var slaveConfigs = new TalonFXConfiguration();
 
     // Set shooter motor output configuration
-    var shooterOutputConfigs = shooterConfigs.MotorOutput;
-    shooterOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
-    shooterOutputConfigs.NeutralMode = NeutralModeValue.Brake;
-    shooterOutputConfigs.withDutyCycleNeutralDeadband(DRIVE_DEADBAND);
+    var masterOutputConfigs = masterConfigs.MotorOutput;
+    masterOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    masterOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+    masterOutputConfigs.withDutyCycleNeutralDeadband(DRIVE_DEADBAND);
+
+    var slaveOutputConfigs = slaveConfigs.MotorOutput;
+    slaveOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    slaveOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+    slaveOutputConfigs.withDutyCycleNeutralDeadband(DRIVE_DEADBAND);
 
     // Set shooter motor feedback sensor
-    var shooterSensorConfig = shooterConfigs.Feedback;
-    shooterSensorConfig.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
+    var masterSensorConfig = masterConfigs.Feedback;
+    masterSensorConfig.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
 
     // Set shooter motor PID constants
-    var slot0Configs = shooterConfigs.Slot0;
+    var slot0Configs = masterConfigs.Slot0;
     slot0Configs.kG = drive_kG;
     slot0Configs.kS = drive_kS;
     slot0Configs.kV = drive_kV;
@@ -75,20 +89,51 @@ public class Shooter extends SubsystemBase {
     slot0Configs.kD = drive_kD;
 
     // Apply shooter motor configuration and initialize position to 0
-    StatusCode shooterStatus = shooterMotor.getConfigurator().apply(shooterConfigs, 0.050);
-    if (!shooterStatus.isOK()) {
-      System.err.println("Could not apply shooter motor configs. Error code: " + shooterStatus.toString());
-      DriverStation.reportError("Could not apply shooter motor configs.", false);
+    StatusCode masterStatus = masterMotor.getConfigurator().apply(masterConfigs, 0.050);
+    if (!masterStatus.isOK()) {
+      System.err.println("Could not apply master motor configs. Error code: " + masterStatus.toString());
+      DriverStation.reportError("Could not apply master motor configs.", false);
     } else {
-      System.out.println("Successfully applied drive motor configs. Error code: " + shooterStatus.toString());
+      System.out.println("Successfully applied drive motor configs. Error code: " + masterStatus.toString());
     }
-    shooterMotor.getConfigurator().setPosition(0);
+    masterMotor.getConfigurator().setPosition(0);
+
+        StatusCode slaveStatus = slaveMotor.getConfigurator().apply(slaveConfigs, 0.050);
+    if (!slaveStatus.isOK()) {
+      System.err.println("Could not apply slave motor configs. Error code: " + slaveStatus.toString());
+      DriverStation.reportError("Could not apply slave motor configs.", false);
+    } else {
+      System.out.println("Successfully applied drive motor configs. Error code: " + slaveStatus.toString());
+    }
+    slaveMotor.getConfigurator().setPosition(0);
 
   }
 
+  /**
+   * Runs shooter motors
+   * @param speed speed and direction of the motor rotation (+ = clockwise)
+   */
+  public void runShooter(double speed) {
+    masterMotor.setControl(new DutyCycleOut(speed));
+  }
+
+  /**
+   * Halts shooter motors
+   */
+  public void stopShooter(){
+    masterMotor.stopMotor();
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
+  /**
+   * Activate intake motor
+   */
+  public void setShooterSpeed(double shooterSpeed) {
+  masterMotor.setControl(requestShooterDuty.withOutput(shooterSpeed));
+  }
+
 }

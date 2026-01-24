@@ -50,7 +50,7 @@ public class Intake extends SubsystemBase {
   public Intake() {
 
     // Create motors
-    intakeMotor = new TalonFX(intakeMotorID, GeneralConstants.CANBUS_NAME);
+    intakeMotor = new TalonFX(intakeMotorID, "mechanisms");
 
     // Create intake motor configuration
     var intakeConfigs = new TalonFXConfiguration();
