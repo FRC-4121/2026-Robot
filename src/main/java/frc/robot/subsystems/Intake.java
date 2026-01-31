@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.robot.Constants.GeneralConstants;
+import frc.robot.Robot;
 
 public class Intake extends SubsystemBase {
   // Declare constants
@@ -50,7 +50,7 @@ public class Intake extends SubsystemBase {
   public Intake() {
 
     // Create motors
-    intakeMotor = new TalonFX(intakeMotorID, "mechanisms");
+    intakeMotor = new TalonFX(intakeMotorID, Robot.canBusMechanisms);
 
     // Create intake motor configuration
     var intakeConfigs = new TalonFXConfiguration();

@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.robot.Constants.GeneralConstants;
+import frc.robot.Robot;
 
 public class Shooter extends SubsystemBase {
   // Declare constants
@@ -54,8 +54,8 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
 
     // Create motors
-    masterMotor = new TalonFX(masterMotorID, GeneralConstants.CANBUS_NAME);
-    slaveMotor = new TalonFX(slaveMotorID, GeneralConstants.CANBUS_NAME);
+    masterMotor = new TalonFX(masterMotorID, Robot.canBusRio);
+    slaveMotor = new TalonFX(slaveMotorID, Robot.canBusRio);
 
     slaveMotor.setControl(new Follower(masterMotorID, MotorAlignmentValue.Opposed));
 

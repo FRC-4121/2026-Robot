@@ -15,12 +15,11 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import frc.robot.LimelightHelpers;
+import frc.robot.Robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import frc.robot.Constants.GeneralConstants;
 
 public class Turret extends SubsystemBase {
   // Declare constants
@@ -51,7 +50,7 @@ public class Turret extends SubsystemBase {
   public Turret() {
 
     // Create motors
-    turretMotor = new TalonFX(turretMotorID, GeneralConstants.CANBUS_NAME);
+    turretMotor = new TalonFX(turretMotorID, Robot.canBusRio);
 
     // Create turret motor configuration
     var turretConfigs = new TalonFXConfiguration();
