@@ -25,9 +25,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GeneralConstants;
 
 public class Shooter extends SubsystemBase {
-  // Declare constants
-  private final double DRIVE_DEADBAND = 0.001; // Deadband for the drive motor. Values smaller than this will be rounded
-                                               // to zero
+  
+  
 
   // Declare CAN ID for motor
   private final int masterMotorID = 21;
@@ -123,6 +122,7 @@ public class Shooter extends SubsystemBase {
   public void stopShooter(){
     masterMotor.stopMotor();
   }
+
 
   @Override
   public void periodic() {

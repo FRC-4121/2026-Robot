@@ -50,41 +50,6 @@ public class Turret extends SubsystemBase {
   /** Creates a new Turret. */
   public Turret() {
 
-    // Create motors
-    turretMotor = new TalonFX(turretMotorID, GeneralConstants.CANBUS_NAME);
-
-    // Create turret motor configuration
-    var turretConfigs = new TalonFXConfiguration();
-
-    // Set turret motor output configuration
-    var turretOutputConfigs = turretConfigs.MotorOutput;
-    turretOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
-    turretOutputConfigs.NeutralMode = NeutralModeValue.Brake;
-    turretOutputConfigs.withDutyCycleNeutralDeadband(DRIVE_DEADBAND);
-
-    // Set turret motor feedback sensor
-    var turretSensorConfig = turretConfigs.Feedback;
-    turretSensorConfig.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
-
-    // Set turret motor PID constants
-    var slot0Configs = turretConfigs.Slot0;
-    slot0Configs.kG = drive_kG;
-    slot0Configs.kS = drive_kS;
-    slot0Configs.kV = drive_kV;
-    slot0Configs.kA = drive_kA;
-    slot0Configs.kP = drive_kP;
-    slot0Configs.kI = drive_kI;
-    slot0Configs.kD = drive_kD;
-
-    // Apply turret motor configuration and initialize position to 0
-    StatusCode turretStatus = turretMotor.getConfigurator().apply(turretConfigs, 0.050);
-    if (!turretStatus.isOK()) {
-      System.err.println("Could not apply turret motor configs. Error code: " + turretStatus.toString());
-      DriverStation.reportError("Could not apply turret motor configs.", false);
-    } else {
-      System.out.println("Successfully applied drive motor configs. Error code: " + turretStatus.toString());
-    }
-    turretMotor.getConfigurator().setPosition(0);
 
   }
 
