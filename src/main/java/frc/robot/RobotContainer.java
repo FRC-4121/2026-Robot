@@ -9,19 +9,50 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import frc.robot.subsystems.*;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.*;
+import frc.robot.LimelightHelpers.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import edu.wpi.first.wpilibj2.command.button.*;
 
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class RobotContainer {
-    private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+
+    // ===Variables===//
+    private double MaxSpeed = 0.25 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+
+    // ===Controllers===//
+    private final CommandXboxController joystick = new CommandXboxController(0);
+
+    // ===Subsystems===//
+
+    //Declare subsystems
+    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    private final Intake intake = new Intake();
+    private final Shooter shooter = new Shooter();
+    private final Turret turret = new Turret();
+
+    // ===Extra Systems===//
+
+    // ===COMMANDS===//
+    private final Command RunIntakeCommand;
+    private final Command RunShooterCommand;
+    private final Command RunTurretRightCommand;
+    private final Command RunTurretLeftCommand;
+    private final Command AutoTurretCommand;
+    private final Command AutoShooterCommand;
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -30,17 +61,35 @@ public class RobotContainer {
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
+    
+    // ===Logging===//
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    private final CommandXboxController joystick = new CommandXboxController(0);
-
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     public RobotContainer() {
+
+
+        RunIntakeCommand = new RunIntake(intake, -0.75);
+        RunShooterCommand = new RunShooter(shooter, 1);
+        RunTurretRightCommand = new RunTurretRight(turret, .06);
+        RunTurretLeftCommand = new RunTurretLeft(turret, -.06);
+        AutoTurretCommand = new AutoTurret(turret);
+        AutoShooterCommand = new AutoShooter(shooter, 1);
+
         configureBindings();
+
+        turret.setDefaultCommand(AutoTurretCommand);
+        shooter.setDefaultCommand(AutoShooterCommand);
+
+        drivetrain.seedFieldCentric();
+
     }
 
+    /** 
+     * Method to configure control bindings
+     */
     private void configureBindings() {
+
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
@@ -72,11 +121,20 @@ public class RobotContainer {
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // Reset the field-centric heading on left bumper press.
-        joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        joystick.x().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        joystick.rightBumper().whileTrue(RunTurretRightCommand);
+        joystick.leftBumper().whileTrue(RunTurretLeftCommand);
+        joystick.y().whileTrue(RunIntakeCommand);
+
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
-
+    
+    /**
+     * Method to determine Autonomous command
+     * 
+     * @return Autonomous Command
+     */
     public Command getAutonomousCommand() {
         // Simple drive forward auton
         final var idle = new SwerveRequest.Idle();
@@ -94,5 +152,9 @@ public class RobotContainer {
             // Finally idle for the rest of auton
             drivetrain.applyRequest(() -> idle)
         );
+    }
+
+    public void UpdateStatus() {
+        SmartDashboard.putNumber("TX", LimelightHelpers.getTX("limelight-turret"));
     }
 }
