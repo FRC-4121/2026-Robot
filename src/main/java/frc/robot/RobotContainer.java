@@ -70,7 +70,7 @@ public class RobotContainer {
 
 
         RunIntakeCommand = new RunIntake(intake, -0.75);
-        RunShooterCommand = new RunShooter(shooter, 1);
+        RunShooterCommand = new RunShooter(shooter, 0);
         RunTurretRightCommand = new RunTurretRight(turret, .06);
         RunTurretLeftCommand = new RunTurretLeft(turret, -.06);
         AutoTurretCommand = new AutoTurret(turret);
