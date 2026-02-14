@@ -5,19 +5,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.*;
+import frc.robot.Constants.MechanismConstants;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class RunIntake extends Command {
-  
-  private Intake myIntake;
-  private double speed;
+public class DisableTurret extends Command {
 
-  /** Creates a new RunIntake. */
-  public RunIntake(Intake intake, double speed) {
-    
-    myIntake = intake;
-    addRequirements(myIntake);
+  /** Creates a new DisableTurret. */
+  public DisableTurret() {
 
   }
 
@@ -28,18 +22,16 @@ public class RunIntake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    myIntake.runIntake(speed);
-
+    if(MechanismConstants.isTurretEnabled){
+      MechanismConstants.isTurretEnabled = false;
+    } else{
+      MechanismConstants.isTurretEnabled = true;
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-
-    myIntake.stopIntake();
-    
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
