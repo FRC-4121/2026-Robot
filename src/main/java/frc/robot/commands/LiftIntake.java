@@ -8,14 +8,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.*;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class RunIntake extends Command {
-  
-  private Intake myIntake;
-  private double speed;
+public class LiftIntake extends Command {
 
-  /** Creates a new RunIntake. */
-  public RunIntake(Intake intake, double speed) {
-    
+  private Intake myIntake;
+  private double liftPos;
+
+  /** Creates a new LiftIntake. */
+  public LiftIntake(Intake intake, double pos) {
+  
     myIntake = intake;
     addRequirements(myIntake);
 
@@ -29,7 +29,7 @@ public class RunIntake extends Command {
   @Override
   public void execute() {
 
-    myIntake.runIntake(speed);
+    myIntake.runIntakeLift(liftPos);
 
   }
 
@@ -37,8 +37,8 @@ public class RunIntake extends Command {
   @Override
   public void end(boolean interrupted) {
 
-    myIntake.stopIntake();
-    
+    myIntake.stopIntakeLift();
+
   }
 
   // Returns true when the command should end.
