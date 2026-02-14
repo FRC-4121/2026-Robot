@@ -16,6 +16,7 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -47,7 +48,10 @@ public class Shooter extends SubsystemBase {
 
   // Declare motor output requests
   private final DutyCycleOut requestRotateDuty = new DutyCycleOut(0.0);
-  private final DutyCycleOut requestShooterDuty = new DutyCycleOut(0.0);
+  private final MotionMagicVelocityVoltage requestShooterDuty = new MotionMagicVelocityVoltage(0.0);
+
+  private final double MOTOR_DEADBAND = 0.001; // Deadband for the drive motor. Values smaller than this will be rounded
+                                               // to zero
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -66,12 +70,12 @@ public class Shooter extends SubsystemBase {
     var masterOutputConfigs = masterConfigs.MotorOutput;
     masterOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
     masterOutputConfigs.NeutralMode = NeutralModeValue.Brake;
-    masterOutputConfigs.withDutyCycleNeutralDeadband(DRIVE_DEADBAND);
+    masterOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
 
     var slaveOutputConfigs = slaveConfigs.MotorOutput;
     slaveOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
     slaveOutputConfigs.NeutralMode = NeutralModeValue.Brake;
-    slaveOutputConfigs.withDutyCycleNeutralDeadband(DRIVE_DEADBAND);
+    slaveOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
 
     // Set shooter motor feedback sensor
     var masterSensorConfig = masterConfigs.Feedback;
@@ -113,7 +117,7 @@ public class Shooter extends SubsystemBase {
    * @param speed speed and direction of the motor rotation (+ = clockwise)
    */
   public void runShooter(double speed) {
-    masterMotor.setControl(new DutyCycleOut(speed));
+    masterMotor.setControl(new MotionMagicVelocityVoltage(speed));
   }
 
   /**
@@ -130,10 +134,10 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
-   * Activate intake motor
+   * Activate shooter motors
    */
   public void setShooterSpeed(double shooterSpeed) {
-  masterMotor.setControl(requestShooterDuty.withOutput(shooterSpeed));
+  masterMotor.setControl(requestShooterDuty.withVelocity(shooterSpeed));
   }
 
 }

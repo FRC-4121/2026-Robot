@@ -27,16 +27,16 @@ import frc.robot.Constants.GeneralConstants;
 public class Climber extends SubsystemBase {
 
   // Declare constants
-  private final double DRIVE_DEADBAND = 0.001; // Deadband for the drive motor. Values smaller than this will be rounded
+  private final double MOTOR_DEADBAND = 0.001; // Deadband for the drive motor. Values smaller than this will be rounded
                                                // to zero
 
   // Declare CAN ID for motor
-  private final int climberLeadMotorID = 21;
-  private final int climberFollowMotorID = 22;
+  private final int climberMotorID = 23;
+  
 
   // Declare motor variables
-  private TalonFX climberLeadMotor;
-  private TalonFX climberFollowMotor;
+  private TalonFX climberMotor;
+  
 
   // Declare Phoenix PID controller gains
   private double drive_kG = 0.0;
@@ -54,40 +54,38 @@ public class Climber extends SubsystemBase {
   public Climber() {
 
     // Create motors
-    climberLeadMotor = new TalonFX(climberLeadMotorID, GeneralConstants.CANBUS_NAME);
-    climberFollowMotor = new TalonFX(climberFollowMotorID, GeneralConstants.CANBUS_NAME);
+    climberMotor = new TalonFX(climberMotorID, GeneralConstants.CANBUS_NAME);
 
-   // Configure motors
-   InitializeMotors();
+   // Configure motor
+   InitializeMotor();
 
-   // Set follower to follow lead motor 
-   climberFollowMotor.setControl(new Follower(climberLeadMotor.getDeviceID(), MotorAlignmentValue.Opposed));
+
    
   }
 
   /*
-   * Configure the motors
+   * Configure the motor
    */
-  private void InitializeMotors() {
+  private void InitializeMotor() {
 
     // Create lead climber motor configuration
-    var climberLeadConfigs = new TalonFXConfiguration();
+    var climberConfigs = new TalonFXConfiguration();
 
 
     // Set lead climber motor output configuration
-    var climberLeadOutputConfigs = climberLeadConfigs.MotorOutput;
-    climberLeadOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
-    climberLeadOutputConfigs.NeutralMode = NeutralModeValue.Brake;
-    climberLeadOutputConfigs.withDutyCycleNeutralDeadband(DRIVE_DEADBAND);
+    var climberOutputConfigs = climberConfigs.MotorOutput;
+    climberOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    climberOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+    climberOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
 
     
 
     // Set lead climber motor feedback sensor
-    var climberSensorConfig = climberLeadConfigs.Feedback;
+    var climberSensorConfig = climberConfigs.Feedback;
     climberSensorConfig.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
 
     // Set climber motor PID constants
-    var slot0Configs = climberLeadConfigs.Slot0;
+    var slot0Configs = climberConfigs.Slot0;
     slot0Configs.kG = drive_kG;
     slot0Configs.kS = drive_kS;
     slot0Configs.kV = drive_kV;
@@ -97,38 +95,16 @@ public class Climber extends SubsystemBase {
     slot0Configs.kD = drive_kD;
 
     // Apply lead climber motor configuration and initialize position to 0
-    StatusCode climberStatus = climberLeadMotor.getConfigurator().apply(climberLeadConfigs, 0.050);
+    StatusCode climberStatus = climberMotor.getConfigurator().apply(climberConfigs, 0.050);
     if (!climberStatus.isOK()) {
       System.err.println("Could not apply climber motor configs. Error code: " + climberStatus.toString());
       DriverStation.reportError("Could not apply climber motor configs.", false);
     } else {
       System.out.println("Successfully applied drive motor configs. Error code: " + climberStatus.toString());
     }
-    climberLeadMotor.getConfigurator().setPosition(0);
+    climberMotor.getConfigurator().setPosition(0);
 
 
-
-
-    // Create follower climber motor 
-    var climberFollowConfigs = new TalonFXConfiguration();
-
-
-    // Set follow climber motor output configuration
-    var climberFollowOutputConfigs = climberFollowConfigs.MotorOutput;
-    climberFollowOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
-    climberFollowOutputConfigs.NeutralMode = NeutralModeValue.Brake;
-    climberFollowOutputConfigs.withDutyCycleNeutralDeadband(DRIVE_DEADBAND);
-
-
-    // Apply follower climber motor configuration and initialize position to 0
-    StatusCode climberFollowStatus = climberFollowMotor.getConfigurator().apply(climberFollowConfigs, 0.050);
-    if (!climberFollowStatus.isOK()) {
-      System.err.println("Could not apply climber motor configs. Error code: " + climberFollowStatus.toString());
-      DriverStation.reportError("Could not apply climber motor configs.", false);
-    } else {
-      System.out.println("Successfully applied drive motor configs. Error code: " + climberFollowStatus.toString());
-    }
-    climberFollowMotor.getConfigurator().setPosition(0);
 
   }
 

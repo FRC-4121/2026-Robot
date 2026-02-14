@@ -22,7 +22,7 @@ import frc.robot.Constants.GeneralConstants;
 
 public class Indexer extends SubsystemBase{
      // Declare constants
-  private final double DRIVE_DEADBAND = 0.001; // Deadband for the drive motor. Values smaller than this will be rounded
+  private final double MOTOR_DEADBAND = 0.001; // Deadband for the drive motor. Values smaller than this will be rounded
                                                // to zero
     
  // Declare CAN ID for motor
@@ -66,7 +66,7 @@ public class Indexer extends SubsystemBase{
     var indexerMotorOutputConfigs = indexerMotorConfigs.MotorOutput;
     indexerMotorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
     indexerMotorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
-    indexerMotorOutputConfigs.withDutyCycleNeutralDeadband(DRIVE_DEADBAND);
+    indexerMotorOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
 
     // Set indexer motor feedback sensor
     var indexerSensorConfig = indexerMotorConfigs.Feedback;
@@ -85,10 +85,10 @@ public class Indexer extends SubsystemBase{
     // Apply indexer motor configuration and initialize position to 0
     StatusCode indexerMotorStatus = indexerMotor.getConfigurator().apply(indexerMotorConfigs, 0.050);
     if (!indexerMotorStatus.isOK()) {
-      System.err.println("Could not apply shooter motor configs. Error code: " + indexerMotor.toString());
-      DriverStation.reportError("Could not apply shooter motor configs.", false);
+      System.err.println("Could not apply indexer motor configs. Error code: " + indexerMotor.toString());
+      DriverStation.reportError("Could not apply indexer motor configs.", false);
     } else {
-      System.out.println("Successfully applied drive motor configs. Error code: " + indexerMotorStatus.toString());
+      System.out.println("Successfully applied indexer motor configs. Error code: " + indexerMotorStatus.toString());
     }
     indexerMotor.getConfigurator().setPosition(0);
 

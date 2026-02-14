@@ -24,14 +24,16 @@ import frc.robot.Constants.GeneralConstants;
 
 public class Intake extends SubsystemBase {
   // Declare constants
-  private final double DRIVE_DEADBAND = 0.001; // Deadband for the drive motor. Values smaller than this will be rounded
+  private final double MOTOR_DEADBAND = 0.001; // Deadband for the drive motor. Values smaller than this will be rounded
                                                // to zero
 
   // Declare CAN ID for motor
-  private final int intakeMotorID = 21;
+  private final int intakeMotorID = 20;
+  private final int intakeLiftID = 3;
 
   // Declare motor variables
   private TalonFX intakeMotor;
+  private TalonFX intakeLift;
 
   // Declare Phoenix PID controller gains
   private double drive_kG = 0.0;
@@ -43,7 +45,7 @@ public class Intake extends SubsystemBase {
   private double drive_kD = 0.0;
 
   // Declare motor output requests
-  private final DutyCycleOut requestRotateDuty = new DutyCycleOut(0.0);
+  private final DutyCycleOut requestIntakeLiftDuty = new DutyCycleOut(0.0);
   private final DutyCycleOut requestIntakeDuty = new DutyCycleOut(0.0);
 
   /** Creates a new Intake. */
@@ -51,19 +53,30 @@ public class Intake extends SubsystemBase {
 
     // Create motors
     intakeMotor = new TalonFX(intakeMotorID, "mechanisms");
+    intakeLift = new TalonFX(intakeLiftID, "mechanisms");
 
     // Create intake motor configuration
     var intakeConfigs = new TalonFXConfiguration();
+    var intakeLiftConfigs = new TalonFXConfiguration();
 
     // Set intake motor output configuration
     var intakeOutputConfigs = intakeConfigs.MotorOutput;
     intakeOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
     intakeOutputConfigs.NeutralMode = NeutralModeValue.Brake;
-    intakeOutputConfigs.withDutyCycleNeutralDeadband(DRIVE_DEADBAND);
+    intakeOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
+
+    var intakeLiftOutputConfigs = intakeLiftConfigs.MotorOutput;
+    intakeLiftOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    intakeLiftOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+    intakeLiftOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
+
 
     // Set intake motor feedback sensor
     var intakeSensorConfig = intakeConfigs.Feedback;
     intakeSensorConfig.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
+
+    var intakeLiftSensorConfig = intakeLiftConfigs.Feedback;
+    intakeLiftSensorConfig.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
 
     // Set intake motor PID constants
     var slot0Configs = intakeConfigs.Slot0;
@@ -75,6 +88,15 @@ public class Intake extends SubsystemBase {
     slot0Configs.kI = drive_kI;
     slot0Configs.kD = drive_kD;
 
+    var slot0LiftConfigs = intakeLiftConfigs.Slot0;
+    slot0LiftConfigs.kG = drive_kG;
+    slot0LiftConfigs.kS = drive_kS;
+    slot0LiftConfigs.kV = drive_kV;
+    slot0LiftConfigs.kA = drive_kA;
+    slot0LiftConfigs.kP = drive_kP;
+    slot0LiftConfigs.kI = drive_kI;
+    slot0LiftConfigs.kD = drive_kD;
+
     // Apply intake motor configuration and initialize position to 0
     StatusCode intakeStatus = intakeMotor.getConfigurator().apply(intakeConfigs, 0.050);
     if (!intakeStatus.isOK()) {
@@ -84,6 +106,15 @@ public class Intake extends SubsystemBase {
       System.out.println("Successfully applied drive motor configs. Error code: " + intakeStatus.toString());
     }
     intakeMotor.getConfigurator().setPosition(0);
+
+    StatusCode intakeLiftStatus = intakeLift.getConfigurator().apply(intakeLiftConfigs, 0.050);
+    if (!intakeLiftStatus.isOK()) {
+      System.err.println("Could not apply intake lift configs. Error code: " + intakeLiftStatus.toString());
+      DriverStation.reportError("Could not apply intake lift configs.", false);
+    } else {
+      System.out.println("Successfully applied intake lift configs. Error code: " + intakeLiftStatus.toString());
+    }
+    intakeLift.getConfigurator().setPosition(0);
 
   }
 
@@ -95,11 +126,19 @@ public class Intake extends SubsystemBase {
     intakeMotor.setControl(new DutyCycleOut(speed));
   }
 
+  public void runIntakeLift(double speed) {
+    intakeLift.setControl(new DutyCycleOut(speed));
+  }
+
   /**
    * Halts intake motor
    */
   public void stopIntake(){
     intakeMotor.stopMotor();
+  }
+
+  public void stopIntakeLift(){
+    intakeLift.stopMotor();
   }
 
   @Override
@@ -112,5 +151,9 @@ public class Intake extends SubsystemBase {
    */
   public void setIntakeSpeed(double intakeSpeed) {
     intakeMotor.setControl(requestIntakeDuty.withOutput(intakeSpeed));
+  }
+
+  public void setIntakeLiftSpeed(double intakeLiftSpeed) {
+    intakeLift.setControl(requestIntakeLiftDuty.withOutput(intakeLiftSpeed));
   }
 }

@@ -24,7 +24,7 @@ import frc.robot.Constants.GeneralConstants;
 
 public class Turret extends SubsystemBase {
   // Declare constants
-  private final double DRIVE_DEADBAND = 0.001; // Deadband for the drive motor. Values smaller than this will be rounded
+  private final double MOTOR_DEADBAND = 0.001; // Deadband for the drive motor. Values smaller than this will be rounded
                                                // to zero
 
   // Declare CAN ID for motor
