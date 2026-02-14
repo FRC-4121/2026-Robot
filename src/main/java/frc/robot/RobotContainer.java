@@ -36,6 +36,7 @@ public class RobotContainer {
     // ===Controllers===//
     private final CommandXboxController joystick = new CommandXboxController(0);
     private final CommandXboxController aux = new CommandXboxController(1);
+    private final Joystick OI = new Joystick(2);
 
     // ===Subsystems===//
 
@@ -109,10 +110,10 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        joystick.b().whileTrue(drivetrain.applyRequest(() ->
+        //joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        /*joystick.b().whileTrue(drivetrain.applyRequest(() ->
             point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
-        ));
+        )); */
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -122,13 +123,23 @@ public class RobotContainer {
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // Reset the field-centric heading on left bumper press.
-        joystick.x().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        //joystick.x().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         joystick.rightBumper().whileTrue(RunTurretRightCommand);
         joystick.leftBumper().whileTrue(RunTurretLeftCommand);
-        joystick.y().whileTrue(RunIntakeCommand);
+        //joystick.y().whileTrue(RunIntakeCommand);
 
 
         drivetrain.registerTelemetry(logger::telemeterize);
+
+
+        //Subsystem Buttons on Main Driver Controller
+        joystick.a().whileTrue(RunIntakeCommand);
+        //joystick.b().whileTrue(); //Add Shooter Command Here
+        //joystick.x().onTrue(); //Add command to swap between field and robot oriented driving mode
+        //joystick.y().onTrue(); // Add command to swap between fast and slow driving mode
+
+        //Subsystem Buttons on Aux Controller
+        aux.a().onTrue(LiftIntakeCommand);
     }
     
     /**
