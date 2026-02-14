@@ -33,15 +33,6 @@ public class Turret extends SubsystemBase {
   // Declare motor variables
   private TalonFX turretMotor;
 
-  // Declare Phoenix PID controller gains
-  private double drive_kG = 0.0;
-  private double drive_kS = 0.1;
-  private double drive_kV = 0.1;
-  private double drive_kA = 0.0;
-  private double drive_kP = 0.1;
-  private double drive_kI = 0.0;
-  private double drive_kD = 0.0;
-
   // Declare motor output requests
   private final DutyCycleOut requestRotateDuty = new DutyCycleOut(0.0);
   private final DutyCycleOut requestTurretDuty = new DutyCycleOut(0.0);
