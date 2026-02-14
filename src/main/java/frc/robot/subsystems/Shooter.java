@@ -30,8 +30,8 @@ public class Shooter extends SubsystemBase {
   
 
   // Declare CAN ID for motor
-  private final int masterMotorID = 21;
-  private final int slaveMotorID = 22;
+  private final int masterMotorID = 24;
+  private final int slaveMotorID = 25;
 
   // Declare motor variables
   private TalonFX masterMotor;

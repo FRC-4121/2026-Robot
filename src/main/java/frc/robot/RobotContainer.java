@@ -35,6 +35,7 @@ public class RobotContainer {
 
     // ===Controllers===//
     private final CommandXboxController joystick = new CommandXboxController(0);
+    private final CommandXboxController aux = new CommandXboxController(1);
 
     // ===Subsystems===//
 

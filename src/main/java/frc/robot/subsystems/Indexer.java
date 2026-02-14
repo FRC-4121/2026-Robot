@@ -26,7 +26,7 @@ public class Indexer extends SubsystemBase{
                                                // to zero
     
  // Declare CAN ID for motor
- private final int indexerMotorID = 24;
+ private final int indexerMotorID = 22;
 
  // Declare motor variable
  private TalonFX indexerMotor;

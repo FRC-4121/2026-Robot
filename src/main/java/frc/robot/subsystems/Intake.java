@@ -28,8 +28,8 @@ public class Intake extends SubsystemBase {
                                                // to zero
 
   // Declare CAN ID for motor
-  private final int intakeMotorID = 20;
-  private final int intakeLiftID = 3;
+  private final int intakeMotorID = 21;
+  private final int intakeLiftID = 20;
 
   // Declare motor variables
   private TalonFX intakeMotor;

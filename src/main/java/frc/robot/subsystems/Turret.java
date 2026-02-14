@@ -28,7 +28,7 @@ public class Turret extends SubsystemBase {
                                                // to zero
 
   // Declare CAN ID for motor
-  private final int turretMotorID = 19;
+  private final int turretMotorID = 23;
 
   // Declare motor variables
   private TalonFX turretMotor;

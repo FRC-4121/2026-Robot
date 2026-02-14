@@ -31,7 +31,7 @@ public class Climber extends SubsystemBase {
                                                // to zero
 
   // Declare CAN ID for motor
-  private final int climberMotorID = 23;
+  private final int climberMotorID = 26;
   
 
   // Declare motor variables
