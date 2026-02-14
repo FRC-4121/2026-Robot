@@ -4,46 +4,22 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.*;
-import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ShootBall extends Command {
-
-  private Shooter myShooter;
-  private Indexer myIndexer;
-  private double value;
-
-  /** Creates a new ShootBall. */
-  public ShootBall(Shooter shooter, Indexer indexer, double value ) {
-
-    myShooter = shooter;
-    myIndexer = indexer;
-    this.value = value;
-  
+public class Park extends Command {
+  /** Creates a new Park. */
+  public Park() {
     // Use addRequirements() here to declare subsystem dependencies.
-
-    addRequirements(myShooter, myIndexer);
-    
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-
-
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-
-    myShooter.runShooter(value);
-    // while() {
-    //   myIndexer.runIndexer(value);  
-    // } 
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

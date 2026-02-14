@@ -108,8 +108,7 @@ public final class Constants {
 
     public static final double kShooterSpeed = -1.0;
 
-    // Set hopper/indexer constants
-
+    public static boolean isTurretEnabled = true;
 
     //Set turret constants
     public static final int TURRET = 9;
