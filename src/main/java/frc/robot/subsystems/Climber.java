@@ -13,6 +13,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -108,6 +109,19 @@ public class Climber extends SubsystemBase {
 
   }
 
+  /**
+   * Run climber motor
+   */
+   public void runClimber(double climberPos){
+    climberMotor.setControl(new PositionVoltage(climberPos));
+   }
+  
+   /**
+    * Halt climber motor
+    */
+    public void stopClimber(){
+      climberMotor.stopMotor();
+    }
 
   @Override
   public void periodic() {

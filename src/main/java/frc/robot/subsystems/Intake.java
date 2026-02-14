@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -35,17 +36,26 @@ public class Intake extends SubsystemBase {
   private TalonFX intakeMotor;
   private TalonFX intakeLift;
 
-  // Declare Phoenix PID controller gains
-  private double drive_kG = 0.0;
-  private double drive_kS = 0.1;
-  private double drive_kV = 0.1;
-  private double drive_kA = 0.0;
-  private double drive_kP = 0.1;
-  private double drive_kI = 0.0;
-  private double drive_kD = 0.0;
+  // Declare Intake Phoenix PID controller gains
+  private double intake_kG = 0.0;
+  private double intake_kS = 0.1;
+  private double intake_kV = 0.1;
+  private double intake_kA = 0.0;
+  private double intake_kP = 0.1;
+  private double intake_kI = 0.0;
+  private double intake_kD = 0.0;
+  
+  // Declare Lift Phoenix PID controller gains
+  private double lift_kG = 0.0;
+  private double lift_kS = 0.1;
+  private double lift_kV = 0.1;
+  private double lift_kA = 0.0;
+  private double lift_kP = 0.1;
+  private double lift_kI = 0.0;
+  private double lift_kD = 0.0;
 
   // Declare motor output requests
-  private final DutyCycleOut requestIntakeLiftDuty = new DutyCycleOut(0.0);
+  private final PositionVoltage m_positionRequest = new PositionVoltage(0).withSlot(0);
   private final DutyCycleOut requestIntakeDuty = new DutyCycleOut(0.0);
 
   /** Creates a new Intake. */
@@ -80,22 +90,22 @@ public class Intake extends SubsystemBase {
 
     // Set intake motor PID constants
     var slot0Configs = intakeConfigs.Slot0;
-    slot0Configs.kG = drive_kG;
-    slot0Configs.kS = drive_kS;
-    slot0Configs.kV = drive_kV;
-    slot0Configs.kA = drive_kA;
-    slot0Configs.kP = drive_kP;
-    slot0Configs.kI = drive_kI;
-    slot0Configs.kD = drive_kD;
+    slot0Configs.kG = intake_kG;
+    slot0Configs.kS = intake_kS;
+    slot0Configs.kV = intake_kV;
+    slot0Configs.kA = intake_kA;
+    slot0Configs.kP = intake_kP;
+    slot0Configs.kI = intake_kI;
+    slot0Configs.kD = intake_kD;
 
     var slot0LiftConfigs = intakeLiftConfigs.Slot0;
-    slot0LiftConfigs.kG = drive_kG;
-    slot0LiftConfigs.kS = drive_kS;
-    slot0LiftConfigs.kV = drive_kV;
-    slot0LiftConfigs.kA = drive_kA;
-    slot0LiftConfigs.kP = drive_kP;
-    slot0LiftConfigs.kI = drive_kI;
-    slot0LiftConfigs.kD = drive_kD;
+    slot0LiftConfigs.kG = lift_kG;
+    slot0LiftConfigs.kS = lift_kS;
+    slot0LiftConfigs.kV = lift_kV;
+    slot0LiftConfigs.kA = lift_kA;
+    slot0LiftConfigs.kP = lift_kP;
+    slot0LiftConfigs.kI = lift_kI;
+    slot0LiftConfigs.kD = lift_kD;
 
     // Apply intake motor configuration and initialize position to 0
     StatusCode intakeStatus = intakeMotor.getConfigurator().apply(intakeConfigs, 0.050);
@@ -106,6 +116,7 @@ public class Intake extends SubsystemBase {
       System.out.println("Successfully applied drive motor configs. Error code: " + intakeStatus.toString());
     }
     intakeMotor.getConfigurator().setPosition(0);
+
 
     StatusCode intakeLiftStatus = intakeLift.getConfigurator().apply(intakeLiftConfigs, 0.050);
     if (!intakeLiftStatus.isOK()) {
@@ -126,8 +137,12 @@ public class Intake extends SubsystemBase {
     intakeMotor.setControl(new DutyCycleOut(speed));
   }
 
-  public void runIntakeLift(double speed) {
-    intakeLift.setControl(new DutyCycleOut(speed));
+  /**
+   * Run intake lift motor
+   * @param position desired position of the intake
+   */
+  public void runIntakeLift(double position) {
+    intakeLift.setControl(new PositionVoltage(position));
   }
 
   /**
@@ -137,6 +152,9 @@ public class Intake extends SubsystemBase {
     intakeMotor.stopMotor();
   }
 
+  /**
+   * Halt inatke lift motor
+   */
   public void stopIntakeLift(){
     intakeLift.stopMotor();
   }
@@ -146,14 +164,4 @@ public class Intake extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  /**
-   * Activate intake motor
-   */
-  public void setIntakeSpeed(double intakeSpeed) {
-    intakeMotor.setControl(requestIntakeDuty.withOutput(intakeSpeed));
-  }
-
-  public void setIntakeLiftSpeed(double intakeLiftSpeed) {
-    intakeLift.setControl(requestIntakeLiftDuty.withOutput(intakeLiftSpeed));
-  }
 }

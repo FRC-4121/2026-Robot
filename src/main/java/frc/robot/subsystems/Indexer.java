@@ -22,7 +22,7 @@ import frc.robot.Constants.GeneralConstants;
 
 public class Indexer extends SubsystemBase{
      // Declare constants
-  private final double MOTOR_DEADBAND = 0.001; // Deadband for the drive motor. Values smaller than this will be rounded
+  private final double MOTOR_DEADBAND = 0.001; // Deadband for the indexer motor. Values smaller than this will be rounded
                                                // to zero
     
  // Declare CAN ID for motor
@@ -32,13 +32,13 @@ public class Indexer extends SubsystemBase{
  private TalonFX indexerMotor;
 
  // Declare Phoenix PID controller gains
-  private double drive_kG = 0.0;
-  private double drive_kS = 0.1;
-  private double drive_kV = 0.1;
-  private double drive_kA = 0.0;
-  private double drive_kP = 0.1;
-  private double drive_kI = 0.0;
-  private double drive_kD = 0.0;
+  private double indexer_kG = 0.0;
+  private double indexer_kS = 0.1;
+  private double indexer_kV = 0.1;
+  private double indexer_kA = 0.0;
+  private double indexer_kP = 0.1;
+  private double indexer_kI = 0.0;
+  private double indexer_kD = 0.0;
 
   // Declare motor output requests
   private final DutyCycleOut m_dutyRequest = new DutyCycleOut(0);
@@ -74,13 +74,13 @@ public class Indexer extends SubsystemBase{
 
     // Set indexer motor PID constants
     var slot0Configs = indexerMotorConfigs.Slot0;
-    slot0Configs.kG = drive_kG;
-    slot0Configs.kS = drive_kS;
-    slot0Configs.kV = drive_kV;
-    slot0Configs.kA = drive_kA;
-    slot0Configs.kP = drive_kP;
-    slot0Configs.kI = drive_kI;
-    slot0Configs.kD = drive_kD;
+    slot0Configs.kG = indexer_kG;
+    slot0Configs.kS = indexer_kS;
+    slot0Configs.kV = indexer_kV;
+    slot0Configs.kA = indexer_kA;
+    slot0Configs.kP = indexer_kP;
+    slot0Configs.kI = indexer_kI;
+    slot0Configs.kD = indexer_kD;
 
     // Apply indexer motor configuration and initialize position to 0
     StatusCode indexerMotorStatus = indexerMotor.getConfigurator().apply(indexerMotorConfigs, 0.050);
@@ -94,4 +94,22 @@ public class Indexer extends SubsystemBase{
 
   }
 
+  /**
+   * Indexer Methods
+   * @param speed speed and direction of the motor rotation (+ = clockwise)
+   */
+
+   /**
+    * Run indexer
+    */
+  public void runIndexer(double speed) {
+    indexerMotor.setControl(new DutyCycleOut(speed));
+  }
+
+  /**
+   * Halt indexer
+   */
+  public void stopIndexer() {
+    indexerMotor.stopMotor();
+  }
 }

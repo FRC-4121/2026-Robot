@@ -32,7 +32,7 @@ public class RunIntake extends Command {
   @Override
   public void execute() {
 
-    myIntake.setIntakeSpeed(value);
+    myIntake.runIntake(value);
 
   }
 
