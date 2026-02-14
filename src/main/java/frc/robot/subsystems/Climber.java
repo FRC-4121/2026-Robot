@@ -7,24 +7,20 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityDutyCycle;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.GeneralConstants;
 
+/**
+ * Define the climber subsystem
+ */
 public class Climber extends SubsystemBase {
 
   // Declare constants
@@ -34,44 +30,38 @@ public class Climber extends SubsystemBase {
   // Declare CAN ID for motor
   private final int climberMotorID = 26;
   
-
   // Declare motor variables
   private TalonFX climberMotor;
   
-
   // Declare Phoenix PID controller gains
-  private double drive_kG = 0.0;
-  private double drive_kS = 0.1;
-  private double drive_kV = 0.1;
-  private double drive_kA = 0.0;
-  private double drive_kP = 0.1;
-  private double drive_kI = 0.0;
-  private double drive_kD = 0.0;
+  private double climb_kG = 0.0;
+  private double climb_kS = 0.1;
+  private double climb_kV = 0.1;
+  private double climb_kA = 0.0;
+  private double climb_kP = 0.1;
+  private double climb_kI = 0.0;
+  private double climb_kD = 0.0;
 
-  // Declare motor output requests
-  private final PositionVoltage m_positionRequest = new PositionVoltage(0).withSlot(0);
-
-  /** Creates a new Climber. */
+  /**
+   * Create the climber subsystem
+   */
   public Climber() {
 
     // Create motors
-    climberMotor = new TalonFX(climberMotorID, GeneralConstants.CANBUS_NAME);
+    climberMotor = new TalonFX(climberMotorID, GeneralConstants.kMechBus);
 
-   // Configure motor
-   InitializeMotor();
+    // Configure motor
+    InitializeMotor();
 
-
-   
   }
 
   /*
-   * Configure the motor
+   * Configure the climber motor
    */
   private void InitializeMotor() {
 
     // Create lead climber motor configuration
     var climberConfigs = new TalonFXConfiguration();
-
 
     // Set lead climber motor output configuration
     var climberOutputConfigs = climberConfigs.MotorOutput;
@@ -79,23 +69,21 @@ public class Climber extends SubsystemBase {
     climberOutputConfigs.NeutralMode = NeutralModeValue.Brake;
     climberOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
 
-    
-
     // Set lead climber motor feedback sensor
     var climberSensorConfig = climberConfigs.Feedback;
     climberSensorConfig.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
 
     // Set climber motor PID constants
     var slot0Configs = climberConfigs.Slot0;
-    slot0Configs.kG = drive_kG;
-    slot0Configs.kS = drive_kS;
-    slot0Configs.kV = drive_kV;
-    slot0Configs.kA = drive_kA;
-    slot0Configs.kP = drive_kP;
-    slot0Configs.kI = drive_kI;
-    slot0Configs.kD = drive_kD;
+    slot0Configs.kG = climb_kG;
+    slot0Configs.kS = climb_kS;
+    slot0Configs.kV = climb_kV;
+    slot0Configs.kA = climb_kA;
+    slot0Configs.kP = climb_kP;
+    slot0Configs.kI = climb_kI;
+    slot0Configs.kD = climb_kD;
 
-    // Apply lead climber motor configuration and initialize position to 0
+    // Apply climber motor configuration and initialize position to 0
     StatusCode climberStatus = climberMotor.getConfigurator().apply(climberConfigs, 0.050);
     if (!climberStatus.isOK()) {
       System.err.println("Could not apply climber motor configs. Error code: " + climberStatus.toString());
@@ -105,23 +93,23 @@ public class Climber extends SubsystemBase {
     }
     climberMotor.getConfigurator().setPosition(0);
 
-
-
   }
 
   /**
    * Run climber motor
+   * 
+   * @param climberPos  Position target for the climber
    */
-   public void runClimber(double climberPos){
+  public void runClimber(double climberPos){
     climberMotor.setControl(new PositionVoltage(climberPos));
-   }
+  }
   
-   /**
-    * Halt climber motor
-    */
-    public void stopClimber(){
-      climberMotor.stopMotor();
-    }
+  /**
+  * Halt climber motor
+  */
+  public void stopClimber(){
+    climberMotor.stopMotor();
+  }
 
   @Override
   public void periodic() {

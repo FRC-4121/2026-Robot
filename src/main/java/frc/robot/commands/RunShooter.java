@@ -32,7 +32,7 @@ public class RunShooter extends Command {
   @Override
   public void execute() {
       
-    myShooter.setShooterSpeed(value);
+    // myShooter.setShooterSpeed(value);
 
   }
 

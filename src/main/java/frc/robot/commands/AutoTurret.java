@@ -12,6 +12,7 @@ import edu.wpi.first.math.controller.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.Turret;
+import frc.robot.commands.*;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AutoTurret extends Command {
@@ -63,6 +64,8 @@ public class AutoTurret extends Command {
   @Override
   public void execute() {
 
+    if (DisableTurret.isTurretEnabled) {
+
     offset = LimelightHelpers.getTX("limelight-turret")/100;
     double output = m_myPIDControl.calculate(offset, 0);
     currentPosition = myTurret.getPosition();
@@ -77,6 +80,7 @@ public class AutoTurret extends Command {
    
     SmartDashboard.putNumber("PID Output", output);
 
+    }
   }
 
   // Called once the command ends or is interrupted.

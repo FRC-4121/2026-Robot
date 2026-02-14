@@ -25,10 +25,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.GeneralConstants;
 
+/**
+ * Define the Shooter subsystem
+ */
 public class Shooter extends SubsystemBase {
   
-  
-
   // Declare CAN ID for motor
   private final int shooterMotorID = 24;
   private final int hoodMotorID = 25;
@@ -37,34 +38,54 @@ public class Shooter extends SubsystemBase {
   private TalonFX shooterMotor;
   private TalonFX hoodMotor;
 
-  // Declare Phoenix PID controller gains
-  private double drive_kG = 0.0;
-  private double drive_kS = 0.1;
-  private double drive_kV = 0.1;
-  private double drive_kA = 0.0;
-  private double drive_kP = 0.1;
-  private double drive_kI = 0.0;
-  private double drive_kD = 0.0;
+  // Declare shooter PID controller gains
+  private double shooter_kG = 0.0;
+  private double shooter_kS = 0.0;
+  private double shooter_kV = 0.12;
+  private double shooter_kA = 0.0;
+  private double shooter_kP = 0.3;
+  private double shooter_kI = 0.02;
+  private double shooter_kD = 0.005;
 
-  // Declare motor output requests
-  private final DutyCycleOut requestRotateDuty = new DutyCycleOut(0.0);
-  private final MotionMagicVelocityVoltage requestShooterDuty = new MotionMagicVelocityVoltage(0.0);
+  // Declare hood PID controller gains
+  private double hood_kG = 0.0;
+  private double hood_kS = 0.1;
+  private double hood_kV = 0.1;
+  private double hood_kA = 0.0;
+  private double hood_kP = 0.1;
+  private double hood_kI = 0.0;
+  private double hood_kD = 0.0;
 
+  // Declare MotionMagic variables
+  private int magic_cruise = 100;
+  private int magic_accel = 100;
+  private int magic_jerk = 1500;
+
+  // Declare motor constants
   private final double MOTOR_DEADBAND = 0.001; // Deadband for the drive motor. Values smaller than this will be rounded
                                                // to zero
 
-  /** Creates a new Shooter. */
+  /**
+   * Create a new shooter
+   */
   public Shooter() {
 
     // Create motors
-    shooterMotor = new TalonFX(shooterMotorID, GeneralConstants.CANBUS_NAME);
-    hoodMotor = new TalonFX(hoodMotorID, GeneralConstants.CANBUS_NAME);
+    shooterMotor = new TalonFX(shooterMotorID, GeneralConstants.kMechBus);
+    hoodMotor = new TalonFX(hoodMotorID, GeneralConstants.kMechBus);
 
-   
+    // Initialize motors
+    InitializeMotors();
+
+  }
+
+  /**
+   * Initialize the shooter motors
+   */
+  public void InitializeMotors() {
 
     // Create shooter motor configuration
     var shooterConfigs = new TalonFXConfiguration();
-    var hoodConfigs = new TalonFXConfiguration();
 
     // Set shooter motor output configuration
     var shooterOutputConfigs = shooterConfigs.MotorOutput;
@@ -72,24 +93,25 @@ public class Shooter extends SubsystemBase {
     shooterOutputConfigs.NeutralMode = NeutralModeValue.Brake;
     shooterOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
 
-    var hoodOutputConfigs = hoodConfigs.MotorOutput;
-    hoodOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
-    hoodOutputConfigs.NeutralMode = NeutralModeValue.Brake;
-    hoodOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
-
     // Set shooter motor feedback sensor
     var shooterSensorConfig = shooterConfigs.Feedback;
     shooterSensorConfig.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
 
     // Set shooter motor PID constants
     var slot0Configs = shooterConfigs.Slot0;
-    slot0Configs.kG = drive_kG;
-    slot0Configs.kS = drive_kS;
-    slot0Configs.kV = drive_kV;
-    slot0Configs.kA = drive_kA;
-    slot0Configs.kP = drive_kP;
-    slot0Configs.kI = drive_kI;
-    slot0Configs.kD = drive_kD;
+    slot0Configs.kG = shooter_kG;
+    slot0Configs.kS = shooter_kS;
+    slot0Configs.kV = shooter_kV;
+    slot0Configs.kA = shooter_kA;
+    slot0Configs.kP = shooter_kP;
+    slot0Configs.kI = shooter_kI;
+    slot0Configs.kD = shooter_kD;
+
+    // Set MotionMagic constants
+    var motionMagicConfigs = shooterConfigs.MotionMagic;
+    motionMagicConfigs.MotionMagicCruiseVelocity = magic_cruise;
+    motionMagicConfigs.MotionMagicAcceleration = magic_accel;
+    motionMagicConfigs.MotionMagicJerk = magic_jerk;
 
     // Apply shooter motor configuration and initialize position to 0
     StatusCode shooterStatus = shooterMotor.getConfigurator().apply(shooterConfigs, 0.050);
@@ -101,7 +123,31 @@ public class Shooter extends SubsystemBase {
     }
     shooterMotor.getConfigurator().setPosition(0);
 
-        StatusCode hoodStatus = hoodMotor.getConfigurator().apply(hoodConfigs, 0.050);
+    // Create hood motor configuration
+    var hoodConfigs = new TalonFXConfiguration();
+
+    // Set hood motor output configuration
+    var hoodOutputConfigs = hoodConfigs.MotorOutput;
+    hoodOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    hoodOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+    hoodOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
+
+    // Set hood motor feedback sensor
+    var hoodSensorConfig = hoodConfigs.Feedback;
+    hoodSensorConfig.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
+
+    // Set hood motor PID constants
+    var hoodSlot0Configs = hoodConfigs.Slot0;
+    hoodSlot0Configs.kG = hood_kG;
+    hoodSlot0Configs.kS = hood_kS;
+    hoodSlot0Configs.kV = hood_kV;
+    hoodSlot0Configs.kA = hood_kA;
+    hoodSlot0Configs.kP = hood_kP;
+    hoodSlot0Configs.kI = hood_kI;
+    hoodSlot0Configs.kD = hood_kD;
+
+    // Apply hood motor configs and initialize position to 0
+    StatusCode hoodStatus = hoodMotor.getConfigurator().apply(hoodConfigs, 0.050);
     if (!hoodStatus.isOK()) {
       System.err.println("Could not apply hood motor configs. Error code: " + hoodStatus.toString());
       DriverStation.reportError("Could not apply hood motor configs.", false);

@@ -8,6 +8,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.config.PIDConstants;
+import com.ctre.phoenix6.CANBus;
 
 /**
  * The Constants class provides a dope af place for teams to hold robot-wide
@@ -217,10 +218,13 @@ public final class Constants {
 
     // General variables
     public static final double degreesToRads = 0.0174533;
-    public static final String CANBUS_NAME = "rio";
 
     // Filtering (for gyro)
     public static final int FILTER_WINDOW_SIZE = 5;
+
+    // CANBus variables
+    public static final CANBus kDriveBus = new CANBus("rio");
+    public static final CANBus kMechBus = new CANBus("mechanisms");
 
   }
 

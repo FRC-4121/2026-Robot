@@ -3,35 +3,31 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityDutyCycle;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GeneralConstants;
 
-
+/**
+ * Define the Ball Indexer subsystem
+ */
 public class Indexer extends SubsystemBase{
-     // Declare constants
+
+  // Declare constants
   private final double MOTOR_DEADBAND = 0.001; // Deadband for the indexer motor. Values smaller than this will be rounded
                                                // to zero
     
- // Declare CAN ID for motor
- private final int indexerMotorID = 22;
+  // Declare CAN ID for motor
+  private final int indexerMotorID = 22;
 
- // Declare motor variable
- private TalonFX indexerMotor;
+  // Declare motor variable
+  private TalonFX indexerMotor;
 
- // Declare Phoenix PID controller gains
+  // Declare Phoenix PID controller gains
   private double indexer_kG = 0.0;
   private double indexer_kS = 0.1;
   private double indexer_kV = 0.1;
@@ -40,25 +36,24 @@ public class Indexer extends SubsystemBase{
   private double indexer_kI = 0.0;
   private double indexer_kD = 0.0;
 
-  // Declare motor output requests
-  private final DutyCycleOut m_dutyRequest = new DutyCycleOut(0);
-
-  /** Create new indexer */
+  /** 
+   * Create new indexer 
+   */
   public Indexer(){
 
- //Create motors
- indexerMotor = new TalonFX(indexerMotorID, GeneralConstants.CANBUS_NAME);
+    //Create motors
+    indexerMotor = new TalonFX(indexerMotorID, GeneralConstants.kMechBus);
 
- // Configure the motors
- InitializeMotor();
+    // Configure the motors
+    InitializeMotor();
 
   }
-
 
   /**
    * Configure the motor
    */
   private void InitializeMotor(){
+
     // Create indexer motor configuration
     var indexerMotorConfigs = new TalonFXConfiguration();
 
@@ -95,13 +90,10 @@ public class Indexer extends SubsystemBase{
   }
 
   /**
-   * Indexer Methods
-   * @param speed speed and direction of the motor rotation (+ = clockwise)
+   * Run the indexer motor at the specified output
+   * 
+   * @param speed  Output duty (-1 to 1) for the motor
    */
-
-   /**
-    * Run indexer
-    */
   public void runIndexer(double speed) {
     indexerMotor.setControl(new DutyCycleOut(speed));
   }
@@ -112,4 +104,5 @@ public class Indexer extends SubsystemBase{
   public void stopIndexer() {
     indexerMotor.stopMotor();
   }
+  
 }
