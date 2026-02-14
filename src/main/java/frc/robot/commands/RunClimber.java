@@ -9,15 +9,17 @@ import frc.robot.subsystems.*;
 import frc.robot.Constants.*;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class LiftIntake extends Command {
+public class RunClimber extends Command {
 
-  private Intake myIntake;
+  private Climber myClimber;
+  private double climberPos;
 
-  /** Creates a new LiftIntake. */
-  public LiftIntake(Intake intake) {
-  
-    myIntake = intake;
-    addRequirements(myIntake);
+  /** Creates a new LiftClimber. */
+  public RunClimber(Climber climber) {
+
+    myClimber = climber;
+    addRequirements(myClimber);
+    
 
   }
 
@@ -25,33 +27,32 @@ public class LiftIntake extends Command {
   @Override
   public void initialize() {
 
-    if (MechanismConstants.isIntakeUp) {
-      MechanismConstants.isIntakeUp = false;
+    if(MechanismConstants.isClimberUp){
+      MechanismConstants.isClimberUp = false;
     } else {
-      MechanismConstants.isIntakeUp = true;
+      MechanismConstants.isClimberUp = true;
     }
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
- 
-  if (MechanismConstants.isIntakeUp) {
-    myIntake.runIntakeLift(MechanismConstants.kIntakeUp);
-  } else {
-    myIntake.runIntakeLift(MechanismConstants.kIntakeDown);
-  }
 
+    if(MechanismConstants.isClimberUp) {
+      climberPos = MechanismConstants.kClimberUp;
+    } else {
+      climberPos = MechanismConstants.kClimberDown;
+    }
+
+    myClimber.runClimber(climberPos);
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
-    myIntake.stopIntakeLift();
-
+    
+    myClimber.stopClimber();
   }
 
   // Returns true when the command should end.

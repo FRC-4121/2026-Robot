@@ -92,6 +92,10 @@ public final class Constants {
   public static final class MechanismConstants {
 
     // Set climber constants
+    public static final double kClimberDown = 0;
+    public static final double kClimberUp = 100; //Edit this to be the encoder vaue when the climber is raised
+    public static final int CLIMBER_LIMIT_SWITCH = 2;
+    public static boolean isClimberUp = true;
     
     // Set shooter constants
     public static final int SHOOTER_LEAD = 1;
@@ -110,6 +114,11 @@ public final class Constants {
 
     // Set hopper/indexer constants
 
+   
+    //Set intake constants
+    public static final double kIntakeUp = 0;
+    public static final double kIntakeDown = 100; //Edit this to be the encoder value when the intake is lowered
+    public static boolean isIntakeUp = true;
 
     //Set turret constants
     public static final int TURRET = 9;

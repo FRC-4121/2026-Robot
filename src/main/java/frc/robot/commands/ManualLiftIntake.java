@@ -9,13 +9,13 @@ import frc.robot.subsystems.*;
 import frc.robot.Constants.*;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class LiftIntake extends Command {
+public class ManualLiftIntake extends Command {
+ 
+ private Intake myIntake;
+ 
+  /** Creates a new ManualLiftIntake. */
+  public ManualLiftIntake(Intake intake) {
 
-  private Intake myIntake;
-
-  /** Creates a new LiftIntake. */
-  public LiftIntake(Intake intake) {
-  
     myIntake = intake;
     addRequirements(myIntake);
 
@@ -23,36 +23,19 @@ public class LiftIntake extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-
-    if (MechanismConstants.isIntakeUp) {
-      MechanismConstants.isIntakeUp = false;
-    } else {
-      MechanismConstants.isIntakeUp = true;
-    }
-
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
- 
-  if (MechanismConstants.isIntakeUp) {
-    myIntake.runIntakeLift(MechanismConstants.kIntakeUp);
-  } else {
-    myIntake.runIntakeLift(MechanismConstants.kIntakeDown);
-  }
+
 
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-
-    myIntake.stopIntakeLift();
-
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

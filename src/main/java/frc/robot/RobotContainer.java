@@ -55,6 +55,8 @@ public class RobotContainer {
     private final Command RunTurretLeftCommand;
     private final Command AutoTurretCommand;
     private final Command AutoShooterCommand;
+    private final Command LiftIntakeCommand;
+    private final Command ShootBallCommand;
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -77,6 +79,8 @@ public class RobotContainer {
         RunTurretLeftCommand = new RunTurretLeft(turret, -.06);
         AutoTurretCommand = new AutoTurret(turret);
         AutoShooterCommand = new AutoShooter(shooter, 1);
+        LiftIntakeCommand = new LiftIntake(intake);
+        ShootBallCommand = new ShootBall(shooter, null, MaxAngularRate); // Finalize this with what needs passed in
 
         configureBindings();
 
@@ -134,12 +138,14 @@ public class RobotContainer {
 
         //Subsystem Buttons on Main Driver Controller
         joystick.a().whileTrue(RunIntakeCommand);
-        //joystick.b().whileTrue(); //Add Shooter Command Here
+        joystick.b().whileTrue(ShootBallCommand);
         //joystick.x().onTrue(); //Add command to swap between field and robot oriented driving mode
         //joystick.y().onTrue(); // Add command to swap between fast and slow driving mode
 
         //Subsystem Buttons on Aux Controller
-        aux.a().onTrue(LiftIntakeCommand);
+        aux.x().onTrue(LiftIntakeCommand);
+        //aux.b().onTrue(); //Add command to automatically move elevator up and down with one button
+
     }
     
     /**
