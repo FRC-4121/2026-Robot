@@ -34,40 +34,6 @@ public final class Constants {
      * Swerve drive values
      */
 
-    // Swerve drive calculation constants
-    public static final double kTalonFXPPR = 2048;
-    public static final double leftGyroCorrection = 53;// Gyro correction in degrees (was 53)
-    public static final double autoLeftGyroCorrection = 53;
-    public static final double rightGyroCorrection = 307;// Gyro correction in degrees (was 307)
-    public static final double autoRightGyroCorrection = -53;
-    public static final double kGearRatio = 7.15;
-
-    // Swerve drive PID constants
-    public static final double kAnglePIDkp = 0.0145;
-    public static final double kAnglePIDkd = 0.0001;
-    public static final double kAnglePIDki = 0.0;
-    public static final double drivePIDkPs[] = { 0.4, 0.4, 0.4, 0.4 };
-    public static final double drivePIDkIs[] = { 0.25, 0.25, 0.25, 0.25 };
-    public static final double drivePIDkDs[] = { 0.0, 0.0, 0.0, 0.0 };
-    public static final double drivePIDkFs[] = { 1.0, 1.0, 1.0, 1.0 };
-    public static final double anglePIDkPs[] = { 3.25, 3.25, 3.25, 3.25 }; // 3.25
-    public static final double anglePIDkIs[] = { 2.25, 2.25, 2.25, 2.25 }; // 2.25
-    public static final double anglePIDkDs[] = { 0.04, 0.04, 0.04, 0.04 }; // 0.04
-    public static double angleLimiters[] = { 1.0, 1.0, 1.0, 1.0 };
-
-    // Auto drive PID constants
-    public static final double FastMaxYawRate = 0.2;
-    public static final double SlowMaxYawRate = 0.35;
-    public static double maxYawRate = 0.2;
-    public static final double kP_DriveAngle = 0.01;
-    public static final double kI_DriveAngle = 0.0;
-    public static final double kD_DriveAngle = 0.0;
-
-    public static boolean AutoAngleToTarget = false;
-
-    // Collision constants
-    public static final double kCollisionThresholdDeltaG = 80000;
-
     // Motor Limits
     public static final double MaxLinearSpeed = 3.7; // 3.7 Max Speed in Meters per second
     public static final double MaxRadiansPerSecond = Math.PI;
