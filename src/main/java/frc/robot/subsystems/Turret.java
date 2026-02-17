@@ -81,7 +81,7 @@ public class Turret extends SubsystemBase {
    * 
    * @param speed speed and direction of the motor rotation (+ = clockwise)
    */
-  public void runturret(double speed) {
+  public void runTurret(double speed) {
     turretMotor.setControl(new DutyCycleOut(speed));
   }
 

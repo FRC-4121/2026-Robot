@@ -5,21 +5,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Turret;
+import frc.robot.Constants.MechanismConstants;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class RunTurretRight extends Command {
+public class DisableAutoTurret extends Command {
 
-  private Turret myTurret;
-  private double value;
-
-  /** Creates a new runTurret. */
-  public RunTurretRight(Turret turret, double value) {
-
-    myTurret = turret;
-    this.value = value;
-
-    addRequirements(myTurret);
+  /** Creates a new DisableTurret. */
+  public DisableAutoTurret() {
 
   }
 
@@ -31,21 +23,21 @@ public class RunTurretRight extends Command {
   @Override
   public void execute() {
 
-  myTurret.setTurretSpeed(value);
+    if(MechanismConstants.isTurretEnabled){
+      MechanismConstants.isTurretEnabled = false;
+    } else{
+      MechanismConstants.isTurretEnabled = true;
+    }
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-
-  myTurret.stopTurret();
-
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

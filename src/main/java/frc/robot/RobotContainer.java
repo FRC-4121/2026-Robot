@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.wpilibj2.command.button.*;
+import frc.robot.Constants.*;
 
 import frc.robot.generated.TunerConstants;
 
@@ -45,6 +46,7 @@ public class RobotContainer {
     private final Intake intake = new Intake();
     private final Shooter shooter = new Shooter();
     private final Turret turret = new Turret();
+    private final Climber climber = new Climber();
 
     // ===Extra Systems===//
 
@@ -57,6 +59,10 @@ public class RobotContainer {
     private final Command AutoShooterCommand;
     private final Command LiftIntakeCommand;
     private final Command ShootBallCommand;
+    private final Command ManualLiftIntakeCommand;
+    private final Command RunClimberCommand;
+    private final Command ManualClimberCommand;
+    private final Command DisableAutoTurretCommand;
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -65,30 +71,44 @@ public class RobotContainer {
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-    
+    //===Buttons===//
+    private final JoystickButton ParkButton;
+    private final JoystickButton DisableAutoTurretButton;
+
     // ===Logging===//
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
 
     public RobotContainer() {
 
-
+        //Initialize Commands
         RunIntakeCommand = new RunIntake(intake, -0.75);
         RunShooterCommand = new RunShooter(shooter, 0);
-        RunTurretRightCommand = new RunTurretRight(turret, .06);
-        RunTurretLeftCommand = new RunTurretLeft(turret, -.06);
+        RunTurretRightCommand = new ManualTurret(turret, .06);
+        RunTurretLeftCommand = new ManualTurret(turret, -.06);
         AutoTurretCommand = new AutoTurret(turret);
         AutoShooterCommand = new AutoShooter(shooter, 1);
         LiftIntakeCommand = new LiftIntake(intake);
         ShootBallCommand = new ShootBall(shooter, null, MaxAngularRate); // Finalize this with what needs passed in
+        ManualLiftIntakeCommand = new ManualLiftIntake(intake, aux);
+        RunClimberCommand = new RunClimber(null);
+        ManualClimberCommand = new ManualClimber(null);
+        DisableAutoTurretCommand = new DisableAutoTurret();
 
-        configureBindings();
+        //Initialize Buttons
+        ParkButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch3);
+        DisableAutoTurretButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch8);
 
+
+        //Initialize Subsystems
         turret.setDefaultCommand(AutoTurretCommand);
         shooter.setDefaultCommand(AutoShooterCommand);
+        intake.setDefaultCommand(ManualLiftIntakeCommand);
+        climber.setDefaultCommand(ManualClimberCommand);
 
         drivetrain.seedFieldCentric();
 
+        configureBindings();
     }
 
     /** 
@@ -114,10 +134,10 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        //joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        /*joystick.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
-        )); */
+        // Park mode for the robot to disable movement and X the wheels
+        ParkButton.whileTrue(drivetrain.applyRequest(() -> brake));
+        DisableAutoTurretButton.whileTrue(DisableAutoTurretCommand);
+        
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -144,7 +164,7 @@ public class RobotContainer {
 
         //Subsystem Buttons on Aux Controller
         aux.x().onTrue(LiftIntakeCommand);
-        //aux.b().onTrue(); //Add command to automatically move elevator up and down with one button
+        aux.b().onTrue(RunClimberCommand);
 
     }
     

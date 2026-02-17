@@ -4,7 +4,9 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.*;
 import frc.robot.Constants.*;
 
@@ -12,16 +14,20 @@ import frc.robot.Constants.*;
 public class ManualLiftIntake extends Command {
  
  private Intake myIntake;
+ private CommandXboxController myCommandXboxController;
+ private Joystick myJoystick;
  
   /** Creates a new ManualLiftIntake. */
-  public ManualLiftIntake(Intake intake) {
+  public ManualLiftIntake(Intake intake, CommandXboxController aux) {
 
     myIntake = intake;
+    myCommandXboxController = aux;
     addRequirements(myIntake);
+
 
   }
 
-  // Called when the command is initially scheduled.
+// Called when the command is initially scheduled.
   @Override
   public void initialize() {}
 
@@ -29,7 +35,7 @@ public class ManualLiftIntake extends Command {
   @Override
   public void execute() {
 
-
+ 
 
   }
 

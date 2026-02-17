@@ -150,6 +150,8 @@ public final class Constants {
     public static final double kTurretSpeedAuto = 1.0;
     public static final double kTurretSpeedLock = 0.0625;
 
+    public static boolean isTurretEnabled = true;
+
   }
 
   /*
@@ -240,7 +242,6 @@ public final class Constants {
     public static boolean blueAlliance = true; // true = blue, red = false
     public static boolean photoSensorIsNotBlocked;
     public static boolean impactDetected = false;
-    public static boolean isClawClear = false;
 
   }
 

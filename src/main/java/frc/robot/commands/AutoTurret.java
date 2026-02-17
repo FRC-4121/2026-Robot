@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import edu.wpi.first.math.controller.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.LimelightHelpers;
+import frc.robot.Constants.MechanismConstants;
 import frc.robot.subsystems.Turret;
 import frc.robot.commands.*;
 
@@ -64,21 +65,21 @@ public class AutoTurret extends Command {
   @Override
   public void execute() {
 
-    if (DisableTurret.isTurretEnabled) {
+    if (MechanismConstants.isTurretEnabled) {
 
-    offset = LimelightHelpers.getTX("limelight-turret")/100;
-    double output = m_myPIDControl.calculate(offset, 0);
-    currentPosition = myTurret.getPosition();
+      offset = LimelightHelpers.getTX("limelight-turret") / 100;
+      double output = m_myPIDControl.calculate(offset, 0);
+      currentPosition = myTurret.getPosition();
 
-    if(currentPosition > upperLimit && output < 0){
-      myTurret.setTurretSpeed(0);
-    } else if(currentPosition < lowerLimit && output > 0) {
-      myTurret.setTurretSpeed(0);
-    } else {
-      myTurret.setTurretSpeed(-output * speed);
-    }
-   
-    SmartDashboard.putNumber("PID Output", output);
+      if (currentPosition > upperLimit && output < 0) {
+        myTurret.runTurret(0);
+      } else if (currentPosition < lowerLimit && output > 0) {
+        myTurret.runTurret(0);
+      } else {
+        myTurret.runTurret(-output * speed);
+      }
+
+      SmartDashboard.putNumber("PID Output", output);
 
     }
   }

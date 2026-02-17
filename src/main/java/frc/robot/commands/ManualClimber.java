@@ -4,23 +4,24 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Turret;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.*;
+import frc.robot.Constants.*;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class RunTurretLeft extends Command {
+public class ManualClimber extends Command {
 
-  private Turret myTurret;
-  private double value;
+  /** Creates a new ManualClimber. */
+  private Climber myClimber;
+  private double climberPos;
+  private CommandXboxController myCommandXboxController;
+  private Joystick myJoystick;
 
-  /** Creates a new runTurret. */
-  public RunTurretLeft(Turret turret, double value) {
-
-    myTurret = turret;
-    this.value = value;
-
-    addRequirements(myTurret);
-
+  public ManualClimber(Climber climber) {
+   myClimber = climber;
+    addRequirements(myClimber);
   }
 
   // Called when the command is initially scheduled.
@@ -31,17 +32,11 @@ public class RunTurretLeft extends Command {
   @Override
   public void execute() {
 
-  myTurret.setTurretSpeed(value);
-
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-
-  myTurret.stopTurret();
-
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
