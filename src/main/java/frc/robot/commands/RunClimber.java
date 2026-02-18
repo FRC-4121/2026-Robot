@@ -12,7 +12,6 @@ import frc.robot.Constants.*;
 public class RunClimber extends Command {
 
   private Climber myClimber;
-  private double climberPos;
 
   /** Creates a new LiftClimber. */
   public RunClimber(Climber climber) {
