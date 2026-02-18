@@ -90,9 +90,9 @@ public class RobotContainer {
         AutoShooterCommand = new AutoShooter(shooter, 1);
         LiftIntakeCommand = new LiftIntake(intake);
         ShootBallCommand = new ShootBall(shooter, null, MaxAngularRate); // Finalize this with what needs passed in
-        ManualLiftIntakeCommand = new ManualLiftIntake(intake, aux);
+        ManualLiftIntakeCommand = new ManualLiftIntake(intake, (-joystick.getLeftY()));
         RunClimberCommand = new RunClimber(null);
-        ManualClimberCommand = new ManualClimber(null);
+        ManualClimberCommand = new ManualClimber(climber, (-joystick.getRightY()));
         DisableAutoTurretCommand = new DisableAutoTurret();
 
         //Initialize Buttons
@@ -148,10 +148,7 @@ public class RobotContainer {
 
         // Reset the field-centric heading on left bumper press.
         //joystick.x().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-        joystick.rightBumper().whileTrue(RunTurretRightCommand);
-        joystick.leftBumper().whileTrue(RunTurretLeftCommand);
         //joystick.y().whileTrue(RunIntakeCommand);
-
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -161,6 +158,8 @@ public class RobotContainer {
         joystick.b().whileTrue(ShootBallCommand);
         //joystick.x().onTrue(); //Add command to swap between field and robot oriented driving mode
         //joystick.y().onTrue(); // Add command to swap between fast and slow driving mode
+        joystick.rightBumper().whileTrue(RunTurretRightCommand);
+        joystick.leftBumper().whileTrue(RunTurretLeftCommand);
 
         //Subsystem Buttons on Aux Controller
         aux.x().onTrue(LiftIntakeCommand);

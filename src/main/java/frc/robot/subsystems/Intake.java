@@ -159,7 +159,29 @@ public class Intake extends SubsystemBase {
     intakeLift.setControl(new PositionVoltage(position));
   }
 
+ /**
+   * Manually runs intake lift
+   * 
+   * @param value value to run the motor for in duty cycle out
+   */
+  public void manualIntakeLift(double value){
+    intakeLift.setControl(new DutyCycleOut(value));
+  }
+
+
   /**
+   * Get current position of encoder
+   * 
+   * @return The current encoder position
+   */
+   public double getPosition(){
+    var rotorPosSignal = intakeLift.getRotorPosition();
+    return rotorPosSignal.getValueAsDouble();
+   }
+
+ 
+ 
+   /**
    * Halts intake motor
    */
   public void stopIntake(){

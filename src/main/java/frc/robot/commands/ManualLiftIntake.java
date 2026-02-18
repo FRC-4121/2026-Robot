@@ -14,14 +14,15 @@ import frc.robot.Constants.*;
 public class ManualLiftIntake extends Command {
  
  private Intake myIntake;
- private CommandXboxController myCommandXboxController;
- private Joystick myJoystick;
+ private double currentPosition;
+ private double value;
  
   /** Creates a new ManualLiftIntake. */
-  public ManualLiftIntake(Intake intake, CommandXboxController aux) {
+  public ManualLiftIntake(Intake intake, double value) {
 
     myIntake = intake;
-    myCommandXboxController = aux;
+    this.value = value;
+    
     addRequirements(myIntake);
 
 
@@ -34,7 +35,16 @@ public class ManualLiftIntake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+   
+    currentPosition = myIntake.getPosition();
 
+    if(currentPosition > MechanismConstants.kIntakeUp && value < 0) {
+        myIntake.manualIntakeLift(0);
+      } else if (currentPosition < MechanismConstants.kIntakeDown && value > 0) {
+        myIntake.manualIntakeLift(0);
+      } else {
+        myIntake.manualIntakeLift(value * .1);
+      }
  
 
   }

@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -104,6 +105,26 @@ public class Climber extends SubsystemBase {
     climberMotor.setControl(new PositionVoltage(climberPos));
   }
   
+  /**
+   * Manually runs climber
+   * 
+   * @param value value to run the motor for in duty cycle out
+   */
+  public void manualRunClimber(double value){
+    climberMotor.setControl(new DutyCycleOut(value));
+  }
+
+  /**
+   * Gets current position of encoder 
+   * 
+   * @return The current encoder position
+   */
+  public double getPosition(){
+    var rotorPosSignal = climberMotor.getRotorPosition();
+    return rotorPosSignal.getValueAsDouble();
+   }
+
+
   /**
   * Halt climber motor
   */

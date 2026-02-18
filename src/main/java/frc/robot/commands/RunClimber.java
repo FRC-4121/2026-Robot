@@ -39,12 +39,10 @@ public class RunClimber extends Command {
   public void execute() {
 
     if(MechanismConstants.isClimberUp) {
-      climberPos = MechanismConstants.kClimberUp;
+      myClimber.runClimber(MechanismConstants.kClimberUp);
     } else {
-      climberPos = MechanismConstants.kClimberDown;
+      myClimber.runClimber(MechanismConstants.kClimberDown);
     }
-
-    myClimber.runClimber(climberPos);
 
   }
 

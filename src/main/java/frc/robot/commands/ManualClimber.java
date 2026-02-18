@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -15,12 +17,14 @@ public class ManualClimber extends Command {
 
   /** Creates a new ManualClimber. */
   private Climber myClimber;
-  private double climberPos;
-  private CommandXboxController myCommandXboxController;
-  private Joystick myJoystick;
+  private double currentPosition;
+  private double value;
+  
 
-  public ManualClimber(Climber climber) {
-   myClimber = climber;
+  public ManualClimber(Climber climber, double value) {
+    myClimber = climber;
+    this.value = value;
+
     addRequirements(myClimber);
   }
 
@@ -31,6 +35,17 @@ public class ManualClimber extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+      currentPosition = myClimber.getPosition();
+
+      if (currentPosition > MechanismConstants.kClimberUp && value < 0) {
+        myClimber.manualRunClimber(0);
+      } else if (currentPosition < MechanismConstants.kClimberDown && value > 0) {
+        myClimber.manualRunClimber(0);
+      } else {
+        myClimber.manualRunClimber(value * .5);
+      }
+
 
   }
 
