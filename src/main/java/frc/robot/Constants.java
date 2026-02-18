@@ -54,6 +54,9 @@ public final class Constants {
     // Fast / Slow Mode Constants
     public static double slowModeMultiplier = 1;
 
+    // Robot Oriented or Field Oriented Boolean
+    public static boolean isFieldoriented = true;
+
   }
 
   /*
