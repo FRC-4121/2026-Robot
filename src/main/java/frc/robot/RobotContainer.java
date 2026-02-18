@@ -47,6 +47,7 @@ public class RobotContainer {
     private final Shooter shooter = new Shooter();
     private final Turret turret = new Turret();
     private final Climber climber = new Climber();
+    private final Indexer indexer = new Indexer();
 
     // ===Extra Systems===//
 
@@ -74,13 +75,17 @@ public class RobotContainer {
     //===Buttons===//
     private final JoystickButton ParkButton;
     private final JoystickButton DisableAutoTurretButton;
+    private final JoystickButton ResetRobotButton;
+    private final JoystickButton ZeroEncodersButton;
+    private final JoystickButton DisableStateButton;
+    private final JoystickButton ShootingModeButton;
 
     // ===Logging===//
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
 
     public RobotContainer() {
-
+                
         //Initialize Commands
         RunIntakeCommand = new RunIntake(intake, -0.75);
         RunShooterCommand = new RunShooter(shooter, 0);
@@ -89,7 +94,7 @@ public class RobotContainer {
         AutoTurretCommand = new AutoTurret(turret);
         AutoShooterCommand = new AutoShooter(shooter, 1);
         LiftIntakeCommand = new LiftIntake(intake);
-        ShootBallCommand = new ShootBall(shooter, null, MaxAngularRate); // Finalize this with what needs passed in
+        ShootBallCommand = new ShootBall(shooter, indexer);
         ManualLiftIntakeCommand = new ManualLiftIntake(intake, (-joystick.getLeftY()));
         RunClimberCommand = new RunClimber(null);
         ManualClimberCommand = new ManualClimber(climber, (-joystick.getRightY()));
@@ -98,15 +103,17 @@ public class RobotContainer {
         //Initialize Buttons
         ParkButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch3);
         DisableAutoTurretButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch8);
-
-
-        //Initialize Subsystems
-        turret.setDefaultCommand(AutoTurretCommand);
-        shooter.setDefaultCommand(AutoShooterCommand);
-        intake.setDefaultCommand(ManualLiftIntakeCommand);
-        climber.setDefaultCommand(ManualClimberCommand);
+        ResetRobotButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch1top);
+        ZeroEncodersButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch2top);
+        DisableStateButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch4);
+        ShootingModeButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch7);
 
         drivetrain.seedFieldCentric();
+
+        //Set Default Commands For Subsystems
+        turret.setDefaultCommand(AutoTurretCommand);
+        intake.setDefaultCommand(ManualLiftIntakeCommand);
+        climber.setDefaultCommand(ManualClimberCommand);
 
         configureBindings();
     }
