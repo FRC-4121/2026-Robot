@@ -51,6 +51,9 @@ public final class Constants {
     // General drive constants
     public static final double GyroCorrection = 0;
 
+    // Fast / Slow Mode Constants
+    public static double slowModeMultiplier = 1;
+
   }
 
   /*

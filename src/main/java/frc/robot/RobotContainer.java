@@ -31,7 +31,7 @@ import frc.robot.generated.TunerConstants;
 public class RobotContainer {
 
     // ===Variables===//
-    private double MaxSpeed = 0.25 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxSpeed = 0.25 * DriveConstants.slowModeMultiplier *TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     // ===Controllers===//
@@ -64,6 +64,7 @@ public class RobotContainer {
     private final Command RunClimberCommand;
     private final Command ManualClimberCommand;
     private final Command DisableAutoTurretCommand;
+    private final Command ChangeDrivingSpeedCommand;
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -99,6 +100,7 @@ public class RobotContainer {
         RunClimberCommand = new RunClimber(null);
         ManualClimberCommand = new ManualClimber(climber, (-joystick.getRightY()));
         DisableAutoTurretCommand = new DisableAutoTurret();
+        ChangeDrivingSpeedCommand = new ChangeDrivingSpeed();
 
         //Initialize Buttons
         ParkButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch3);
@@ -164,7 +166,7 @@ public class RobotContainer {
         joystick.a().whileTrue(RunIntakeCommand);
         joystick.b().whileTrue(ShootBallCommand);
         //joystick.x().onTrue(); //Add command to swap between field and robot oriented driving mode
-        //joystick.y().onTrue(); // Add command to swap between fast and slow driving mode
+        joystick.y().onTrue(ChangeDrivingSpeedCommand);
         joystick.rightBumper().whileTrue(RunTurretRightCommand);
         joystick.leftBumper().whileTrue(RunTurretLeftCommand);
 
