@@ -173,6 +173,15 @@ public class Shooter extends SubsystemBase {
     shooterMotor.stopMotor();
   }
 
+  /**
+   * Returns shooter fly-wheel velocity in rotations per second (rps)
+   * @return shooter velocity
+   */
+  public double getShooterVelocity() {
+
+    return shooterMotor.getRotorVelocity().getValueAsDouble();
+    
+  }
 
   @Override
   public void periodic() {
