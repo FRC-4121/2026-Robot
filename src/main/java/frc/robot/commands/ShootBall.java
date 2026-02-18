@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.robot.Constants.GeneralConstants;
+import frc.robot.Constants.MechanismConstants;
 
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -35,41 +35,44 @@ public class ShootBall extends Command {
 
   private Shooter myShooter;
   private Indexer myIndexer;
-  private double value;
+  private double targetVelocity;
+  private double percentVelocity;
 
   /** Creates a new ShootBall. */
-  public ShootBall(Shooter shooter, Indexer indexer, double value ) {
+  public ShootBall(Shooter shooter, Indexer indexer) {
 
     myShooter = shooter;
     myIndexer = indexer;
-    this.value = value;
-  
-    // Use addRequirements() here to declare subsystem dependencies.
 
     addRequirements(myShooter, myIndexer);
-    
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
 
-
+    percentVelocity = 0.95;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    myShooter.runShooter(value);
-     while (myShooter.speed) {
-       myIndexer.runIndexer(value);  
-     } 
+    myShooter.runShooter(targetVelocity);
+    double shooterVelocity = myShooter.getShooterVelocity();
+
+    if (shooterVelocity > percentVelocity * targetVelocity) {
+      myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);  
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+
+    myShooter.runShooter(0);
+    myIndexer.runIndexer(0);
+  }
 
   // Returns true when the command should end.
   @Override

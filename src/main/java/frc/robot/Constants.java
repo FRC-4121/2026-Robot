@@ -115,6 +115,7 @@ public final class Constants {
     public static final double kTurretSpeedManual = 0.10;//positive is counterclockwise
     public static final double kTurretSpeedAuto = 1.0;
     public static final double kTurretSpeedLock = 0.0625;
+    public static final double kIndexerSpeed = -0.5;
 
   }
 
