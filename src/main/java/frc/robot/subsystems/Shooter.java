@@ -159,7 +159,7 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
-   * Runs shooter motors
+   * Runs shooter motor
    * @param speed speed and direction of the motor rotation (+ = clockwise)
    */
   public void runShooter(double speed) {
@@ -182,6 +182,31 @@ public class Shooter extends SubsystemBase {
     return shooterMotor.getRotorVelocity().getValueAsDouble();
     
   }
+
+  /**
+   *  Runs hood motor
+   */
+  public void runHood(double position) {
+    hoodMotor.setControl(new PositionVoltage(position));
+  }
+
+ /**
+ * Halts hood motor
+ */
+public void stopHood() {
+  hoodMotor.stopMotor();
+}
+
+/**
+ * Get position from hood
+ * @return hood position
+ */
+public double getHoodPosition() {
+
+  return hoodMotor.getPosition().getValueAsDouble();
+
+}
+
 
   @Override
   public void periodic() {
