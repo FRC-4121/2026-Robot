@@ -23,6 +23,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import org.photonvision.*;
+
 import frc.robot.Constants.GeneralConstants;
 
 /**
@@ -37,6 +39,11 @@ public class Shooter extends SubsystemBase {
   // Declare motor variables
   private TalonFX shooterMotor;
   private TalonFX hoodMotor;
+
+  // Declare shooter camera
+  PhotonCamera shooterCamera;
+
+
 
   // Declare shooter PID controller gains
   private double shooter_kG = 0.0;
@@ -73,6 +80,9 @@ public class Shooter extends SubsystemBase {
     // Create motors
     shooterMotor = new TalonFX(shooterMotorID, GeneralConstants.kMechBus);
     hoodMotor = new TalonFX(hoodMotorID, GeneralConstants.kMechBus);
+
+    // Create shooter camera
+    shooterCamera = new PhotonCamera("shootercamera");
 
     // Initialize motors
     InitializeMotors();
@@ -206,6 +216,10 @@ public double getHoodPosition() {
   return hoodMotor.getPosition().getValueAsDouble();
 
 }
+
+/**
+ * Get yaw 
+ */
 
 
   @Override
