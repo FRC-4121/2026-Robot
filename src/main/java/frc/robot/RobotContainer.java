@@ -6,15 +6,14 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.Optional;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
-import frc.robot.subsystems.*;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.*;
-import frc.robot.LimelightHelpers.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj.Joystick;
@@ -24,9 +23,15 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.wpilibj2.command.button.*;
-import frc.robot.Constants.*;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
+import frc.robot.subsystems.*;
+import frc.robot.commands.*;
+import frc.robot.LimelightHelpers.*;
+import frc.robot.Constants.*;
 import frc.robot.generated.TunerConstants;
+
 
 public class RobotContainer {
 
@@ -53,11 +58,9 @@ public class RobotContainer {
 
     // ===COMMANDS===//
     private final Command RunIntakeCommand;
-    private final Command RunShooterCommand;
     private final Command RunTurretRightCommand;
     private final Command RunTurretLeftCommand;
     private final Command AutoTurretCommand;
-    private final Command AutoShooterCommand;
     private final Command LiftIntakeCommand;
     private final Command ShootBallCommand;
     private final Command ManualLiftIntakeCommand;
@@ -89,11 +92,9 @@ public class RobotContainer {
                 
         //Initialize Commands
         RunIntakeCommand = new RunIntake(intake, -0.75);
-        RunShooterCommand = new RunShooter(shooter, 0);
         RunTurretRightCommand = new ManualTurret(turret, .06);
         RunTurretLeftCommand = new ManualTurret(turret, -.06);
         AutoTurretCommand = new AutoTurret(turret);
-        AutoShooterCommand = new AutoShooter(shooter, 1);
         LiftIntakeCommand = new LiftIntake(intake);
         ShootBallCommand = new ShootBall(shooter, indexer);
         ManualLiftIntakeCommand = new ManualLiftIntake(intake, (-joystick.getLeftY()));
@@ -200,7 +201,28 @@ public class RobotContainer {
         );
     }
 
+    /**
+     * Update target yaw from limelight camera
+     */
     public void UpdateStatus() {
         SmartDashboard.putNumber("TX", LimelightHelpers.getTX("limelight-turret"));
+    }
+
+    /**
+     * Getting alliance color from driver's station
+     */
+    public void getAlliance(){
+        Optional<Alliance> allianceColor = DriverStation.getAlliance();
+        if (allianceColor.isPresent()) {
+            if (allianceColor.get() == Alliance.Red) {
+                Mutables.blueAlliance = false;
+            }
+            else if (allianceColor.get() == Alliance.Blue) {
+                Mutables.blueAlliance = true;
+            }
+        }
+        else {
+           Mutables.blueAlliance = true;
+        }
     }
 }
