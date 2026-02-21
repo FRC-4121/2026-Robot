@@ -14,19 +14,16 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.GeneralConstants;
+import frc.robot.Constants.MechanismConstants;
+
 
 /**
  * Define the climber subsystem
  */
 public class Climber extends SubsystemBase {
-
-  // Declare constants
-  private final double MOTOR_DEADBAND = 0.001; // Deadband for the drive motor. Values smaller than this will be rounded
-                                               // to zero
 
   // Declare CAN ID for motor
   private final int climberMotorID = 26;
@@ -68,7 +65,7 @@ public class Climber extends SubsystemBase {
     var climberOutputConfigs = climberConfigs.MotorOutput;
     climberOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
     climberOutputConfigs.NeutralMode = NeutralModeValue.Brake;
-    climberOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
+    climberOutputConfigs.withDutyCycleNeutralDeadband(MechanismConstants.kDutyCycleDeadband);
 
     // Set lead climber motor feedback sensor
     var climberSensorConfig = climberConfigs.Feedback;
@@ -97,11 +94,11 @@ public class Climber extends SubsystemBase {
   }
 
   /**
-   * Run climber motor
+   * Run climber motor to a position
    * 
    * @param climberPos  Position target for the climber
    */
-  public void runClimber(double climberPos){
+  public void runClimberToPos(double climberPos){
     climberMotor.setControl(new PositionVoltage(climberPos));
   }
   

@@ -7,7 +7,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Turret;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+/**
+ * Define a new ManualTurret command
+ * 
+ * This command runs the turret left or right in response to pressing the
+ * left or right bumper buttons on the main controller
+ */
 public class ManualTurret extends Command {
 
   private Turret myTurret;
@@ -17,47 +22,80 @@ public class ManualTurret extends Command {
   private double lowerLimit;
   private double currentPosition;
 
-  /** Creates a new runTurret. */
+  /**
+   * Create a new ManualTurret command
+   * 
+   * @param turret An instance of the turret subsystem
+   * @param value The speed and direction to move the turret
+   */
   public ManualTurret(Turret turret, double value) {
 
+    // Initialize variables
     myTurret = turret;
     this.value = value;
 
+    // Declare subsystem requirements for this command
     addRequirements(myTurret);
 
   }
 
-  // Called when the command is initially scheduled.
+  /**
+   * Initialize the command
+   * 
+   * Called once when the command is initially scheduled
+   */
   @Override
-  public void initialize() {}
+  public void initialize() {
 
-  // Called every time the scheduler runs while the command is scheduled.
+  }
+
+  /**
+   * Execute the commands actions
+   * 
+   * Called every time the scheduler runs while the command is scheduled
+   */
   @Override
   public void execute() {
 
-      currentPosition = myTurret.getPosition();
+    // Get the current position of the turret
+    currentPosition = myTurret.getPosition();
 
-      if (currentPosition > upperLimit && value < 0) {
-        myTurret.runTurret(0);
-      } else if (currentPosition < lowerLimit && value > 0) {
-        myTurret.runTurret(0);
-      } else {
-        myTurret.runTurret(value);
-      }
+    // Only move the turret if not already at the extremes
+    if (currentPosition > upperLimit && value < 0) {
+      myTurret.runTurret(0);
+    } else if (currentPosition < lowerLimit && value > 0) {
+      myTurret.runTurret(0);
+    } else {
+      myTurret.runTurret(value);
+    }
 
   }
 
-  // Called once the command ends or is interrupted.
+  /**
+   * Ends the command
+   * 
+   * Called once the command ends or is interrupted
+   * 
+   * @param interrupted Flag to indicate if the command was interrupted
+   */
   @Override
   public void end(boolean interrupted) {
 
-  myTurret.stopTurret();
+    // Stop the turret from moving
+    myTurret.stopTurret();
 
   }
 
-  // Returns true when the command should end.
+  /**
+   * Checks to see if command should end
+   * 
+   * Returns true when the command should end
+   */
   @Override
   public boolean isFinished() {
+
+    // Returning false means the command will not end
     return false;
+    
   }
 }

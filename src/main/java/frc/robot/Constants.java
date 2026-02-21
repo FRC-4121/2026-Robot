@@ -54,9 +54,6 @@ public final class Constants {
     // Fast / Slow Mode Constants
     public static double slowModeMultiplier = 1;
 
-    // Robot Oriented or Field Oriented Boolean
-    public static boolean isFieldoriented = true;
-
   }
 
   /*
@@ -64,11 +61,15 @@ public final class Constants {
    */
   public static final class MechanismConstants {
 
+    // Set general constants
+    public static final double kDutyCycleDeadband = 0.001;
+
     // Set climber constants
     public static final double kClimberDown = 0;
     public static final double kClimberUp = 100; //Edit this to be the encoder vaue when the climber is raised
     public static final int CLIMBER_LIMIT_SWITCH = 2;
     public static boolean isClimberUp = true;
+    public static final double kClimberSpeedFactor = 0.5;
     
     // Set shooter constants
     public static final int SHOOTER_LEAD = 1;
@@ -92,6 +93,7 @@ public final class Constants {
     public static final double kIntakeUp = 0;
     public static final double kIntakeDown = 100; //Edit this to be the encoder value when the intake is lowered
     public static boolean isIntakeUp = true;
+    public static final double kIntakeSpeedFactor = 0.1;
 
     //Set turret constants
     public static final int TURRET = 9;
@@ -213,8 +215,6 @@ public final class Constants {
     public static boolean isSlowMode = false;
     public static String autoPosition = "Left";
     public static boolean blueAlliance = true; // true = blue, red = false
-    public static boolean photoSensorIsNotBlocked;
-    public static boolean impactDetected = false;
 
   }
 
