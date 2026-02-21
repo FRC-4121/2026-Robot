@@ -51,6 +51,7 @@ public class RobotContainer {
     private final Command AutoTurretCommand;
     private final Command LiftIntakeCommand;
     private final Command ShootBallCommand;
+    private final Command AutoShootCommand;
     private final Command ManualLiftIntakeCommand;
     private final Command RunClimberCommand;
     private final Command ManualClimberCommand;
@@ -115,6 +116,7 @@ public class RobotContainer {
         AutoTurretCommand = new AutoTurret(turret);
         LiftIntakeCommand = new LiftIntake(intake);
         ShootBallCommand = new ShootBall(shooter, indexer);
+        AutoShootCommand = new AutoShoot(shooter, indexer);
         ManualLiftIntakeCommand = new ManualLiftIntake(intake, aux);
         RunClimberCommand = new RunClimber(null);
         ManualClimberCommand = new ManualClimber(climber, aux);
@@ -128,7 +130,7 @@ public class RobotContainer {
 
         // Register named commands for PathPlanner
         NamedCommands.registerCommand("Intake", RunIntakeCommand);
-        NamedCommands.registerCommand("Shoot", ShootBallCommand);
+        NamedCommands.registerCommand("Shoot", AutoShootCommand);
         NamedCommands.registerCommand("Lift Intake", LiftIntakeCommand);
         NamedCommands.registerCommand("Climb", RunClimberCommand);
 
