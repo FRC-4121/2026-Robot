@@ -36,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "L Start and Intake"
+                  "pathName": "R Start and Intake"
                 }
               }
             ]
@@ -45,7 +45,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "L Center Return"
+            "pathName": "R Center Return"
           }
         },
         {
@@ -59,15 +59,15 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "L Climbing Setup from Starting Line"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "Climb"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "R Climb Setup from Starting Line"
                 }
               }
             ]
@@ -76,7 +76,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Climb Left"
+            "pathName": "Right Climb"
           }
         },
         {

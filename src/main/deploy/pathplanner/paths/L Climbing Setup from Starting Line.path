@@ -8,75 +8,64 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.6547166666666673,
-        "y": 7.484533333333333
+        "x": 2.6620722222222226,
+        "y": 7.581977777777778
       },
       "isLocked": false,
       "linkedName": "Auto 1 Return 1"
     },
     {
       "anchor": {
-        "x": 0.5085500000000003,
-        "y": 6.7536999999999985
+        "x": 2.535394444444444,
+        "y": 6.3152
       },
       "prevControl": {
-        "x": 0.5557233303198097,
-        "y": 7.11276846456636
+        "x": 2.6571999999999996,
+        "y": 6.602661111111111
       },
       "nextControl": {
-        "x": 0.4406165839829909,
-        "y": 6.23661233167966
+        "x": 2.327307560517527,
+        "y": 5.824114953932476
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.5085500000000003,
-        "y": 5.179972222222222
+        "x": 1.5804388888888892,
+        "y": 4.921744444444443
       },
       "prevControl": {
-        "x": 0.49204110559886666,
-        "y": 5.786647767540751
+        "x": 1.8288521309676284,
+        "y": 4.893622190624209
       },
       "nextControl": {
-        "x": 0.5153504988547455,
-        "y": 4.930064732908023
+        "x": 1.322211111111111,
+        "y": 4.950977777777777
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.3514908084917012,
-        "y": 5.382657978300948
+        "x": 0.6706887641098638,
+        "y": 4.71329018492846
       },
       "prevControl": {
-        "x": 0.8736592492620766,
-        "y": 5.057616753025172
-      },
-      "nextControl": {
-        "x": 1.5581991447289743,
-        "y": 5.523269726494399
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.786860382707301,
-        "y": 5.548809355067329
-      },
-      "prevControl": {
-        "x": 2.291899362154501,
-        "y": 5.587377746279234
+        "x": 0.8119832085543082,
+        "y": 4.97151796270624
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Climbing Setup"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.95,
+      "rotationDegrees": 180.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -90,10 +79,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Left Climb",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -90.0

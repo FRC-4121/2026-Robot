@@ -1,0 +1,70 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.0,
+        "y": 0.5123833333333323
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.336922222222223,
+        "y": 0.546488888888889
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.397872222222222,
+        "y": 0.6634222222222217
+      },
+      "prevControl": {
+        "x": 7.246559707308738,
+        "y": 0.4644133710860082
+      },
+      "nextControl": {
+        "x": 7.846116666666667,
+        "y": 1.2529611111111114
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.7973944444444445,
+        "y": 3.391866666666667
+      },
+      "prevControl": {
+        "x": 7.826627777777778,
+        "y": 2.5830777777777767
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "R Center Intake End"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0.0,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": true
+}

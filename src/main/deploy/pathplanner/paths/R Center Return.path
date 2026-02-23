@@ -3,29 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.995336640680369,
-        "y": 7.567221828490432
+        "x": 7.7973944444444445,
+        "y": 3.391866666666667
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.310987292396436,
-        "y": 7.567221828490432
+        "x": 7.690205555555556,
+        "y": 2.066622222222221
       },
       "isLocked": false,
-      "linkedName": "Auto 1 Return 1"
+      "linkedName": "R Center Intake End"
     },
     {
       "anchor": {
-        "x": 1.7326576895818575,
-        "y": 4.687448618001417
+        "x": 6.6962722222222215,
+        "y": 0.9216499999999996
       },
       "prevControl": {
-        "x": 1.8097944720056702,
-        "y": 6.043770375620128
+        "x": 7.32444172848784,
+        "y": 1.3303904321591355
+      },
+      "nextControl": {
+        "x": 5.984927777777777,
+        "y": 0.4587888888888881
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.031166666666667,
+        "y": 0.5562333333333322
+      },
+      "prevControl": {
+        "x": 5.078694444444444,
+        "y": 0.6439333333333332
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Left Climbing Setup"
+      "linkedName": "R Return End"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +58,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 90.0
   },
   "reversed": false,
-  "folder": "Left Climb",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }
