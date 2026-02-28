@@ -57,7 +57,7 @@ public class ShootBall extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    targetVelocity = -30;
     myShooter.runShooter(targetVelocity);
     double shooterVelocity = myShooter.getShooterVelocity();
 

@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.pathplanner.lib.auto.NamedCommands;
+//import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import frc.robot.subsystems.*;
@@ -57,6 +57,8 @@ public class RobotContainer {
     private final Command ManualClimberCommand;
     private final Command DisableAutoTurretCommand;
     private final Command ChangeDrivingSpeedCommand;
+    private final Command DisableStateFalseCommand;
+    private final Command DisableStateTrueCommand;
 
     //===Declare Buttons===//
     private final JoystickButton ParkButton;
@@ -118,10 +120,12 @@ public class RobotContainer {
         ShootBallCommand = new ShootBall(shooter, indexer);
         AutoShootCommand = new AutoShoot(shooter, indexer);
         ManualLiftIntakeCommand = new ManualLiftIntake(intake, aux);
-        RunClimberCommand = new RunClimber(null);
+        RunClimberCommand = new RunClimber(climber);
         ManualClimberCommand = new ManualClimber(climber, aux);
         DisableAutoTurretCommand = new DisableAutoTurret();
         ChangeDrivingSpeedCommand = new ChangeDrivingSpeed();
+        DisableStateTrueCommand = new DisableState(true);
+        DisableStateFalseCommand = new DisableState(false);
 
         // Set Default Commands For Subsystems
         turret.setDefaultCommand(AutoTurretCommand);
@@ -129,11 +133,11 @@ public class RobotContainer {
         climber.setDefaultCommand(ManualClimberCommand);
 
         // Register named commands for PathPlanner
-        NamedCommands.registerCommand("Intake", RunIntakeCommand);
+        /*NamedCommands.registerCommand("Intake", RunIntakeCommand);
         NamedCommands.registerCommand("Shoot", AutoShootCommand);
         NamedCommands.registerCommand("Lift Intake", LiftIntakeCommand);
         NamedCommands.registerCommand("Climb", RunClimberCommand);
-
+        */
         // Set field centric drive
         drivetrain.seedFieldCentric();
 
@@ -176,7 +180,7 @@ public class RobotContainer {
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // Reset the field-centric heading on left bumper press.
-        //joystick.x().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        joystick.x().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         //joystick.y().whileTrue(RunIntakeCommand);
 
         drivetrain.registerTelemetry(logger::telemeterize);
@@ -192,6 +196,10 @@ public class RobotContainer {
         //Subsystem Buttons on Aux Controller
         aux.x().onTrue(LiftIntakeCommand);
         aux.b().onTrue(RunClimberCommand);
+
+        //OI Buttons
+        DisableStateButton.onTrue(DisableStateTrueCommand);
+        DisableStateButton.onFalse(DisableStateFalseCommand);
 
     }
     
@@ -224,6 +232,9 @@ public class RobotContainer {
      */
     public void UpdateStatus() {
         SmartDashboard.putNumber("TX", LimelightHelpers.getTX("limelight-turret"));
+        SmartDashboard.putNumber("Inake Angle", intake.getPosition());
+        SmartDashboard.putNumber("Climber Pos", climber.getPosition());
+        SmartDashboard.putNumber("Turret Angle", turret.getPosition());
     }
 
     /**

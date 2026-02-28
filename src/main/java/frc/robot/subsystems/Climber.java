@@ -121,6 +121,10 @@ public class Climber extends SubsystemBase {
     return rotorPosSignal.getValueAsDouble();
    }
 
+   public void setSafety(){
+    
+   }
+
 
   /**
   * Halt climber motor

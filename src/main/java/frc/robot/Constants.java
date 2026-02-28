@@ -7,7 +7,7 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.config.PIDConstants;
+//import com.pathplanner.lib.config.PIDConstants;
 import com.ctre.phoenix6.CANBus;
 
 /**
@@ -45,8 +45,8 @@ public final class Constants {
     public static double RotationalSpeedFast = 2 * Math.PI;
 
     // PathPlanner constants
-    public static final PIDConstants translationConstants = new PIDConstants(4.5, 0.0, 0.0);
-    public static final PIDConstants rotationConstants = new PIDConstants(1.5, 0.0, 0.0);
+    //public static final PIDConstants translationConstants = new PIDConstants(4.5, 0.0, 0.0);
+    //public static final PIDConstants rotationConstants = new PIDConstants(1.5, 0.0, 0.0);
 
     // General drive constants
     public static final double GyroCorrection = 0;
@@ -63,12 +63,13 @@ public final class Constants {
 
     // Set general constants
     public static final double kDutyCycleDeadband = 0.001;
+    public static boolean isDisableState = false;
 
     // Set climber constants
     public static final double kClimberDown = 0;
-    public static final double kClimberUp = 100; //Edit this to be the encoder vaue when the climber is raised
+    public static final double kClimberUp = 112; //Actual encode value at max height is 110
     public static final int CLIMBER_LIMIT_SWITCH = 2;
-    public static boolean isClimberUp = true;
+    public static boolean isClimberUp = false;
     public static final double kClimberSpeedFactor = 0.5;
     
     // Set shooter constants
@@ -91,9 +92,9 @@ public final class Constants {
    
     //Set intake constants
     public static final double kIntakeUp = 0;
-    public static final double kIntakeDown = 100; //Edit this to be the encoder value when the intake is lowered
+    public static final double kIntakeDown = 11.24; // Exact value
     public static boolean isIntakeUp = true;
-    public static final double kIntakeSpeedFactor = 0.1;
+    public static final double kIntakeSpeedFactor = 0.2;
 
     //Set turret constants
     public static final int TURRET = 9;
@@ -102,9 +103,9 @@ public final class Constants {
     public static final double kTurretEncoderPPR = 10.5;
     public static final int TURRET_LIMIT_SWITCH  = 2;
 
-    public static final double kTurretMinAngle = -90;
-    public static final double kTurretMaxAngle = 90;
-        //0 is centered
+    public static final double kTurretMinAngle = -3.239;
+    public static final double kTurretMaxAngle = .3789;
+        //0 is facing to the climber side of the bot parallel with the front and back frame stock
 
     public static final double kP_Turret = 0.01;
     public static final double kI_Turret = 0.0000;
@@ -123,7 +124,7 @@ public final class Constants {
     public static final double kTurretSpeedManual = 0.10;//positive is counterclockwise
     public static final double kTurretSpeedAuto = 1.0;
     public static final double kTurretSpeedLock = 0.0625;
-    public static final double kIndexerSpeed = -0.5;
+    public static final double kIndexerSpeed = 1;
 
     public static boolean isTurretEnabled = true;
 
@@ -201,7 +202,7 @@ public final class Constants {
 
     // CANBus variables
     public static final CANBus kDriveBus = new CANBus("rio");
-    public static final CANBus kMechBus = new CANBus("mechanisms");
+    public static final CANBus kMechBus = new CANBus("Mechanisms");
 
   }
 
