@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import org.photonvision.*;
+//import org.photonvision.*;
 
 import frc.robot.Constants.GeneralConstants;
 
@@ -41,7 +41,7 @@ public class Shooter extends SubsystemBase {
   private TalonFX hoodMotor;
 
   // Declare shooter camera
-  PhotonCamera shooterCamera;
+  //PhotonCamera shooterCamera;
 
 
 
@@ -82,7 +82,7 @@ public class Shooter extends SubsystemBase {
     hoodMotor = new TalonFX(hoodMotorID, GeneralConstants.kMechBus);
 
     // Create shooter camera
-    shooterCamera = new PhotonCamera("shootercamera");
+    //shooterCamera = new PhotonCamera("shootercamera");
 
     // Initialize motors
     InitializeMotors();

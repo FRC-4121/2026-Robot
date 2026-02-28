@@ -17,6 +17,7 @@ public class RunIntake extends Command {
   public RunIntake(Intake intake, double speed) {
     
     myIntake = intake;
+    this.speed = speed;
     addRequirements(myIntake);
 
   }

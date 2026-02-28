@@ -15,7 +15,7 @@ import frc.robot.LimelightHelpers;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import org.photonvision.PhotonCamera;
+//import org.photonvision.PhotonCamera;
 
 import frc.robot.Constants.*;
 
@@ -34,7 +34,7 @@ public class Turret extends SubsystemBase {
   // Declare motor variables
   private TalonFX turretMotor;
 
-  private PhotonCamera turretCam;
+  //private PhotonCamera turretCam;
 
   /**
    * Create a new Turret
@@ -45,7 +45,7 @@ public class Turret extends SubsystemBase {
     turretMotor =  new TalonFX(turretMotorID, GeneralConstants.kMechBus);
 
     //Create a new turret camera
-    turretCam = new PhotonCamera("turretcamera");
+    //turretCam = new PhotonCamera("turretcamera");
 
     // Initialize the motor
     InitializeMotor();

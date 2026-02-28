@@ -74,9 +74,9 @@ public class ManualClimber extends Command {
     currentPosition = myClimber.getPosition();
 
     // Only move the climber if not already at the extremes
-    if (currentPosition > MechanismConstants.kClimberUp && climbSpeed < 0) {
+    if (currentPosition > MechanismConstants.kClimberUp && climbSpeed > 0 && !MechanismConstants.isDisableState) {
       myClimber.manualRunClimber(0);
-    } else if (currentPosition < MechanismConstants.kClimberDown && climbSpeed > 0) {
+    } else if (currentPosition < MechanismConstants.kClimberDown && climbSpeed < 0 && !MechanismConstants.isDisableState) {
       myClimber.manualRunClimber(0);
     } else {
       myClimber.manualRunClimber(climbSpeed * MechanismConstants.kClimberSpeedFactor);

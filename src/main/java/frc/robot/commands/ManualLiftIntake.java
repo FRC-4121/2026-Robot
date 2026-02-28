@@ -69,15 +69,15 @@ public class ManualLiftIntake extends Command {
   public void execute() {
    
     // Get the joystick position and convert to speed
-    intakeSpeed = speedLimiter.calculate(MathUtil.applyDeadband(-myController.getLeftY(), 0.01)) * ControlConstants.kJoystickSpeedCorr;
+    intakeSpeed = speedLimiter.calculate(MathUtil.applyDeadband(myController.getLeftY(), 0.01)) * ControlConstants.kJoystickSpeedCorr;
 
     // Get current position of intake
     currentPosition = myIntake.getPosition();
 
     // Only move the intake if not already at the extremes
-    if(currentPosition > MechanismConstants.kIntakeUp && intakeSpeed < 0) {
+    if(currentPosition < MechanismConstants.kIntakeUp && intakeSpeed < 0 && !MechanismConstants.isDisableState) {
         myIntake.manualIntakeLift(0);
-      } else if (currentPosition < MechanismConstants.kIntakeDown && intakeSpeed > 0) {
+      } else if (currentPosition > MechanismConstants.kIntakeDown && intakeSpeed > 0 && !MechanismConstants.isDisableState) {
         myIntake.manualIntakeLift(0);
       } else {
         myIntake.manualIntakeLift(intakeSpeed * MechanismConstants.kIntakeSpeedFactor);
