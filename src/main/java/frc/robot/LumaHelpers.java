@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.math.util.Units;
 
@@ -24,7 +25,7 @@ public class LumaHelpers {
     /**
      * Blue side hub April Tags (shooting side only)
      */
-    private static final int[] blueTags = {18, 21, 24, 25, 26, 27};
+    private static final int[] blueTags = {18, 21, 24, 26, 27};
     private static final int[] blueMidTags = {18, 21, 26};
 
     /**
@@ -57,9 +58,9 @@ public class LumaHelpers {
         // Get the correct hub tags based on current alliance
         int[] hubTags = {};
         if (bluealliance) {
-            hubTags = blueMidTags;
+            hubTags = blueTags;
         } else {
-            hubTags = redMidTags;
+            hubTags = redTags;
         }
 
         // Get the latest results from the camera pipeline
@@ -128,6 +129,11 @@ public class LumaHelpers {
             }
 
         }
+
+        //Smart Dashboard values
+        SmartDashboard.putNumber("tags found", numTagsFound);
+        SmartDashboard.putNumber("hub yaw", avgYaw);
+        SmartDashboard.putNumber("hub dist", avgDistance);
 
         // Return target info
         return targetInfo;  

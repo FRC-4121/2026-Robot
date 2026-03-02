@@ -53,6 +53,7 @@ public final class Constants {
 
     // Fast / Slow Mode Constants
     public static double slowModeMultiplier = 1;
+    public static double slowModeAngularMultiplier = 1;
 
   }
 
@@ -79,13 +80,28 @@ public final class Constants {
     public static final double kP_Shoot = 0.00015; //was 0.1
     public static final double kI_Shoot = 0.0000;
     public static final double kD_Shoot = 0;
-    public static final double kF_Shoot = -1;
+    public static final double kS_Shoot = 0;
+    public static final double kV_Shoot = 0;
+    public static final double kA_Shoot = 0;
+    public static final double kG_Shoot = 0;
 
     public static final int kPIDLoopIdxShoot = 0;
     public static final int kTimeoutMsShoot = 20;
     public static final int kShooterMaxRPM = 6100;
 
     public static final double kShooterSpeed = -1.0;
+
+    public static final double kP_Hood = 3.2;
+    public static final double kI_Hood = 1;
+    public static final double kD_Hood = 0.01;
+    public static final double kS_Hood = 0;
+    public static final double kV_Hood = 0;
+    public static final double kA_Hood = 0;
+    public static final double kG_Hood = 0;
+    
+    public static final double kHoodLowPos = 0;
+    public static final double kHoodHighPos = 0.15;
+    public static final double kHoodShuttlePos = 0.3;
 
     // Set hopper/indexer constants
 
@@ -104,7 +120,7 @@ public final class Constants {
     public static final int TURRET_LIMIT_SWITCH  = 2;
 
     public static final double kTurretMinAngle = -3.239;
-    public static final double kTurretMaxAngle = .3789;
+    public static final double kTurretMaxAngle = .35;
         //0 is facing to the climber side of the bot parallel with the front and back frame stock
 
     public static final double kP_Turret = 0.01;
@@ -125,6 +141,10 @@ public final class Constants {
     public static final double kTurretSpeedAuto = 1.0;
     public static final double kTurretSpeedLock = 0.0625;
     public static final double kIndexerSpeed = 1;
+
+    public static final double kTurretCameraHeight = .4699;
+    public static final double kTargetHeight = 1.8288;
+    public static final double kTurretCameraAngle = 30;
 
     public static boolean isTurretEnabled = true;
 

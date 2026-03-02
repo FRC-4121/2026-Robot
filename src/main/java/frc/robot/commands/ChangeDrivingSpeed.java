@@ -21,8 +21,10 @@ public class ChangeDrivingSpeed extends Command {
     //Uses the button to switch between fast and slow mode by add a multiplier to the velocity calculation in robotContainer
     if (DriveConstants.slowModeMultiplier == 1) {
       DriveConstants.slowModeMultiplier = 0.25;
+      DriveConstants.slowModeAngularMultiplier = .5;
     } else {
       DriveConstants.slowModeMultiplier = 1;
+      DriveConstants.slowModeAngularMultiplier = 1;
     }
 
   }

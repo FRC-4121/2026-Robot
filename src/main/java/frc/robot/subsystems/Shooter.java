@@ -17,6 +17,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,7 +26,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 //import org.photonvision.*;
 
-import frc.robot.Constants.GeneralConstants;
+import frc.robot.Constants.*;
 
 /**
  * Define the Shooter subsystem
@@ -109,13 +110,13 @@ public class Shooter extends SubsystemBase {
 
     // Set shooter motor PID constants
     var slot0Configs = shooterConfigs.Slot0;
-    slot0Configs.kG = shooter_kG;
-    slot0Configs.kS = shooter_kS;
-    slot0Configs.kV = shooter_kV;
-    slot0Configs.kA = shooter_kA;
-    slot0Configs.kP = shooter_kP;
-    slot0Configs.kI = shooter_kI;
-    slot0Configs.kD = shooter_kD;
+    slot0Configs.kG = MechanismConstants.kG_Shoot;
+    slot0Configs.kS = MechanismConstants.kS_Shoot;
+    slot0Configs.kV = MechanismConstants.kV_Shoot;
+    slot0Configs.kA = MechanismConstants.kA_Shoot;
+    slot0Configs.kP = MechanismConstants.kP_Shoot;
+    slot0Configs.kI = MechanismConstants.kI_Shoot;
+    slot0Configs.kD = MechanismConstants.kD_Shoot;
 
     // Set MotionMagic constants
     var motionMagicConfigs = shooterConfigs.MotionMagic;
@@ -148,13 +149,13 @@ public class Shooter extends SubsystemBase {
 
     // Set hood motor PID constants
     var hoodSlot0Configs = hoodConfigs.Slot0;
-    hoodSlot0Configs.kG = hood_kG;
-    hoodSlot0Configs.kS = hood_kS;
-    hoodSlot0Configs.kV = hood_kV;
-    hoodSlot0Configs.kA = hood_kA;
-    hoodSlot0Configs.kP = hood_kP;
-    hoodSlot0Configs.kI = hood_kI;
-    hoodSlot0Configs.kD = hood_kD;
+    hoodSlot0Configs.kG = MechanismConstants.kG_Hood;
+    hoodSlot0Configs.kS = MechanismConstants.kS_Hood;
+    hoodSlot0Configs.kV = MechanismConstants.kV_Hood;
+    hoodSlot0Configs.kA = MechanismConstants.kA_Hood;
+    hoodSlot0Configs.kP = MechanismConstants.kP_Hood;
+    hoodSlot0Configs.kI = MechanismConstants.kI_Hood;
+    hoodSlot0Configs.kD = MechanismConstants.kD_Hood;
 
     // Apply hood motor configs and initialize position to 0
     StatusCode hoodStatus = hoodMotor.getConfigurator().apply(hoodConfigs, 0.050);
@@ -195,9 +196,11 @@ public class Shooter extends SubsystemBase {
 
   /**
    *  Runs hood motor
+   * 
+   * @param position The desired position of the hood
    */
   public void runHood(double position) {
-    hoodMotor.setControl(new PositionVoltage(position));
+    hoodMotor.setControl(new PositionDutyCycle(position));
   }
 
  /**
@@ -216,6 +219,7 @@ public double getHoodPosition() {
   return hoodMotor.getPosition().getValueAsDouble();
 
 }
+
 
 /**
  * Get yaw 

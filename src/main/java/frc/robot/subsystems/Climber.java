@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.PositionVoltage;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -99,7 +100,14 @@ public class Climber extends SubsystemBase {
    * @param climberPos  Position target for the climber
    */
   public void runClimberToPos(double climberPos){
-    climberMotor.setControl(new PositionVoltage(climberPos));
+    climberMotor.setControl(new PositionDutyCycle(climberPos));
+  }
+
+  /**
+   * Zeros Climber Encoder
+   */
+  public void zeroClimber(){
+    climberMotor.getConfigurator().setPosition(0);
   }
   
   /**

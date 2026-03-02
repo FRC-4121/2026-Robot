@@ -56,9 +56,11 @@ public class RobotContainer {
     private final Command RunClimberCommand;
     private final Command ManualClimberCommand;
     private final Command DisableAutoTurretCommand;
+    private final Command EnableAutoTurretCommand;
     private final Command ChangeDrivingSpeedCommand;
     private final Command DisableStateFalseCommand;
     private final Command DisableStateTrueCommand;
+    private final Command ZeroEncodersCommand;
 
     //===Declare Buttons===//
     private final JoystickButton ParkButton;
@@ -69,8 +71,8 @@ public class RobotContainer {
     private final JoystickButton ShootingModeButton;
 
     //===Swerve Drive Variables===//
-    private double MaxSpeed = 0.25 * DriveConstants.slowModeMultiplier *TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * DriveConstants.slowModeMultiplier; // kSpeedAt12Volts desired top speed
+    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond)  * DriveConstants.slowModeAngularMultiplier; // 3/4 of a rotation per second max angular velocity
 
     //===Swerve Drive Bindings===//
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -113,8 +115,8 @@ public class RobotContainer {
 
         //Initialize Commands
         RunIntakeCommand = new RunIntake(intake, -0.75);
-        RunTurretRightCommand = new ManualTurret(turret, .06);
-        RunTurretLeftCommand = new ManualTurret(turret, -.06);
+        RunTurretRightCommand = new ManualTurret(turret, -.1);
+        RunTurretLeftCommand = new ManualTurret(turret, .1);
         AutoTurretCommand = new AutoTurret(turret);
         LiftIntakeCommand = new LiftIntake(intake);
         ShootBallCommand = new ShootBall(shooter, indexer);
@@ -122,10 +124,13 @@ public class RobotContainer {
         ManualLiftIntakeCommand = new ManualLiftIntake(intake, aux);
         RunClimberCommand = new RunClimber(climber);
         ManualClimberCommand = new ManualClimber(climber, aux);
-        DisableAutoTurretCommand = new DisableAutoTurret();
+        DisableAutoTurretCommand = new DisableAutoTurret(false);
+        EnableAutoTurretCommand = new DisableAutoTurret(true);
         ChangeDrivingSpeedCommand = new ChangeDrivingSpeed();
         DisableStateTrueCommand = new DisableState(true);
         DisableStateFalseCommand = new DisableState(false);
+        ZeroEncodersCommand = new ZeroEncoders(intake, turret, climber);
+
 
         // Set Default Commands For Subsystems
         turret.setDefaultCommand(AutoTurretCommand);
@@ -155,9 +160,9 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed * DriveConstants.slowModeMultiplier) // Drive forward with negative Y (forward)
+                    .withVelocityY(-joystick.getLeftX() * MaxSpeed * DriveConstants.slowModeMultiplier) // Drive left with negative X (left)
+                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate * DriveConstants.slowModeAngularMultiplier) // Drive counterclockwise with negative X (left)
             )
         );
 
@@ -167,10 +172,6 @@ public class RobotContainer {
         RobotModeTriggers.disabled().whileTrue(
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
-
-        // Park mode for the robot to disable movement and X the wheels
-        ParkButton.whileTrue(drivetrain.applyRequest(() -> brake));
-        DisableAutoTurretButton.whileTrue(DisableAutoTurretCommand);
         
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -200,6 +201,10 @@ public class RobotContainer {
         //OI Buttons
         DisableStateButton.onTrue(DisableStateTrueCommand);
         DisableStateButton.onFalse(DisableStateFalseCommand);
+        ZeroEncodersButton.onTrue(ZeroEncodersCommand);
+        ParkButton.whileTrue(drivetrain.applyRequest(() -> brake));
+        DisableAutoTurretButton.onTrue(DisableAutoTurretCommand);
+        DisableAutoTurretButton.onFalse(EnableAutoTurretCommand);
 
     }
     
@@ -231,10 +236,11 @@ public class RobotContainer {
      * Update target yaw from limelight camera
      */
     public void UpdateStatus() {
-        SmartDashboard.putNumber("TX", LimelightHelpers.getTX("limelight-turret"));
-        SmartDashboard.putNumber("Inake Angle", intake.getPosition());
-        SmartDashboard.putNumber("Climber Pos", climber.getPosition());
-        SmartDashboard.putNumber("Turret Angle", turret.getPosition());
+        //SmartDashboard.putNumber("TX", LimelightHelpers.getTX("limelight-turret"));
+        //SmartDashboard.putNumber("Inake Angle", intake.getPosition());
+        //SmartDashboard.putNumber("Climber Pos", climber.getPosition());
+        //SmartDashboard.putNumber("Turret Angle", turret.getPosition());
+        turret.getHubInfo();
     }
 
     /**

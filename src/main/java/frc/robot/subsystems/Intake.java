@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.PositionVoltage;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -156,7 +157,14 @@ public class Intake extends SubsystemBase {
    * @param position desired position of the intake
    */
   public void runIntakeLift(double position) {
-    intakeLift.setControl(new PositionVoltage(position));
+    intakeLift.setControl(new PositionDutyCycle(position));
+  }
+
+  /**
+   * Zeros intake lift position
+   */
+  public void zeroIntakeLift() {
+    intakeLift.getConfigurator().setPosition(0);
   }
 
  /**

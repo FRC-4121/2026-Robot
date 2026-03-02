@@ -11,6 +11,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GeneralConstants;
+import org.photonvision.PhotonCamera;
 
 /**
  * Define the Ball Indexer subsystem
@@ -26,6 +27,8 @@ public class Indexer extends SubsystemBase{
 
   // Declare motor variable
   private TalonFX indexerMotor;
+
+  private PhotonCamera hopperCam;
 
   // Declare Phoenix PID controller gains
   private double indexer_kG = 0.0;
@@ -46,6 +49,9 @@ public class Indexer extends SubsystemBase{
 
     // Configure the motors
     InitializeMotor();
+
+    //Create a new indexer camera
+    hopperCam = new PhotonCamera("hoppercam");
 
   }
 

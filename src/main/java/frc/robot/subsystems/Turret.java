@@ -15,9 +15,10 @@ import frc.robot.LimelightHelpers;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-//import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonCamera;
 
 import frc.robot.Constants.*;
+import frc.robot.LumaHelpers;
 
 /**
  * Define the Turret subsystem
@@ -34,7 +35,7 @@ public class Turret extends SubsystemBase {
   // Declare motor variables
   private TalonFX turretMotor;
 
-  //private PhotonCamera turretCam;
+  private PhotonCamera turretCam;
 
   /**
    * Create a new Turret
@@ -45,7 +46,7 @@ public class Turret extends SubsystemBase {
     turretMotor =  new TalonFX(turretMotorID, GeneralConstants.kMechBus);
 
     //Create a new turret camera
-    //turretCam = new PhotonCamera("turretcamera");
+    turretCam = new PhotonCamera("turretcamera");
 
     // Initialize the motor
     InitializeMotor();
@@ -98,6 +99,10 @@ public class Turret extends SubsystemBase {
     turretMotor.stopMotor();
   }
 
+  public void zeroTurret(){
+    turretMotor.getConfigurator().setPosition(0);
+  }
+
   /**
    * Gets current position of encoder 
    * 
@@ -120,14 +125,20 @@ public class Turret extends SubsystemBase {
    * 
    * @return The current target offset
    */
-  public double GetOffset() {
-    return LimelightHelpers.getTX("limelight-turret");
+  public void getHubInfo() {
+
+    double[] hubInfo = LumaHelpers.getHubTargetInfo(turretCam, 
+                                        Mutables.blueAlliance, 
+                                        MechanismConstants.kTurretCameraHeight, 
+                                        MechanismConstants.kTurretCameraAngle, 
+                                        MechanismConstants.kTargetHeight);
+
   }
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber("turret Pos", getPosition());
-
+    getHubInfo();
   }
 
 }

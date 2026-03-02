@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.MechanismConstants;
 import frc.robot.subsystems.Turret;
 
 /**
@@ -59,16 +60,16 @@ public class ManualTurret extends Command {
 
     // Get the current position of the turret
     currentPosition = myTurret.getPosition();
-
+    if(!MechanismConstants.isTurretEnabled) {
     // Only move the turret if not already at the extremes
-    if (currentPosition > upperLimit && value < 0) {
-      myTurret.runTurret(0);
-    } else if (currentPosition < lowerLimit && value > 0) {
-      myTurret.runTurret(0);
-    } else {
-      myTurret.runTurret(value);
+      if (currentPosition > MechanismConstants.kTurretMaxAngle && value > 0 && !MechanismConstants.isDisableState) {
+        myTurret.runTurret(0);
+      } else if (currentPosition < MechanismConstants.kTurretMinAngle && value < 0 && !MechanismConstants.isDisableState) {
+        myTurret.runTurret(0);
+      } else {
+        myTurret.runTurret(value);
+      }
     }
-
   }
 
   /**

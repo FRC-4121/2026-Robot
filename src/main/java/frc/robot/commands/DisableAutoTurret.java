@@ -10,8 +10,12 @@ import frc.robot.Constants.MechanismConstants;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DisableAutoTurret extends Command {
 
+  private boolean myAutoTurretStatus;
+
   /** Creates a new DisableTurret. */
-  public DisableAutoTurret() {
+  public DisableAutoTurret(boolean autoTurretStatus) {
+
+    myAutoTurretStatus = autoTurretStatus;
 
   }
 
@@ -23,11 +27,7 @@ public class DisableAutoTurret extends Command {
   @Override
   public void execute() {
 
-    if(MechanismConstants.isTurretEnabled){
-      MechanismConstants.isTurretEnabled = false;
-    } else{
-      MechanismConstants.isTurretEnabled = true;
-    }
+    MechanismConstants.isTurretEnabled = myAutoTurretStatus;
 
   }
 
