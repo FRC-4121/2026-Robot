@@ -77,7 +77,7 @@ public final class Constants {
     public static final int SHOOTER_LEAD = 1;
     public static final int SHOOTER_FOLLOW = 0;
 
-    public static final double kP_Shoot = 0.00015; //was 0.1
+    public static final double kP_Shoot = 1; //was 0.1 //for Jackson only: .00015
     public static final double kI_Shoot = 0.0000;
     public static final double kD_Shoot = 0;
     public static final double kS_Shoot = 0;

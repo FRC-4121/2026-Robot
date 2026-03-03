@@ -106,7 +106,7 @@ public class ManualLiftIntake extends Command {
   public boolean isFinished() {
 
     // Returning false means command will never end
-    return false;
+    return true;
 
   }
 }

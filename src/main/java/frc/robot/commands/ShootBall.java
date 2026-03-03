@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.math.*;
 
 import frc.robot.Constants.MechanismConstants;
 
@@ -61,7 +62,7 @@ public class ShootBall extends Command {
     myShooter.runShooter(targetVelocity);
     double shooterVelocity = myShooter.getShooterVelocity();
 
-    if (shooterVelocity > percentVelocity * targetVelocity) {
+    if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * targetVelocity)) {
       myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);  
     }
   }
@@ -70,8 +71,8 @@ public class ShootBall extends Command {
   @Override
   public void end(boolean interrupted) {
 
-    myShooter.runShooter(0);
-    myIndexer.runIndexer(0);
+    myShooter.stopShooter();
+    myIndexer.stopIndexer();
     myShooter.runHood(MechanismConstants.kHoodLowPos);
   }
 

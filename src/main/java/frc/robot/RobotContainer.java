@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-//import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import frc.robot.subsystems.*;
@@ -138,11 +138,11 @@ public class RobotContainer {
         climber.setDefaultCommand(ManualClimberCommand);
 
         // Register named commands for PathPlanner
-        /*NamedCommands.registerCommand("Intake", RunIntakeCommand);
+        NamedCommands.registerCommand("Intake", RunIntakeCommand);
         NamedCommands.registerCommand("Shoot", AutoShootCommand);
         NamedCommands.registerCommand("Lift Intake", LiftIntakeCommand);
         NamedCommands.registerCommand("Climb", RunClimberCommand);
-        */
+        
         // Set field centric drive
         drivetrain.seedFieldCentric();
 
