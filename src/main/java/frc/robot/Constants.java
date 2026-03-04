@@ -103,6 +103,8 @@ public final class Constants {
     public static final double kHoodHighPos = 0.15;
     public static final double kHoodShuttlePos = 0.3;
 
+    public static boolean isShooterMode = true;
+
     // Set hopper/indexer constants
 
    
@@ -142,11 +144,11 @@ public final class Constants {
     public static final double kTurretSpeedLock = 0.0625;
     public static final double kIndexerSpeed = 1;
 
-    public static final double kTurretCameraHeight = .4699;
-    public static final double kTargetHeight = 1.8288;
+    public static final double kTurretCameraHeight = .530;
+    public static final double kTargetHeight = 1.143;
     public static final double kTurretCameraAngle = 30;
 
-    public static boolean isTurretEnabled = true;
+    public static boolean isTurretEnabled = false;
 
   }
 

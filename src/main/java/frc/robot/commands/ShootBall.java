@@ -58,12 +58,27 @@ public class ShootBall extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    targetVelocity = -50;
-    myShooter.runShooter(targetVelocity);
-    double shooterVelocity = myShooter.getShooterVelocity();
 
-    if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * targetVelocity)) {
-      myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);  
+    if (MechanismConstants.isShooterMode) {
+
+      targetVelocity = -50;
+      myShooter.runShooter(targetVelocity);
+      double shooterVelocity = myShooter.getShooterVelocity();
+
+      if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * targetVelocity)) {
+        myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+      }
+
+    } else {
+
+      targetVelocity = -30;
+      myShooter.runShooter(targetVelocity);
+      double shooterVelocity = myShooter.getShooterVelocity();
+
+      if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * targetVelocity)) {
+        myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+      }
+      
     }
   }
 

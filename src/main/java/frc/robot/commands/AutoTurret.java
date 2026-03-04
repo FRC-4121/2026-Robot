@@ -47,15 +47,15 @@ public class AutoTurret extends Command {
   @Override
   public void initialize() {
 
-    speed = -0.5;
-    m_kP = 1;
+    speed = -0.1;
+    m_kP = .075;
     m_kI = 0;
-    m_kD = 0;
-    upperLimit = 1.7;
-    lowerLimit = -1.7;
+    m_kD = .0002;
+    upperLimit = MechanismConstants.kTurretMaxAngle;
+    lowerLimit = MechanismConstants.kTurretMinAngle;
 
     m_myPIDControl = new PIDController(m_kP, m_kI, m_kD);
-    m_myPIDControl.setTolerance(0.01);
+    m_myPIDControl.setTolerance(0.05);
 
     currentPosition = myTurret.getPosition();
 
@@ -65,9 +65,11 @@ public class AutoTurret extends Command {
   @Override
   public void execute() {
 
+    double[] hubInfo = myTurret.getHubInfo();
+
     if (MechanismConstants.isTurretEnabled) {
 
-      offset = LimelightHelpers.getTX("limelight-turret") / 100;
+      offset = -hubInfo[0];
       double output = m_myPIDControl.calculate(offset, 0);
       currentPosition = myTurret.getPosition();
 
@@ -76,7 +78,7 @@ public class AutoTurret extends Command {
       } else if (currentPosition < lowerLimit && output > 0) {
         myTurret.runTurret(0);
       } else {
-        myTurret.runTurret(-output * speed);
+        myTurret.runTurret(output * speed);
       }
 
       SmartDashboard.putNumber("PID Output", output);

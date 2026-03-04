@@ -61,6 +61,8 @@ public class RobotContainer {
     private final Command DisableStateFalseCommand;
     private final Command DisableStateTrueCommand;
     private final Command ZeroEncodersCommand;
+    private final Command ShooterModeCommand;
+    private final Command ShuttleModeCommand;
 
     //===Declare Buttons===//
     private final JoystickButton ParkButton;
@@ -130,6 +132,8 @@ public class RobotContainer {
         DisableStateTrueCommand = new DisableState(true);
         DisableStateFalseCommand = new DisableState(false);
         ZeroEncodersCommand = new ZeroEncoders(intake, turret, climber);
+        ShooterModeCommand = new ChangeShootingMode(true);
+        ShuttleModeCommand = new ChangeShootingMode(false);
 
 
         // Set Default Commands For Subsystems
@@ -148,6 +152,8 @@ public class RobotContainer {
 
         // Bind commands to buttons
         configureBindings();
+
+        turret.getHubInfo();
     }
 
     /** 
@@ -205,6 +211,8 @@ public class RobotContainer {
         ParkButton.whileTrue(drivetrain.applyRequest(() -> brake));
         DisableAutoTurretButton.onTrue(DisableAutoTurretCommand);
         DisableAutoTurretButton.onFalse(EnableAutoTurretCommand);
+        ShootingModeButton.onTrue(ShooterModeCommand);
+        ShootingModeButton.onFalse(ShuttleModeCommand);
 
     }
     
@@ -240,7 +248,7 @@ public class RobotContainer {
         //SmartDashboard.putNumber("Inake Angle", intake.getPosition());
         //SmartDashboard.putNumber("Climber Pos", climber.getPosition());
         //SmartDashboard.putNumber("Turret Angle", turret.getPosition());
-        turret.getHubInfo();
+        //turret.getHubInfo();
     }
 
     /**

@@ -46,7 +46,7 @@ public class Turret extends SubsystemBase {
     turretMotor =  new TalonFX(turretMotorID, GeneralConstants.kMechBus);
 
     //Create a new turret camera
-    turretCam = new PhotonCamera("turretcamera");
+    turretCam = new PhotonCamera("turretcam");
 
     // Initialize the motor
     InitializeMotor();
@@ -125,7 +125,7 @@ public class Turret extends SubsystemBase {
    * 
    * @return The current target offset
    */
-  public void getHubInfo() {
+  public double[] getHubInfo() {
 
     double[] hubInfo = LumaHelpers.getHubTargetInfo(turretCam, 
                                         Mutables.blueAlliance, 
@@ -133,12 +133,18 @@ public class Turret extends SubsystemBase {
                                         MechanismConstants.kTurretCameraAngle, 
                                         MechanismConstants.kTargetHeight);
 
+    SmartDashboard.putNumber("tags found", hubInfo[2]);
+    SmartDashboard.putNumber("hub yaw", hubInfo[0]);
+    SmartDashboard.putNumber("hub dist", hubInfo[1]);
+
+    return hubInfo;
+
   }
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber("turret Pos", getPosition());
-    getHubInfo();
+    //getHubInfo();
   }
 
 }

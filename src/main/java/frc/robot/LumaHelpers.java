@@ -48,7 +48,7 @@ public class LumaHelpers {
     public static double[] getHubTargetInfo(PhotonCamera camera, boolean bluealliance, double camheight, double camangle, double targetheight){
         
         // Initialize local variables
-        double[] targetInfo = {0, 0};
+        double[] targetInfo = {0, 0, 0};
         double yawSum = 0.0;
         double distanceSum = 0.0;
         int numTagsFound = 0;
@@ -124,20 +124,15 @@ public class LumaHelpers {
                     // Update target info array
                     targetInfo[0] = avgYaw;
                     targetInfo[1] = avgDistance;
+                    targetInfo[2] = numTagsFound;
 
                 }
             }
 
         }
 
-        //Smart Dashboard values
-        SmartDashboard.putNumber("tags found", numTagsFound);
-        SmartDashboard.putNumber("hub yaw", avgYaw);
-        SmartDashboard.putNumber("hub dist", avgDistance);
-
         // Return target info
         return targetInfo;  
-
     }
 
     /**
