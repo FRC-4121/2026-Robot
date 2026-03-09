@@ -78,12 +78,24 @@ public final class Constants {
     public static final int SHOOTER_FOLLOW = 0;
 
     public static final double kP_Shoot = 1; //was 0.1 //for Jackson only: .00015
-    public static final double kI_Shoot = 0.0000;
+    public static final double kI_Shoot = 0;
     public static final double kD_Shoot = 0;
     public static final double kS_Shoot = 0;
     public static final double kV_Shoot = 0;
     public static final double kA_Shoot = 0;
     public static final double kG_Shoot = 0;
+
+    public static final double kP_ShootDouble = 0.55;
+    public static final double kI_ShootDouble = 0.08;
+    public static final double kD_ShootDouble = 0;
+    public static final double kS_ShootDouble = 0;
+    public static final double kV_ShootDouble = 0.12;
+    public static final double kA_ShootDouble = 0;
+    public static final double kG_ShootDouble = 0;
+
+    public static final double kMagicCruise = 100;
+    public static final double kMagicAccel = 100;
+    public static final double kMagicJerk = 1500;
 
     public static final int kPIDLoopIdxShoot = 0;
     public static final int kTimeoutMsShoot = 20;
@@ -91,6 +103,15 @@ public final class Constants {
 
     public static final double kShooterSpeed = -1.0;
 
+    /*public static final double kP_Hood = 0;
+    public static final double kI_Hood = 0;
+    public static final double kD_Hood = 0;
+    public static final double kS_Hood = 0;
+    public static final double kV_Hood = 0;
+    public static final double kA_Hood = 0;
+    public static final double kG_Hood = 0;
+    */
+    
     public static final double kP_Hood = 3.2;
     public static final double kI_Hood = 1;
     public static final double kD_Hood = 0.01;
@@ -99,8 +120,9 @@ public final class Constants {
     public static final double kA_Hood = 0;
     public static final double kG_Hood = 0;
     
+    
     public static final double kHoodLowPos = 0;
-    public static final double kHoodHighPos = 0.15;
+    public static final double kHoodHighPos = 0.2;
     public static final double kHoodShuttlePos = 0.3;
 
     public static boolean isShooterMode = true;
@@ -113,6 +135,12 @@ public final class Constants {
     public static final double kIntakeDown = 11.24; // Exact value
     public static boolean isIntakeUp = true;
     public static final double kIntakeSpeedFactor = 0.2;
+
+    public static final double kP_IntakeLift = 0.06;
+    public static final double kI_IntakeLift = 0;
+    public static final double kD_IntakeLift = 0.005;
+
+    public static boolean stopAutoIntake = false;
 
     //Set turret constants
     public static final int TURRET = 9;
@@ -144,11 +172,15 @@ public final class Constants {
     public static final double kTurretSpeedLock = 0.0625;
     public static final double kIndexerSpeed = 1;
 
-    public static final double kTurretCameraHeight = .530;
-    public static final double kTargetHeight = 1.143;
-    public static final double kTurretCameraAngle = 30;
+    public static final double kTurretCameraHeight = .5207;
+    public static final double kTargetHeight = 1.1176;
+    public static final double kTurretCameraAngle = 25;
 
-    public static boolean isTurretEnabled = false;
+    public static boolean isTurretEnabled = true;
+    public static boolean shuttleTurretStatus = false;
+    public static boolean turretModeSwitch = false;
+
+    public static double targetDistance;
 
   }
 

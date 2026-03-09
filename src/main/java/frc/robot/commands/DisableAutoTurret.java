@@ -17,6 +17,7 @@ public class DisableAutoTurret extends Command {
 
     myAutoTurretStatus = autoTurretStatus;
 
+
   }
 
   // Called when the command is initially scheduled.
@@ -28,6 +29,7 @@ public class DisableAutoTurret extends Command {
   public void execute() {
 
     MechanismConstants.isTurretEnabled = myAutoTurretStatus;
+    MechanismConstants.turretModeSwitch = true;
 
   }
 

@@ -9,6 +9,9 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import org.photonvision.PhotonCamera;
+
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -28,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 //import org.photonvision.*;
 
 import frc.robot.Constants.*;
+import frc.robot.LumaHelpers;
 
 /**
  * Define the Shooter subsystem
@@ -42,8 +46,8 @@ public class Shooter extends SubsystemBase {
   private TalonFX shooterMotor;
   private TalonFX hoodMotor;
 
-  // Declare shooter camera
-  //PhotonCamera shooterCamera;
+  // Declare turret camera
+  private PhotonCamera turretCam;
 
 
 
@@ -71,7 +75,7 @@ public class Shooter extends SubsystemBase {
   private int magic_jerk = 1500;
 
   // Declare motor constants
-  private final double MOTOR_DEADBAND = 0.001; // Deadband for the drive motor. Values smaller than this will be rounded
+  private final double MOTOR_DEADBAND = 0.05; // Deadband for the drive motor. Values smaller than this will be rounded
                                                // to zero
 
   /**
@@ -209,6 +213,27 @@ public class Shooter extends SubsystemBase {
  */
 public void stopHood() {
   hoodMotor.stopMotor();
+}
+
+/**
+ * Get the current target offset from the turret camera
+ * 
+ * @return The current target offset
+ */
+public double[] getHubInfo() {
+
+  double[] hubInfo = LumaHelpers.getHubTargetInfo(turretCam,
+      Mutables.blueAlliance,
+      MechanismConstants.kTurretCameraHeight,
+      MechanismConstants.kTurretCameraAngle,
+      MechanismConstants.kTargetHeight);
+
+  SmartDashboard.putNumber("tags found", hubInfo[2]);
+  SmartDashboard.putNumber("hub yaw", hubInfo[0]);
+  SmartDashboard.putNumber("hub dist", hubInfo[1]);
+
+  return hubInfo;
+
 }
 
 /**

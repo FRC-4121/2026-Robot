@@ -60,15 +60,13 @@ public class ManualTurret extends Command {
 
     // Get the current position of the turret
     currentPosition = myTurret.getPosition();
-    if(!MechanismConstants.isTurretEnabled) {
     // Only move the turret if not already at the extremes
-      if (currentPosition > MechanismConstants.kTurretMaxAngle && value > 0 && !MechanismConstants.isDisableState) {
-        myTurret.runTurret(0);
-      } else if (currentPosition < MechanismConstants.kTurretMinAngle && value < 0 && !MechanismConstants.isDisableState) {
-        myTurret.runTurret(0);
-      } else {
-        myTurret.runTurret(value);
-      }
+    if (currentPosition > MechanismConstants.kTurretMaxAngle && value > 0 && !MechanismConstants.isDisableState) {
+      myTurret.runTurret(0);
+    } else if (currentPosition < MechanismConstants.kTurretMinAngle && value < 0 && !MechanismConstants.isDisableState) {
+      myTurret.runTurret(0);
+    } else {
+      myTurret.runTurret(value);
     }
   }
 

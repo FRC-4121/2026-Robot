@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.*;
 import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -52,7 +51,7 @@ public class ShootBall extends Command {
   @Override
   public void initialize() {
 
-    percentVelocity = 0.95;
+    percentVelocity = 0.8;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -61,7 +60,13 @@ public class ShootBall extends Command {
 
     if (MechanismConstants.isShooterMode) {
 
-      targetVelocity = -50;
+      if (MechanismConstants.targetDistance > 2) {
+        myShooter.runHood(MechanismConstants.kHoodHighPos);
+      } else {
+        myShooter.runHood(MechanismConstants.kHoodLowPos);
+      }
+
+      targetVelocity = -90;
       myShooter.runShooter(targetVelocity);
       double shooterVelocity = myShooter.getShooterVelocity();
 
@@ -71,9 +76,10 @@ public class ShootBall extends Command {
 
     } else {
 
-      targetVelocity = -30;
+      targetVelocity = -80;
       myShooter.runShooter(targetVelocity);
       double shooterVelocity = myShooter.getShooterVelocity();
+      myShooter.runHood(MechanismConstants.kHoodShuttlePos);
 
       if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * targetVelocity)) {
         myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);

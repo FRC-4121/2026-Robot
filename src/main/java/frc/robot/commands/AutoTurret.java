@@ -20,6 +20,7 @@ public class AutoTurret extends Command {
 
   private Turret myTurret;
   private double offset;
+  private double output;
   private double speed;
   private double m_kP;
   private double m_kI;
@@ -48,7 +49,7 @@ public class AutoTurret extends Command {
   public void initialize() {
 
     speed = -0.1;
-    m_kP = .075;
+    m_kP = .05;  //0.075
     m_kI = 0;
     m_kD = .0002;
     upperLimit = MechanismConstants.kTurretMaxAngle;
@@ -67,10 +68,10 @@ public class AutoTurret extends Command {
 
     double[] hubInfo = myTurret.getHubInfo();
 
-    if (MechanismConstants.isTurretEnabled) {
+    if (MechanismConstants.isTurretEnabled && !MechanismConstants.shuttleTurretStatus) {
 
       offset = -hubInfo[0];
-      double output = m_myPIDControl.calculate(offset, 0);
+      output = m_myPIDControl.calculate(offset, 0);
       currentPosition = myTurret.getPosition();
 
       if (currentPosition > upperLimit && output < 0) {
@@ -83,12 +84,17 @@ public class AutoTurret extends Command {
 
       SmartDashboard.putNumber("PID Output", output);
 
+    } else if (MechanismConstants.turretModeSwitch) {
+      myTurret.stopTurret();
+      MechanismConstants.turretModeSwitch = false;
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+
+  }
 
   // Returns true when the command should end.
   @Override

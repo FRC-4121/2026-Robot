@@ -8,16 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.*;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ChangeShootingMode extends Command {
-
-  boolean myShooterMode;
-
-  /** Creates a new ShootShuttleSwitch. */
-  public ChangeShootingMode(boolean ShooterMode) {
+public class ChangeAutoIntake extends Command {
+  /** Creates a new ChangeAutoIntake. */
+  public ChangeAutoIntake() {
     // Use addRequirements() here to declare subsystem dependencies.
-
-    myShooterMode = ShooterMode;
-
   }
 
   // Called when the command is initially scheduled.
@@ -28,9 +22,8 @@ public class ChangeShootingMode extends Command {
   @Override
   public void execute() {
 
-    MechanismConstants.isShooterMode = myShooterMode;
-    MechanismConstants.shuttleTurretStatus = !myShooterMode;
-    
+    MechanismConstants.stopAutoIntake = true;
+
   }
 
   // Called once the command ends or is interrupted.

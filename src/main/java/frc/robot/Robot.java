@@ -51,7 +51,7 @@ public class Robot extends TimedRobot {
             CommandScheduler.getInstance().schedule(m_autonomousCommand);
         }
         
-        //m_robotContainer.getAlliance();
+        m_robotContainer.getAlliance();
 
     }
 

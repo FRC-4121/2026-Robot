@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 0.4257222222190725,
-        "y": 0.6682944444496228
+        "x": 0.5816333333333334,
+        "y": 0.6682944444444445
       },
       "prevControl": {
-        "x": 1.1468111111079624,
-        "y": 0.9849888888940674
+        "x": 1.4781222222222223,
+        "y": 0.7413777777777786
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "R Outpost"
     }
   ],
   "rotationTargets": [],
@@ -41,8 +41,8 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 0.0
+    "velocity": 0.0,
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,

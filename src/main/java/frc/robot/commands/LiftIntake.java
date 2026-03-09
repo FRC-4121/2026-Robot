@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.*;
 import frc.robot.Constants.*;
@@ -12,6 +13,11 @@ import frc.robot.Constants.*;
 public class LiftIntake extends Command {
 
   private Intake myIntake;
+
+  private double currentPosition;
+  private boolean done;
+
+  private PIDController m_myPIDControl;
 
   /** Creates a new LiftIntake. */
   public LiftIntake(Intake intake) {
@@ -25,24 +31,24 @@ public class LiftIntake extends Command {
   @Override
   public void initialize() {
 
-    if (MechanismConstants.isIntakeUp) {
-      MechanismConstants.isIntakeUp = false;
-    } else {
-      MechanismConstants.isIntakeUp = true;
-    }
+    m_myPIDControl = new PIDController(MechanismConstants.kP_IntakeLift, MechanismConstants.kI_IntakeLift, MechanismConstants.kD_IntakeLift);
+    m_myPIDControl.setTolerance(0.05);
+
+    done = false;
 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
- 
-  if (MechanismConstants.isIntakeUp) {
-    myIntake.runIntakeLift(MechanismConstants.kIntakeUp);
-  } else {
-    myIntake.runIntakeLift(MechanismConstants.kIntakeDown);
-  }
 
+    currentPosition = myIntake.getPosition();
+
+    if (currentPosition > (MechanismConstants.kIntakeDown / 2)) {
+      myIntake.runIntakeLift(MechanismConstants.kIntakeUp);
+    } else {
+      myIntake.runIntakeLift(MechanismConstants.kIntakeDown);
+    }
 
   }
 

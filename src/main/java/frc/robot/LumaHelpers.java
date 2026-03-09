@@ -10,7 +10,7 @@ import java.util.HashMap;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import frc.robot.Constants.MechanismConstants;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -125,6 +125,7 @@ public class LumaHelpers {
                     targetInfo[0] = avgYaw;
                     targetInfo[1] = avgDistance;
                     targetInfo[2] = numTagsFound;
+                    MechanismConstants.targetDistance = avgDistance;
 
                 }
             }

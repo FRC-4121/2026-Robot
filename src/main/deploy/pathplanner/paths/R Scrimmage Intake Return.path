@@ -3,45 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.563527777777777,
-        "y": 3.377249999999999
+        "x": 7.6268666666666665,
+        "y": 3.4259722222222218
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.456338888888888,
-        "y": 2.052005555555553
+        "x": 7.451466666666667,
+        "y": 2.5733333333333324
       },
       "isLocked": false,
-      "linkedName": "R Center Intake End"
+      "linkedName": "R Scrim Intake End"
     },
     {
       "anchor": {
-        "x": 6.6962722222222215,
-        "y": 0.9216499999999996
+        "x": 6.218794444444445,
+        "y": 0.7803555555555546
       },
       "prevControl": {
-        "x": 7.32444172848784,
-        "y": 1.3303904321591355
+        "x": 7.066302485782813,
+        "y": 0.918203249026253
       },
       "nextControl": {
-        "x": 5.984927777777777,
-        "y": 0.4587888888888881
+        "x": 5.410005555555556,
+        "y": 0.6488055555555546
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.031166666666667,
-        "y": 0.5562333333333322
+        "x": 3.5877944444444445,
+        "y": 0.6195722222222217
       },
       "prevControl": {
-        "x": 5.078694444444444,
-        "y": 0.6439333333333332
+        "x": 4.401455555555556,
+        "y": 0.6341888888888878
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R Return End"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -58,7 +58,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,

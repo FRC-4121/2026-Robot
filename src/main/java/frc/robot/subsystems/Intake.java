@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.GeneralConstants;
+import frc.robot.Constants.MechanismConstants;
 
 /**
  * Define the Intake subsystem
@@ -122,13 +123,13 @@ public class Intake extends SubsystemBase {
 
     // Set intake lift motor PID constants
     var slot0LiftConfigs = intakeLiftConfigs.Slot0;
-    slot0LiftConfigs.kG = lift_kG;
-    slot0LiftConfigs.kS = lift_kS;
-    slot0LiftConfigs.kV = lift_kV;
-    slot0LiftConfigs.kA = lift_kA;
-    slot0LiftConfigs.kP = lift_kP;
-    slot0LiftConfigs.kI = lift_kI;
-    slot0LiftConfigs.kD = lift_kD;
+    slot0LiftConfigs.kG = 0;
+    slot0LiftConfigs.kS = 0;
+    slot0LiftConfigs.kV = 0;
+    slot0LiftConfigs.kA = 0;
+    slot0LiftConfigs.kP = MechanismConstants.kP_IntakeLift;
+    slot0LiftConfigs.kI = MechanismConstants.kI_IntakeLift;
+    slot0LiftConfigs.kD = MechanismConstants.kD_IntakeLift;
 
     // Apply intake lift motor configuration and initialize position to 0
     StatusCode intakeLiftStatus = intakeLift.getConfigurator().apply(intakeLiftConfigs, 0.050);

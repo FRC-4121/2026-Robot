@@ -28,6 +28,8 @@ import frc.robot.commands.*;
 import frc.robot.Constants.*;
 import frc.robot.generated.TunerConstants;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import com.pathplanner.lib.auto.*;
 
 public class RobotContainer {
 
@@ -63,6 +65,8 @@ public class RobotContainer {
     private final Command ZeroEncodersCommand;
     private final Command ShooterModeCommand;
     private final Command ShuttleModeCommand;
+    private final Command StartAutoIntakeCommand;
+    private final Command StopAutoIntakeCommand;
 
     //===Declare Buttons===//
     private final JoystickButton ParkButton;
@@ -88,6 +92,10 @@ public class RobotContainer {
 
     //===Declare Extra Systems===//
 
+    // ===PathPlanner=== //
+
+    // Declare PathPlanner variables
+     private final SendableChooser<Command> autoChooser;
 
     /**
      * Create a new RobotContainer
@@ -134,7 +142,8 @@ public class RobotContainer {
         ZeroEncodersCommand = new ZeroEncoders(intake, turret, climber);
         ShooterModeCommand = new ChangeShootingMode(true);
         ShuttleModeCommand = new ChangeShootingMode(false);
-
+        StartAutoIntakeCommand = new AutoIntake(intake, -.75);
+        StopAutoIntakeCommand = new ChangeAutoIntake();
 
         // Set Default Commands For Subsystems
         turret.setDefaultCommand(AutoTurretCommand);
@@ -142,7 +151,8 @@ public class RobotContainer {
         climber.setDefaultCommand(ManualClimberCommand);
 
         // Register named commands for PathPlanner
-        NamedCommands.registerCommand("Intake", RunIntakeCommand);
+        NamedCommands.registerCommand("Start Intake", StartAutoIntakeCommand);
+        NamedCommands.registerCommand("Stop Intake", StopAutoIntakeCommand);
         NamedCommands.registerCommand("Shoot", AutoShootCommand);
         NamedCommands.registerCommand("Lift Intake", LiftIntakeCommand);
         NamedCommands.registerCommand("Climb", RunClimberCommand);
@@ -152,6 +162,9 @@ public class RobotContainer {
 
         // Bind commands to buttons
         configureBindings();
+
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto Chooser", autoChooser);
 
         turret.getHubInfo();
     }
@@ -188,7 +201,6 @@ public class RobotContainer {
 
         // Reset the field-centric heading on left bumper press.
         joystick.x().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-        //joystick.y().whileTrue(RunIntakeCommand);
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -222,22 +234,25 @@ public class RobotContainer {
      * @return Autonomous Command
      */
     public Command getAutonomousCommand() {
+        
+        return autoChooser.getSelected();
+
         // Simple drive forward auton
-        final var idle = new SwerveRequest.Idle();
-        return Commands.sequence(
-            // Reset our field centric heading to match the robot
-            // facing away from our alliance station wall (0 deg).
-            drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
-            // Then slowly drive forward (away from us) for 5 seconds.
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(0.5)
-                    .withVelocityY(0)
-                    .withRotationalRate(0)
-            )
-            .withTimeout(5.0),
-            // Finally idle for the rest of auton
-            drivetrain.applyRequest(() -> idle)
-        );
+        // final var idle = new SwerveRequest.Idle();
+        // return Commands.sequence(
+        //     // Reset our field centric heading to match the robot
+        //     // facing away from our alliance station wall (0 deg).
+        //     drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
+        //     // Then slowly drive forward (away from us) for 5 seconds.
+        //     drivetrain.applyRequest(() ->
+        //         drive.withVelocityX(0)
+        //             .withVelocityY(0)
+        //             .withRotationalRate(0)
+        //     )
+        //     .withTimeout(5.0),
+        //     // Finally idle for the rest of auton
+        //     drivetrain.applyRequest(() -> idle)
+        // );
     }
 
     /**

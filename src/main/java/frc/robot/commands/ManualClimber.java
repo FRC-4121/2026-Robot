@@ -68,7 +68,7 @@ public class ManualClimber extends Command {
   public void execute() {
 
     // Get the joystick position and convert to speed
-    climbSpeed = speedLimiter.calculate(MathUtil.applyDeadband(-myController.getRightY(), 0.01)) * ControlConstants.kJoystickSpeedCorr;
+    climbSpeed = speedLimiter.calculate(MathUtil.applyDeadband(-myController.getRightY(), 0.05)) * ControlConstants.kJoystickSpeedCorr;
 
     // Get the current position of the climber
     currentPosition = myClimber.getPosition();
@@ -78,6 +78,7 @@ public class ManualClimber extends Command {
       myClimber.manualRunClimber(0);
     } else if (currentPosition < MechanismConstants.kClimberDown && climbSpeed < 0 && !MechanismConstants.isDisableState) {
       myClimber.manualRunClimber(0);
+    } else if (climbSpeed == 0) {
     } else {
       myClimber.manualRunClimber(climbSpeed * MechanismConstants.kClimberSpeedFactor);
     }
