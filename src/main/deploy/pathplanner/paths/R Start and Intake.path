@@ -3,29 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.0,
-        "y": 0.5123833333333323
+        "x": 4.011677777777778,
+        "y": 0.4685333333333336
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.336922222222223,
-        "y": 0.546488888888889
+        "x": 5.348600000000001,
+        "y": 0.5026388888888903
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.154261111111111,
-        "y": 0.6488055555555547
+        "x": 6.29675,
+        "y": 0.702399999999999
       },
       "prevControl": {
-        "x": 7.002948596197626,
-        "y": 0.4497967044193396
+        "x": 5.934855124324057,
+        "y": 0.6663263123658174
       },
       "nextControl": {
-        "x": 7.602505555555556,
-        "y": 1.2383444444444445
+        "x": 6.658644875675944,
+        "y": 0.7384736876341806
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.378383333333333,
+        "y": 0.8972888888888884
+      },
+      "prevControl": {
+        "x": 7.227070818419848,
+        "y": 0.698280037752673
+      },
+      "nextControl": {
+        "x": 7.8266277777777775,
+        "y": 1.486827777777778
       },
       "isLocked": false,
       "linkedName": null
@@ -44,10 +60,32 @@
       "linkedName": "R Center Intake End"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.75,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 2.053941908713707,
+      "rotationDegrees": -90.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Lift Intake",
+      "waypointRelativePos": 0.4317617866004995,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 1.9057071960297687,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -58,13 +96,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": -90.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0.0,
-    "rotation": 90.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

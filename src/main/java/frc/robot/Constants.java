@@ -77,11 +77,11 @@ public final class Constants {
     public static final int SHOOTER_LEAD = 1;
     public static final int SHOOTER_FOLLOW = 0;
 
-    public static final double kP_Shoot = 1; //was 0.1 //for Jackson only: .00015
-    public static final double kI_Shoot = 0;
+    public static final double kP_Shoot = .008;
+    public static final double kI_Shoot = .0005;
     public static final double kD_Shoot = 0;
     public static final double kS_Shoot = 0;
-    public static final double kV_Shoot = 0;
+    public static final double kV_Shoot = .14;
     public static final double kA_Shoot = 0;
     public static final double kG_Shoot = 0;
 
@@ -93,8 +93,8 @@ public final class Constants {
     public static final double kA_ShootDouble = 0;
     public static final double kG_ShootDouble = 0;
 
-    public static final double kMagicCruise = 100;
-    public static final double kMagicAccel = 100;
+    public static final double kMagicCruise = 200;
+    public static final double kMagicAccel = 1000;
     public static final double kMagicJerk = 1500;
 
     public static final int kPIDLoopIdxShoot = 0;
@@ -127,6 +127,8 @@ public final class Constants {
 
     public static boolean isShooterMode = true;
 
+    public static boolean stopAutoShooter = false;
+
     // Set hopper/indexer constants
 
    
@@ -140,7 +142,7 @@ public final class Constants {
     public static final double kI_IntakeLift = 0;
     public static final double kD_IntakeLift = 0.005;
 
-    public static boolean stopAutoIntake = false;
+    public static boolean stopAutoIntake = true;
 
     //Set turret constants
     public static final int TURRET = 9;
@@ -175,6 +177,9 @@ public final class Constants {
     public static final double kTurretCameraHeight = .5207;
     public static final double kTargetHeight = 1.1176;
     public static final double kTurretCameraAngle = 25;
+    public static final double kShooterSlip = .5;
+    public static final double kShooterDriveRatio = 2;
+    public static final double kShooterWheelDiameter = .1016;
 
     public static boolean isTurretEnabled = true;
     public static boolean shuttleTurretStatus = false;

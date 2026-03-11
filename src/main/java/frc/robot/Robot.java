@@ -45,12 +45,19 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+
+        // Run command to set field centric orientation
+        CommandScheduler.getInstance().schedule(m_robotContainer.setFieldCentricGyro());
+
+        // Get the chosen autonomous command
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
+        // Schedule the auto command to run
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().schedule(m_autonomousCommand);
         }
         
+        // Get alliance color from driver station
         m_robotContainer.getAlliance();
 
     }
@@ -63,6 +70,11 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+
+        // Run command to set field centric orientation
+        //CommandScheduler.getInstance().schedule(m_robotContainer.setFieldCentricGyro());
+
+        // Stop the autonomous command if it is still running
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
         }

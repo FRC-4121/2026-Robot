@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.4257222222222222,
-        "y": 0.6244444444444435
+        "x": 1.146811111111111,
+        "y": 5.959527777777778
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3270833333333334,
-        "y": 1.2139833333333332
+        "x": 0.8969541459676431,
+        "y": 5.9510721897263235
       },
       "isLocked": false,
-      "linkedName": "R Outpost"
+      "linkedName": "Outpost Setup"
     },
     {
       "anchor": {
-        "x": 3.1103166666666664,
-        "y": 2.329722222222222
+        "x": 0.6011222222222223,
+        "y": 5.959527777777778
       },
       "prevControl": {
-        "x": 2.3746111111111112,
-        "y": 1.8425
+        "x": 0.8509494839496656,
+        "y": 5.950235883580816
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Outpost Intake End"
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 0.85,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Intaking From Depot",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

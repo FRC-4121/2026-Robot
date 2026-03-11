@@ -27,7 +27,11 @@ public class AutoIntake extends Command {
   @Override
   public void initialize() {
 
-    MechanismConstants.stopAutoIntake = false;
+    if (MechanismConstants.stopAutoIntake) {
+      MechanismConstants.stopAutoIntake = false;
+    } else {
+      MechanismConstants.stopAutoIntake = true;
+    }
 
   }
 
@@ -35,9 +39,13 @@ public class AutoIntake extends Command {
   @Override
   public void execute() {
 
+    if (!MechanismConstants.stopAutoIntake) {
     myIntake.runIntake(speed);
-
+    } else {
+      myIntake.stopIntake();
+    }
   }
+    
 
   // Called once the command ends or is interrupted.
   @Override
@@ -46,6 +54,6 @@ public class AutoIntake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return MechanismConstants.stopAutoIntake;
+    return true;
   }
 }

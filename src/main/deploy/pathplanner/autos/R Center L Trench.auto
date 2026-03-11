@@ -13,7 +13,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.75
           }
         },
         {
@@ -25,19 +25,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R Scrimmage Intake"
+            "pathName": "R Center L Trench"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "R Scrimmage Intake Return"
+            "name": "Shoot"
           }
         }
       ]

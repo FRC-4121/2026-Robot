@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.4257222222222222,
-        "y": 0.6244444444444435
+        "x": 1.146811111111111,
+        "y": 5.959527777777778
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3270833333333334,
-        "y": 1.2139833333333332
+        "x": 2.0241243381788574,
+        "y": 5.374446930656715
       },
       "isLocked": false,
-      "linkedName": "R Outpost"
+      "linkedName": "Outpost Setup"
     },
     {
       "anchor": {
-        "x": 3.1103166666666664,
-        "y": 2.329722222222222
+        "x": 3.0908277777777777,
+        "y": 5.194588888888888
       },
       "prevControl": {
-        "x": 2.3746111111111112,
-        "y": 1.8425
+        "x": 1.9736808318723784,
+        "y": 5.5253357008109525
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 89.680763931256
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Intaking From Depot",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

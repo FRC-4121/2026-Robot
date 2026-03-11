@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.hardware.*;
 
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
@@ -46,6 +47,8 @@ public class RobotContainer {
     private final Climber climber;
     private final Indexer indexer;
 
+    private final Pigeon2 pigeon;
+
     //===Declare Commands===//
     private final Command RunIntakeCommand;
     private final Command RunTurretRightCommand;
@@ -65,8 +68,7 @@ public class RobotContainer {
     private final Command ZeroEncodersCommand;
     private final Command ShooterModeCommand;
     private final Command ShuttleModeCommand;
-    private final Command StartAutoIntakeCommand;
-    private final Command StopAutoIntakeCommand;
+    private final Command AutoIntakeCommand;
 
     //===Declare Buttons===//
     private final JoystickButton ParkButton;
@@ -110,6 +112,8 @@ public class RobotContainer {
         climber = new Climber();
         indexer = new Indexer();
 
+        pigeon = new Pigeon2(13);
+
         // Initialize controllers
         joystick = new CommandXboxController(0);
         aux = new CommandXboxController(1);
@@ -142,8 +146,7 @@ public class RobotContainer {
         ZeroEncodersCommand = new ZeroEncoders(intake, turret, climber);
         ShooterModeCommand = new ChangeShootingMode(true);
         ShuttleModeCommand = new ChangeShootingMode(false);
-        StartAutoIntakeCommand = new AutoIntake(intake, -.75);
-        StopAutoIntakeCommand = new ChangeAutoIntake();
+        AutoIntakeCommand = new AutoIntake(intake, -.75);
 
         // Set Default Commands For Subsystems
         turret.setDefaultCommand(AutoTurretCommand);
@@ -151,8 +154,7 @@ public class RobotContainer {
         climber.setDefaultCommand(ManualClimberCommand);
 
         // Register named commands for PathPlanner
-        NamedCommands.registerCommand("Start Intake", StartAutoIntakeCommand);
-        NamedCommands.registerCommand("Stop Intake", StopAutoIntakeCommand);
+        NamedCommands.registerCommand("Intake", AutoIntakeCommand);
         NamedCommands.registerCommand("Shoot", AutoShootCommand);
         NamedCommands.registerCommand("Lift Intake", LiftIntakeCommand);
         NamedCommands.registerCommand("Climb", RunClimberCommand);
@@ -264,6 +266,7 @@ public class RobotContainer {
         //SmartDashboard.putNumber("Climber Pos", climber.getPosition());
         //SmartDashboard.putNumber("Turret Angle", turret.getPosition());
         //turret.getHubInfo();
+        SmartDashboard.putNumber("Gyro Data", pigeon.getYaw().getValueAsDouble());
     }
 
     /**
@@ -282,5 +285,16 @@ public class RobotContainer {
         else {
            Mutables.blueAlliance = true;
         }
+    }
+
+    /**
+     * Command to set field centric drive
+     * 
+     * @return Field centric drive command
+     */
+    public Command setFieldCentricGyro() {
+
+        return drivetrain.runOnce(drivetrain::seedFieldCentric);
+
     }
 }

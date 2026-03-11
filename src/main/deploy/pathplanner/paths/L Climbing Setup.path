@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.4257222222222222,
-        "y": 0.6244444444444435
+        "x": 2.9641499999999996,
+        "y": 5.535644444444444
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3270833333333334,
-        "y": 1.2139833333333332
+        "x": 2.2826421079999144,
+        "y": 4.617992452230651
       },
       "isLocked": false,
-      "linkedName": "R Outpost"
+      "linkedName": "Auto 1 Return 1"
     },
     {
       "anchor": {
-        "x": 3.1103166666666664,
-        "y": 2.329722222222222
+        "x": 1.3514444444444444,
+        "y": 4.62941111111111
       },
       "prevControl": {
-        "x": 2.3746111111111112,
-        "y": 1.8425
+        "x": 1.6710645130310822,
+        "y": 4.921238997810466
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Climbing Setup"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Left Climb",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

@@ -49,29 +49,38 @@ public class AutoShoot extends Command {
   @Override
   public void initialize() {
     percentVelocity = 0.90;
+
+    if (MechanismConstants.stopAutoShooter) {
+      MechanismConstants.stopAutoShooter = false;
+    } else {
+      MechanismConstants.stopAutoShooter = true;
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    myShooter.runShooter(targetVelocity);
-    double shooterVelocity = myShooter.getShooterVelocity();
+    if (MechanismConstants.stopAutoShooter) {
 
-    if (shooterVelocity > percentVelocity * targetVelocity) {
-      myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);  
+      myShooter.runShooter(targetVelocity);
+      double shooterVelocity = myShooter.getShooterVelocity();
+
+      if (shooterVelocity > percentVelocity * targetVelocity) {
+        myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+      }
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-     myShooter.runShooter(0);
-     myIndexer.runIndexer(0);
+     myShooter.stopShooter();
+     myIndexer.stopIndexer();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return MechanismConstants.stopAutoIntake;
   }
 }

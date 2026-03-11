@@ -9,7 +9,7 @@ import frc.robot.subsystems.*;
 import java.math.*;
 
 /*
-All units are in inches, seconds, and degrees
+All units are in meters, seconds, and degrees
 
 */
 
@@ -20,18 +20,19 @@ public class Ballistics2026 {
     private double launchAngle;
     private double initialY;
     private double targetY;
-    private double gravity = 386.1;
+    private double gravity = 9.81;
     private double slipFactor; //Adjust this with testing
     private double wheelDiameter;
+    private double driveRatio;
     
-    public Ballistics2026(double angle, double launchH, double finalH, double slip, double wheelD) {
+    public Ballistics2026(double angle, double launchH, double finalH, double slip, double wheelD, double ratio) {
 
         launchAngle = angle;
         initialY = launchH;
         targetY = finalH;
         slipFactor = slip;
         wheelDiameter = wheelD;
-
+        driveRatio = ratio;
         
     }
 
@@ -49,7 +50,7 @@ public class Ballistics2026 {
 
         double launchVelocity = targetDistance / (Math.cos(Math.toRadians(launchAngle)) * calculateTime(targetDistance));
 
-        double wheelSpeed = launchVelocity / (Math.PI * wheelDiameter * slipFactor);
+        double wheelSpeed = launchVelocity / (Math.PI * wheelDiameter * slipFactor * driveRatio);
     
         return wheelSpeed;
     }    

@@ -121,13 +121,14 @@ public class LumaHelpers {
                     avgYaw = yawSum / numTagsFound;
                     avgDistance = distanceSum / numTagsFound;
 
-                    // Update target info array
-                    targetInfo[0] = avgYaw;
-                    targetInfo[1] = avgDistance;
-                    targetInfo[2] = numTagsFound;
-                    MechanismConstants.targetDistance = avgDistance;
-
                 }
+
+                // Update target info array
+                targetInfo[0] = avgYaw;
+                targetInfo[1] = avgDistance;
+                targetInfo[2] = numTagsFound;
+                MechanismConstants.targetDistance = avgDistance;
+
             }
 
         }

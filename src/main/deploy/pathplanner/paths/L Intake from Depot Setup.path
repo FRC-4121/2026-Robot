@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.4257222222222222,
-        "y": 0.6244444444444435
+        "x": 2.9641499999999996,
+        "y": 5.535644444444444
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3270833333333334,
-        "y": 1.2139833333333332
+        "x": 2.355122222222222,
+        "y": 5.81336111111111
       },
       "isLocked": false,
-      "linkedName": "R Outpost"
+      "linkedName": "Auto 1 Return 1"
     },
     {
       "anchor": {
-        "x": 3.1103166666666664,
-        "y": 2.329722222222222
+        "x": 1.146811111111111,
+        "y": 5.959527777777778
       },
       "prevControl": {
-        "x": 2.3746111111111112,
-        "y": 1.8425
+        "x": 1.6925000000000006,
+        "y": 5.959527777777778
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Outpost Setup"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Intaking From Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

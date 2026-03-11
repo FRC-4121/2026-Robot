@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.031166666666667,
-        "y": 0.5562333333333322
+        "x": 3.0615944444444443,
+        "y": 1.8619888888888885
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.332694444444444,
-        "y": 0.7949722222222215
+        "x": 2.6961777777777782,
+        "y": 2.061749999999998
       },
       "isLocked": false,
       "linkedName": "R Return End"
     },
     {
       "anchor": {
-        "x": 1.4147833333333333,
-        "y": 2.855922222222223
+        "x": 1.3514444444444444,
+        "y": 3.192105555555555
       },
       "prevControl": {
-        "x": 1.448888888888889,
-        "y": 1.7986499999999999
+        "x": 1.6973722222222223,
+        "y": 2.982599999999999
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Right Climb",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

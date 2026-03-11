@@ -246,6 +246,16 @@ public double getHoodPosition() {
 
 }
 
+/**
+ * Get the current shooter motor velocity
+ * @return
+ */
+public double getWheelVelocity() {
+
+  return shooterMotor.getVelocity().getValueAsDouble();
+
+}
+
 
 /**
  * Get yaw 
