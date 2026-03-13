@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.hardware.*;
 
@@ -69,6 +68,7 @@ public class RobotContainer {
     private final Command ShooterModeCommand;
     private final Command ShuttleModeCommand;
     private final Command AutoIntakeCommand;
+    private final Command ShooterTestCommand;
 
     //===Declare Buttons===//
     private final JoystickButton ParkButton;
@@ -147,6 +147,7 @@ public class RobotContainer {
         ShooterModeCommand = new ChangeShootingMode(true);
         ShuttleModeCommand = new ChangeShootingMode(false);
         AutoIntakeCommand = new AutoIntake(intake, -.75);
+        ShooterTestCommand = new ShooterTest(shooter);
 
         // Set Default Commands For Subsystems
         turret.setDefaultCommand(AutoTurretCommand);
@@ -267,6 +268,7 @@ public class RobotContainer {
         //SmartDashboard.putNumber("Turret Angle", turret.getPosition());
         //turret.getHubInfo();
         SmartDashboard.putNumber("Gyro Data", pigeon.getYaw().getValueAsDouble());
+        SmartDashboard.putNumber("Target Speed", MechanismConstants.targetVelocity);
     }
 
     /**

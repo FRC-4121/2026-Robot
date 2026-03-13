@@ -55,6 +55,8 @@ public final class Constants {
     public static double slowModeMultiplier = 1;
     public static double slowModeAngularMultiplier = 1;
 
+    public static boolean kUseLimelight = true;
+
   }
 
   /*
@@ -84,14 +86,6 @@ public final class Constants {
     public static final double kV_Shoot = .14;
     public static final double kA_Shoot = 0;
     public static final double kG_Shoot = 0;
-
-    public static final double kP_ShootDouble = 0.55;
-    public static final double kI_ShootDouble = 0.08;
-    public static final double kD_ShootDouble = 0;
-    public static final double kS_ShootDouble = 0;
-    public static final double kV_ShootDouble = 0.12;
-    public static final double kA_ShootDouble = 0;
-    public static final double kG_ShootDouble = 0;
 
     public static final double kMagicCruise = 200;
     public static final double kMagicAccel = 1000;
@@ -128,6 +122,8 @@ public final class Constants {
     public static boolean isShooterMode = true;
 
     public static boolean stopAutoShooter = false;
+
+    public static double targetVelocity = 0;
 
     // Set hopper/indexer constants
 

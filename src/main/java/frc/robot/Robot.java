@@ -9,7 +9,9 @@ import com.ctre.phoenix6.HootAutoReplay;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.util.Units;
 
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
@@ -32,6 +34,19 @@ public class Robot extends TimedRobot {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
         m_robotContainer.UpdateStatus();
+
+        //Suggested LimeLight code
+        if (DriveConstants.kUseLimelight) {
+            var driveState = m_robotContainer.drivetrain.getState();
+            double headingDeg = driveState.Pose.getRotation().getDegrees();
+            double omegaRps = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
+
+            LimelightHelpers.SetRobotOrientation("limelight-dcaml", headingDeg, 0, 0, 0, 0, 0);
+            var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-dcaml");
+            if (llMeasurement != null && llMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
+                m_robotContainer.drivetrain.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
+            }
+        }
     }
 
     @Override

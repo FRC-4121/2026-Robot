@@ -70,8 +70,8 @@ public class Shooter extends SubsystemBase {
   private double hood_kD = 0.0;
 
   // Declare MotionMagic variables
-  private int magic_cruise = 100;
-  private int magic_accel = 100;
+  private int magic_cruise = 200;
+  private int magic_accel = 1000;
   private int magic_jerk = 1500;
 
   // Declare motor constants

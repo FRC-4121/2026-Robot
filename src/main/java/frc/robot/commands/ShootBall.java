@@ -36,7 +36,6 @@ public class ShootBall extends Command {
 
   private Shooter myShooter;
   private Indexer myIndexer;
-  private double targetVelocity;
   private double percentVelocity;
   private Ballistics2026 myBallistics;
 
@@ -72,29 +71,31 @@ public class ShootBall extends Command {
         hoodAngle = 65;
       }
 
-      myBallistics = new Ballistics2026(hoodAngle, 
-                                      MechanismConstants.kTurretCameraHeight, 
-                                      MechanismConstants.kTargetHeight, 
-                                      MechanismConstants.kShooterSlip,
-                                      MechanismConstants.kShooterWheelDiameter,
-                                      MechanismConstants.kShooterDriveRatio);
+      // myBallistics = new Ballistics2026(hoodAngle, 
+      //                                 MechanismConstants.kTurretCameraHeight, 
+      //                                 MechanismConstants.kTargetHeight, 
+      //                                 MechanismConstants.kShooterSlip,
+      //                                 MechanismConstants.kShooterWheelDiameter,
+      //                                 MechanismConstants.kShooterDriveRatio);
 
-      targetVelocity = myBallistics.calculateLaunchVelcity(MechanismConstants.targetDistance);
-      myShooter.runShooter(targetVelocity);
+      // MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(MechanismConstants.targetDistance);
+      MechanismConstants.targetVelocity = -32.5;
+      SmartDashboard.putNumber("Target Velocity", MechanismConstants.targetVelocity);
+      myShooter.runShooter(MechanismConstants.targetVelocity);
       double shooterVelocity = myShooter.getShooterVelocity();
 
-      if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * targetVelocity)) {
+      if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) {
         myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
       }
 
     } else {
 
-      targetVelocity = -80;
-      myShooter.runShooter(targetVelocity);
+      MechanismConstants.targetVelocity = -80;
+      myShooter.runShooter(MechanismConstants.targetVelocity);
       double shooterVelocity = myShooter.getShooterVelocity();
       myShooter.runHood(MechanismConstants.kHoodShuttlePos);
 
-      if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * targetVelocity)) {
+      if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) {
         myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
       }
       
