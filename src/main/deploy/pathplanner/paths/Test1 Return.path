@@ -3,55 +3,51 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5731777777777776,
-        "y": 0.45878888888888814
+        "x": 7.7535444444444455,
+        "y": 3.382122222222222
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.573177777777776,
-        "y": 0.45878888888888814
+        "x": 7.714566666666666,
+        "y": 2.6415444444444436
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Test1 Middle"
     },
     {
       "anchor": {
-        "x": 7.334533333333334,
-        "y": 0.8680555555555554
+        "x": 7.397872222222222,
+        "y": 1.058072222222222
       },
       "prevControl": {
-        "x": 7.231082597258037,
-        "y": 0.6404639361899047
+        "x": 7.975230134336646,
+        "y": 1.453106583142617
       },
       "nextControl": {
-        "x": 7.67316927939115,
-        "y": 1.6130546368827372
+        "x": 6.935011111111112,
+        "y": 0.7413777777777775
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.6268666666666665,
-        "y": 3.4259722222222218
+        "x": 4.0165500000000005,
+        "y": 0.6390611111111115
       },
       "prevControl": {
-        "x": 7.6561,
-        "y": 2.4612722222222216
+        "x": 6.23341111111111,
+        "y": 0.6293166666666661
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R Scrim Intake End"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5228215767634855,
+      "waypointRelativePos": 1.0887966804979208,
       "rotationDegrees": 180.0
-    },
-    {
-      "waypointRelativePos": 1.093775933609956,
-      "rotationDegrees": -90.0
     }
   ],
   "constraintZones": [],
@@ -67,13 +63,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

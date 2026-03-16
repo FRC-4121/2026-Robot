@@ -25,32 +25,32 @@ public class Ballistics2026 {
     private double wheelDiameter;
     private double driveRatio;
     
-    public Ballistics2026(double angle, double launchH, double finalH, double slip, double wheelD, double ratio) {
+    public Ballistics2026(double launchH, double finalH, double wheelD, double ratio) {
 
-        launchAngle = angle;
         initialY = launchH;
         targetY = finalH;
-        slipFactor = slip;
         wheelDiameter = wheelD;
         driveRatio = ratio;
         
     }
 
     //Calculates time that the projectile will be in the air during the launch
-    public double calculateTime(double targetDistance){
+    public double calculateTime(double targetDistance, double launchAngle){
 
-        double time = Math.sqrt((targetY - initialY - targetDistance * Math.tan(Math.toRadians(launchAngle)))/ (0.5 * gravity));  
+        double time = Math.sqrt((initialY + targetDistance * Math.tan(Math.toRadians(launchAngle)) - targetY)/ (0.5 * gravity));  
 
         return time;
     }
 
     //Calculates the launch velocity of the projectile and using it, calulated the wheel speed necessary to launch 
     //the projectile at that desired velocity
-    public double calculateLaunchVelcity(double targetDistance){
+    public double calculateLaunchVelcity(double targetDistance, double launchAngle, double slipFactor){
 
-        double launchVelocity = targetDistance / (Math.cos(Math.toRadians(launchAngle)) * calculateTime(targetDistance));
+        double wheelSpeed = 0;        
 
-        double wheelSpeed = launchVelocity / (Math.PI * wheelDiameter * slipFactor * driveRatio);
+        double launchVelocity = targetDistance / (Math.cos(Math.toRadians(launchAngle)) * calculateTime(targetDistance, launchAngle));
+
+        wheelSpeed = launchVelocity / (Math.PI * wheelDiameter * slipFactor * driveRatio);
     
         return wheelSpeed;
     }    

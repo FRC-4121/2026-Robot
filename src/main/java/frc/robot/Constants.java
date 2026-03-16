@@ -55,7 +55,7 @@ public final class Constants {
     public static double slowModeMultiplier = 1;
     public static double slowModeAngularMultiplier = 1;
 
-    public static boolean kUseLimelight = true;
+    public static boolean kUseLimelight = false;
 
   }
 
@@ -79,11 +79,11 @@ public final class Constants {
     public static final int SHOOTER_LEAD = 1;
     public static final int SHOOTER_FOLLOW = 0;
 
-    public static final double kP_Shoot = .008;
-    public static final double kI_Shoot = .0005;
+    public static final double kP_Shoot = .009;
+    public static final double kI_Shoot = .001;
     public static final double kD_Shoot = 0;
     public static final double kS_Shoot = 0;
-    public static final double kV_Shoot = .14;
+    public static final double kV_Shoot = .145;
     public static final double kA_Shoot = 0;
     public static final double kG_Shoot = 0;
 
@@ -114,14 +114,13 @@ public final class Constants {
     public static final double kA_Hood = 0;
     public static final double kG_Hood = 0;
     
-    
     public static final double kHoodLowPos = 0;
     public static final double kHoodHighPos = 0.2;
     public static final double kHoodShuttlePos = 0.3;
 
     public static boolean isShooterMode = true;
 
-    public static boolean stopAutoShooter = false;
+    public static boolean stopAutoShooter = true;
 
     public static double targetVelocity = 0;
 
@@ -152,8 +151,8 @@ public final class Constants {
         //0 is facing to the climber side of the bot parallel with the front and back frame stock
 
     public static final double kP_Turret = 0.01;
-    public static final double kI_Turret = 0.0000;
-    public static final double kD_Turret = 0.000;
+    public static final double kI_Turret = 0.0005;
+    public static final double kD_Turret = 0.0;
 
     public static final double kP_TurretLock = 0.00115;
     public static final double kI_TurretLock = 0.0005;//try .0006
@@ -173,7 +172,8 @@ public final class Constants {
     public static final double kTurretCameraHeight = .5207;
     public static final double kTargetHeight = 1.1176;
     public static final double kTurretCameraAngle = 25;
-    public static final double kShooterSlip = .5;
+    public static final double kShooterSlipClose = .25;
+    public static final double kShooterSlipFar = .33;
     public static final double kShooterDriveRatio = 2;
     public static final double kShooterWheelDiameter = .1016;
 
@@ -182,6 +182,8 @@ public final class Constants {
     public static boolean turretModeSwitch = false;
 
     public static double targetDistance;
+
+    public static boolean isIndexerMixing = true;
 
   }
 

@@ -3,39 +3,44 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9251722222222223,
-        "y": 3.0459388888888883
+        "x": 7.563527777777777,
+        "y": 3.377249999999999
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9604722222222226,
-        "y": 2.5246111111111085
+        "x": 7.329661111111111,
+        "y": 2.300488888888889
       },
       "isLocked": false,
-      "linkedName": "R Return End"
+      "linkedName": "R Center Intake End"
     },
     {
       "anchor": {
-        "x": 0.38674444444444445,
-        "y": 0.7511222222222216
+        "x": 3.046977777777778,
+        "y": 2.821816666666666
       },
       "prevControl": {
-        "x": 1.3855499999999998,
-        "y": 0.7608666666666659
+        "x": 3.5585611111111106,
+        "y": 2.7292444444444435
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R Outpost"
+      "linkedName": "R Bump Leave"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.4373443983402515,
+      "rotationDegrees": -135.0
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.8,
-      "maxWaypointRelativePos": 1.0,
+      "minWaypointRelativePos": 0.45,
+      "maxWaypointRelativePos": 0.75,
       "constraints": {
-        "maxVelocity": 0.75,
+        "maxVelocity": 2.0,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -55,14 +60,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 0.0
+    "velocity": 0,
+    "rotation": -135.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

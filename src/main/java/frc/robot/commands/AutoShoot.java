@@ -32,55 +32,77 @@ public class AutoShoot extends Command {
   /** Creates a new AutoShoot. */
   private Shooter myShooter;
   private Indexer myIndexer;
-  private double targetVelocity;
+  private Intake myIntake;
   private double percentVelocity;
+  private Ballistics2026 myBallistics;
 
     // Create new AutoShoot
-    public AutoShoot(Shooter shooter, Indexer indexer) {
+    public AutoShoot(Shooter shooter, Indexer indexer, Intake intake, Ballistics2026 ballistics) {
 
+    myBallistics = ballistics;
     myShooter = shooter;
     myIndexer = indexer;
+    myIntake = intake;
 
-    addRequirements(myShooter, myIndexer);
+    addRequirements(myShooter, myIndexer, myIntake);
+
   }
 
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    percentVelocity = 0.90;
+    
+    percentVelocity = 0.95;
+    MechanismConstants.isIndexerMixing = false;
 
     if (MechanismConstants.stopAutoShooter) {
       MechanismConstants.stopAutoShooter = false;
     } else {
       MechanismConstants.stopAutoShooter = true;
     }
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (MechanismConstants.stopAutoShooter) {
+    double hoodAngle = 0;
+    double slipFactor = .25;
 
-      myShooter.runShooter(targetVelocity);
+      if (MechanismConstants.targetDistance > 2) {
+        myShooter.runHood(MechanismConstants.kHoodHighPos);
+        hoodAngle = 53;
+        slipFactor = .3;
+      } else {
+        myShooter.runHood(MechanismConstants.kHoodLowPos);
+        hoodAngle = 62.5;
+        slipFactor = .23;
+      }
+
+      MechanismConstants.targetVelocity = -myBallistics.calculateLaunchVelcity(MechanismConstants.targetDistance, hoodAngle, slipFactor);
+      myShooter.runShooter(MechanismConstants.targetVelocity);
+      myIntake.runIntake(-0.5);
       double shooterVelocity = myShooter.getShooterVelocity();
 
-      if (shooterVelocity > percentVelocity * targetVelocity) {
+      if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) {
         myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
       }
-    }
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-     myShooter.stopShooter();
-     myIndexer.stopIndexer();
+    myShooter.stopShooter();
+    myIntake.stopIntake();
+    myShooter.runHood(MechanismConstants.kHoodLowPos);
+    MechanismConstants.isIndexerMixing = true;
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return MechanismConstants.stopAutoIntake;
+    return MechanismConstants.stopAutoShooter;
   }
 }

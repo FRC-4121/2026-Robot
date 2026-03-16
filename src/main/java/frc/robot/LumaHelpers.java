@@ -31,7 +31,7 @@ public class LumaHelpers {
     /**
      * Red side hub April Tags (shooting side only)
      */
-    private static final int[] redTags = {2, 5, 8, 9, 10, 11};
+    private static final int[] redTags = {2, 5, 8, 10, 11};
     private static final int[] redMidTags = {2, 5, 10};
 
     /**
@@ -69,6 +69,8 @@ public class LumaHelpers {
         // Make sure there are current results before proceeding
         if (!results.isEmpty()) {
 
+            int[] foundTags = new int[hubTags.length];
+
             // Camera processed a new frame since last
             // Get the last one in the list.
             var result = results.get(results.size() - 1);
@@ -90,6 +92,7 @@ public class LumaHelpers {
                     for (int tag : hubTags){
                         if (tag == targetID){
                             targetFound = true;
+                            foundTags[numTagsFound] = targetID;
                             break;
                         }
                     }
@@ -116,6 +119,19 @@ public class LumaHelpers {
 
                 // Calculate final results if at least one tag found
                 if (numTagsFound > 0) {
+
+                    if (numTagsFound == 1) {
+
+                        if (foundTags[0] == 25 || foundTags[0] == 10) {
+
+                            if (yawSum < 0) {
+                                yawSum += 5;
+                            } else {
+                                yawSum -= 5;
+                            }
+                        }
+
+                    }
 
                     // Calculate the averages
                     avgYaw = yawSum / numTagsFound;

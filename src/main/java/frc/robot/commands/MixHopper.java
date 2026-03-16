@@ -5,17 +5,19 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.Indexer;
+import frc.robot.Constants.*;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ShooterTest extends Command {
+public class MixHopper extends Command {
 
-  Shooter myShooter;
-  /** Creates a new ShooterTest. */
-  public ShooterTest(Shooter shooter) {
+  private Indexer myIndexer;
 
-    myShooter = shooter;
-    addRequirements(myShooter);
+  /** Creates a new MixHopper. */
+  public MixHopper(Indexer indexer) {
+
+    myIndexer = indexer;
+    addRequirements(myIndexer);
 
   }
 
@@ -27,8 +29,11 @@ public class ShooterTest extends Command {
   @Override
   public void execute() {
 
-    System.out.println("Running ShooterTest");
-    myShooter.runShooter(-50);
+    if (MechanismConstants.isIndexerMixing) {
+
+      myIndexer.runIndexer(-.2);
+
+    }
 
   }
 
@@ -36,7 +41,7 @@ public class ShooterTest extends Command {
   @Override
   public void end(boolean interrupted) {
 
-    myShooter.stopShooter();
+    myIndexer.stopIndexer();
 
   }
 

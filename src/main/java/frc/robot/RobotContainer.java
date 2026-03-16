@@ -25,6 +25,7 @@ import com.ctre.phoenix6.hardware.*;
 
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
+import frc.robot.extras.Ballistics2026;
 import frc.robot.Constants.*;
 import frc.robot.generated.TunerConstants;
 
@@ -48,6 +49,8 @@ public class RobotContainer {
 
     private final Pigeon2 pigeon;
 
+    private final Ballistics2026 myBallistics;
+
     //===Declare Commands===//
     private final Command RunIntakeCommand;
     private final Command RunTurretRightCommand;
@@ -68,7 +71,7 @@ public class RobotContainer {
     private final Command ShooterModeCommand;
     private final Command ShuttleModeCommand;
     private final Command AutoIntakeCommand;
-    private final Command ShooterTestCommand;
+    private final Command MixHopperCommand;
 
     //===Declare Buttons===//
     private final JoystickButton ParkButton;
@@ -119,6 +122,13 @@ public class RobotContainer {
         aux = new CommandXboxController(1);
         OI = new Joystick(2);
 
+        //Creates Ballistics Used by Shooter
+        myBallistics = new Ballistics2026(
+            MechanismConstants.kTurretCameraHeight, 
+            MechanismConstants.kTargetHeight, 
+            MechanismConstants.kShooterWheelDiameter,
+            MechanismConstants.kShooterDriveRatio);
+
         // Initialize Buttons
         ParkButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch3);
         DisableAutoTurretButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch8);
@@ -128,12 +138,12 @@ public class RobotContainer {
         ShootingModeButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch7);
 
         //Initialize Commands
-        RunIntakeCommand = new RunIntake(intake, -0.75);
+        RunIntakeCommand = new RunIntake(intake, -0.5);
         RunTurretRightCommand = new ManualTurret(turret, -.1);
         RunTurretLeftCommand = new ManualTurret(turret, .1);
         AutoTurretCommand = new AutoTurret(turret);
         LiftIntakeCommand = new LiftIntake(intake);
-        ShootBallCommand = new ShootBall(shooter, indexer);
+        ShootBallCommand = new ShootBall(shooter, indexer, intake, myBallistics);
         AutoShootCommand = new AutoShoot(shooter, indexer);
         ManualLiftIntakeCommand = new ManualLiftIntake(intake, aux);
         RunClimberCommand = new RunClimber(climber);
@@ -147,16 +157,17 @@ public class RobotContainer {
         ShooterModeCommand = new ChangeShootingMode(true);
         ShuttleModeCommand = new ChangeShootingMode(false);
         AutoIntakeCommand = new AutoIntake(intake, -.75);
-        ShooterTestCommand = new ShooterTest(shooter);
+        MixHopperCommand = new MixHopper(indexer);
 
         // Set Default Commands For Subsystems
         turret.setDefaultCommand(AutoTurretCommand);
         intake.setDefaultCommand(ManualLiftIntakeCommand);
         climber.setDefaultCommand(ManualClimberCommand);
+        indexer.setDefaultCommand(MixHopperCommand);
 
         // Register named commands for PathPlanner
         NamedCommands.registerCommand("Intake", AutoIntakeCommand);
-        NamedCommands.registerCommand("Shoot", AutoShootCommand);
+        NamedCommands.registerCommand("Shoot", ShootBallCommand);
         NamedCommands.registerCommand("Lift Intake", LiftIntakeCommand);
         NamedCommands.registerCommand("Climb", RunClimberCommand);
         
@@ -269,6 +280,7 @@ public class RobotContainer {
         //turret.getHubInfo();
         SmartDashboard.putNumber("Gyro Data", pigeon.getYaw().getValueAsDouble());
         SmartDashboard.putNumber("Target Speed", MechanismConstants.targetVelocity);
+        SmartDashboard.putNumber("Shooter Speed", shooter.getWheelVelocity());
     }
 
     /**
