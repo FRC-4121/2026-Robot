@@ -167,7 +167,7 @@ public class RobotContainer {
 
         // Register named commands for PathPlanner
         NamedCommands.registerCommand("Intake", AutoIntakeCommand);
-        NamedCommands.registerCommand("Shoot", ShootBallCommand);
+        NamedCommands.registerCommand("Shoot", AutoShootCommand);
         NamedCommands.registerCommand("Lift Intake", LiftIntakeCommand);
         NamedCommands.registerCommand("Climb", RunClimberCommand);
         
