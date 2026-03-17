@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 1.146811111111111,
+        "x": 1.0883444444444443,
         "y": 5.959527777777778
       },
       "prevControl": {
-        "x": 1.6925000000000006,
+        "x": 1.634033333333334,
         "y": 5.959527777777778
       },
       "nextControl": null,
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 0.6,
     "rotation": 0.0
   },
   "reversed": false,
   "folder": "Intaking From Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 70.0
   },
   "useDefaultConstraints": true
 }

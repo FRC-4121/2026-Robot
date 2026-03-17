@@ -120,7 +120,7 @@ public final class Constants {
 
     public static boolean isShooterMode = true;
 
-    public static boolean stopAutoShooter = true;
+    public static boolean stopAutoShooter = false;
 
     public static double targetVelocity = 0;
 

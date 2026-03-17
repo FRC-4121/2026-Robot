@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.146811111111111,
+        "x": 1.0883444444444443,
         "y": 5.959527777777778
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0241243381788574,
-        "y": 5.374446930656715
+        "x": 2.0566710173421425,
+        "y": 5.48017138160775
       },
       "isLocked": false,
       "linkedName": "Outpost Setup"
     },
     {
       "anchor": {
-        "x": 3.0908277777777777,
-        "y": 5.194588888888888
+        "x": 2.2820388888888887,
+        "y": 5.545388888888888
       },
       "prevControl": {
-        "x": 1.9736808318723784,
-        "y": 5.5253357008109525
+        "x": 1.088559141732932,
+        "y": 5.751829858944154
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,7 +47,7 @@
   "reversed": false,
   "folder": "Intaking From Depot",
   "idealStartingState": {
-    "velocity": 0,
+    "velocity": 3.0,
     "rotation": 0.0
   },
   "useDefaultConstraints": true

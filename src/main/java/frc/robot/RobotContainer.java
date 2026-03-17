@@ -72,6 +72,7 @@ public class RobotContainer {
     private final Command ShuttleModeCommand;
     private final Command AutoIntakeCommand;
     private final Command MixHopperCommand;
+    private final Command StopAutoShootCommand;
 
     //===Declare Buttons===//
     private final JoystickButton ParkButton;
@@ -158,6 +159,7 @@ public class RobotContainer {
         ShuttleModeCommand = new ChangeShootingMode(false);
         AutoIntakeCommand = new AutoIntake(intake, -.75);
         MixHopperCommand = new MixHopper(indexer);
+        StopAutoShootCommand = new StopAutoShoot();
 
         // Set Default Commands For Subsystems
         turret.setDefaultCommand(AutoTurretCommand);
@@ -168,6 +170,7 @@ public class RobotContainer {
         // Register named commands for PathPlanner
         NamedCommands.registerCommand("Intake", AutoIntakeCommand);
         NamedCommands.registerCommand("Shoot", AutoShootCommand);
+        NamedCommands.registerCommand("Stop Shoot", StopAutoShootCommand);
         NamedCommands.registerCommand("Lift Intake", LiftIntakeCommand);
         NamedCommands.registerCommand("Climb", RunClimberCommand);
         
@@ -229,6 +232,9 @@ public class RobotContainer {
         //Subsystem Buttons on Aux Controller
         aux.x().onTrue(LiftIntakeCommand);
         aux.b().onTrue(RunClimberCommand);
+        aux.rightBumper().whileTrue(RunTurretRightCommand);
+        aux.leftBumper().whileTrue(RunTurretLeftCommand);
+        aux.y().whileTrue(ShootBallCommand);
 
         //OI Buttons
         DisableStateButton.onTrue(DisableStateTrueCommand);
@@ -281,6 +287,8 @@ public class RobotContainer {
         SmartDashboard.putNumber("Gyro Data", pigeon.getYaw().getValueAsDouble());
         SmartDashboard.putNumber("Target Speed", MechanismConstants.targetVelocity);
         SmartDashboard.putNumber("Shooter Speed", shooter.getWheelVelocity());
+        SmartDashboard.putBoolean("Stop Auto Shoot", MechanismConstants.stopAutoShooter);
+        SmartDashboard.putBoolean("Slow Mode?", Mutables.isSlowMode);
     }
 
     /**

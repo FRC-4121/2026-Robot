@@ -6,21 +6,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.MechanismConstants;
-import frc.robot.subsystems.*;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class RunIntake extends Command {
-  
-  private Intake myIntake;
-  private double speed;
-
-  /** Creates a new RunIntake. */
-  public RunIntake(Intake intake, double speed) {
-    
-    myIntake = intake;
-    this.speed = speed;
-    addRequirements(myIntake);
-
+public class StopAutoShoot extends Command {
+  /** Creates a new StopAutoShoot. */
+  public StopAutoShoot() {
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -31,23 +22,17 @@ public class RunIntake extends Command {
   @Override
   public void execute() {
 
-    myIntake.runIntake(speed);
-    myIntake.runIntakeLift(MechanismConstants.kIntakeDown + (.2 * MechanismConstants.kIntakeDown));
+    MechanismConstants.stopAutoShooter = true;
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-
-    myIntake.stopIntake();
-    myIntake.stopIntakeLift();
-    
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

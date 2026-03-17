@@ -37,12 +37,7 @@ public class AutoShoot extends Command {
     
     percentVelocity = 0.95;
     MechanismConstants.isIndexerMixing = false;
-
-    if (MechanismConstants.stopAutoShooter) {
-      MechanismConstants.stopAutoShooter = false;
-    } else {
-      MechanismConstants.stopAutoShooter = true;
-    }
+    MechanismConstants.stopAutoShooter = false;
 
   }
 
@@ -76,10 +71,13 @@ public class AutoShoot extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+
     myShooter.stopShooter();
     myIntake.stopIntake();
+    myIndexer.stopIndexer();
     myShooter.runHood(MechanismConstants.kHoodLowPos);
     MechanismConstants.isIndexerMixing = true;
+
   }
 
   // Returns true when the command should end.
