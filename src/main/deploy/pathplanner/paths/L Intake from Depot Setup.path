@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9641499999999996,
-        "y": 5.535644444444444
+        "x": 3.5293277777777776,
+        "y": 5.374861111111111
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.355122222222222,
-        "y": 5.81336111111111
+        "x": 2.5146169285118423,
+        "y": 5.801339665430448
       },
       "isLocked": false,
       "linkedName": "Auto 1 Return 1"
@@ -20,8 +20,8 @@
         "y": 5.959527777777778
       },
       "prevControl": {
-        "x": 1.634033333333334,
-        "y": 5.959527777777778
+        "x": 1.855424446537818,
+        "y": 5.542635313316639
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +48,7 @@
   "folder": "Intaking From Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 70.0
+    "rotation": 45.0
   },
   "useDefaultConstraints": true
 }

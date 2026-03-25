@@ -4,12 +4,8 @@
 
 package frc.robot;
 
-import java.lang.Math;
-import java.util.HashMap;
-
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.MechanismConstants;
 import edu.wpi.first.math.util.Units;
 

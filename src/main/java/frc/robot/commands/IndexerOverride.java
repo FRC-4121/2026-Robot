@@ -5,26 +5,16 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-
-import frc.robot.subsystems.*;
+import frc.robot.Constants.MechanismConstants;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ZeroEncoders extends Command {
+public class IndexerOverride extends Command {
 
-  Intake myIntake;
-  Turret myTurret;
-  Climber myClimber;
-  Shooter myHood;
+  boolean myIsIndexerOverride;
+  /** Creates a new IndexerOverride. */
+  public IndexerOverride(boolean isIndexerOverride) {
 
-  /** Creates a new ZeroEncoder. */
-  public ZeroEncoders(Intake intake, Turret turret, Climber climber, Shooter hood) {
-    
-    myIntake = intake;
-    myTurret = turret;
-    myClimber = climber;
-    myHood = hood;
-
-    addRequirements(myIntake, myTurret, myClimber, myHood);
+    myIsIndexerOverride = isIndexerOverride;
 
   }
 
@@ -36,10 +26,7 @@ public class ZeroEncoders extends Command {
   @Override
   public void execute() {
 
-    myIntake.zeroIntakeLift();
-    myTurret.zeroTurret();
-    myClimber.zeroClimber();
-    myHood.zeroHood();
+    MechanismConstants.isIndexerOverride = myIsIndexerOverride;
 
   }
 

@@ -4,42 +4,44 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
-
+import frc.robot.Constants.MechanismConstants;
 import frc.robot.subsystems.*;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ZeroEncoders extends Command {
+public class AutoMixHopper extends Command {
 
-  Intake myIntake;
-  Turret myTurret;
-  Climber myClimber;
-  Shooter myHood;
+  private Indexer myIndexer;
 
-  /** Creates a new ZeroEncoder. */
-  public ZeroEncoders(Intake intake, Turret turret, Climber climber, Shooter hood) {
-    
-    myIntake = intake;
-    myTurret = turret;
-    myClimber = climber;
-    myHood = hood;
+  /** Creates a new AutoMixHopper. */
+  public AutoMixHopper(Indexer indexer) {
 
-    addRequirements(myIntake, myTurret, myClimber, myHood);
+    myIndexer = indexer;
+    addRequirements(myIndexer);
 
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+
+    if (MechanismConstants.isAutoIndexerMixing) {
+      MechanismConstants.isAutoIndexerMixing = false;
+    } else {
+      MechanismConstants.isAutoIndexerMixing = true;
+    }
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    myIntake.zeroIntakeLift();
-    myTurret.zeroTurret();
-    myClimber.zeroClimber();
-    myHood.zeroHood();
+    if (MechanismConstants.isAutoIndexerMixing) {
+      myIndexer.runIndexer(-.3);
+    } else {
+      myIndexer.stopIndexer();
+    }
 
   }
 

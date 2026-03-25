@@ -3,10 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.extras;
-import frc.robot.commands.*;
-import frc.robot.LumaHelpers;
-import frc.robot.subsystems.*;
-import java.math.*;
 
 /*
 All units are in meters, seconds, and degrees
@@ -17,11 +13,9 @@ All units are in meters, seconds, and degrees
 public class Ballistics2026 {
 
     //Input Constants
-    private double launchAngle;
     private double initialY;
     private double targetY;
     private double gravity = 9.81;
-    private double slipFactor; //Adjust this with testing
     private double wheelDiameter;
     private double driveRatio;
     

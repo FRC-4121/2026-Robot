@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9641499999999996,
-        "y": 5.535644444444444
+        "x": 3.5293277777777776,
+        "y": 5.374861111111111
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2826421079999144,
-        "y": 4.617992452230651
+        "x": 2.8478198857776924,
+        "y": 4.4572091188973175
       },
       "isLocked": false,
       "linkedName": "Auto 1 Return 1"
@@ -48,7 +48,7 @@
   "folder": "Left Climb",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 70.0
+    "rotation": 45.0
   },
   "useDefaultConstraints": true
 }

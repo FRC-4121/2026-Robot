@@ -29,11 +29,14 @@ public class MixHopper extends Command {
   @Override
   public void execute() {
 
-    if (MechanismConstants.isIndexerMixing) {
+    myIndexer.runIndexer(-.3);
 
-      myIndexer.runIndexer(-.2);
+    // if (MechanismConstants.isIndexerMixing) {
 
-    }
+    //   myIndexer.runIndexer(-.3);
+    //   System.out.println("Mixing Hopper");
+
+    // }
 
   }
 

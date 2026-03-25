@@ -6,14 +6,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-
 import edu.wpi.first.math.controller.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.LimelightHelpers;
 import frc.robot.Constants.MechanismConstants;
 import frc.robot.subsystems.Turret;
-import frc.robot.commands.*;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AutoTurret extends Command {
@@ -36,8 +32,6 @@ public class AutoTurret extends Command {
   public AutoTurret(Turret turret) {
 
     myTurret = turret;
-   
-    
     
     addRequirements(myTurret);
 
@@ -67,6 +61,7 @@ public class AutoTurret extends Command {
   public void execute() {
 
     double[] hubInfo = myTurret.getHubInfo();
+    MechanismConstants.numTagsFound = hubInfo[2];
 
     if (MechanismConstants.isTurretEnabled && !MechanismConstants.shuttleTurretStatus) {
 

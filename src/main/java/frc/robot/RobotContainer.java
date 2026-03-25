@@ -73,6 +73,10 @@ public class RobotContainer {
     private final Command AutoIntakeCommand;
     private final Command MixHopperCommand;
     private final Command StopAutoShootCommand;
+    private final Command StopAutoIntakeCommand;
+    private final Command IndexerOverrideOnCommand;
+    private final Command IndexerOverrideOffCommand;
+    private final Command AutoMixHopperCommand;
 
     //===Declare Buttons===//
     private final JoystickButton ParkButton;
@@ -81,6 +85,8 @@ public class RobotContainer {
     private final JoystickButton ZeroEncodersButton;
     private final JoystickButton DisableStateButton;
     private final JoystickButton ShootingModeButton;
+    private final JoystickButton MixHopperButton;
+    private final JoystickButton IndexerOverrideButton;
 
     //===Swerve Drive Variables===//
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * DriveConstants.slowModeMultiplier; // kSpeedAt12Volts desired top speed
@@ -137,9 +143,11 @@ public class RobotContainer {
         ZeroEncodersButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch2top);
         DisableStateButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch4);
         ShootingModeButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch7);
+        MixHopperButton = new JoystickButton(OI, ControlConstants.LaunchPadButton3);
+        IndexerOverrideButton = new JoystickButton(OI, ControlConstants.LaunchPadButton1);
 
         //Initialize Commands
-        RunIntakeCommand = new RunIntake(intake, -0.5);
+        RunIntakeCommand = new RunIntake(intake, -.8);
         RunTurretRightCommand = new ManualTurret(turret, -.1);
         RunTurretLeftCommand = new ManualTurret(turret, .1);
         AutoTurretCommand = new AutoTurret(turret);
@@ -154,18 +162,22 @@ public class RobotContainer {
         ChangeDrivingSpeedCommand = new ChangeDrivingSpeed();
         DisableStateTrueCommand = new DisableState(true);
         DisableStateFalseCommand = new DisableState(false);
-        ZeroEncodersCommand = new ZeroEncoders(intake, turret, climber);
+        ZeroEncodersCommand = new ZeroEncoders(intake, turret, climber, shooter);
         ShooterModeCommand = new ChangeShootingMode(true);
         ShuttleModeCommand = new ChangeShootingMode(false);
-        AutoIntakeCommand = new AutoIntake(intake, -.75);
+        AutoIntakeCommand = new AutoIntake(intake, -.8);
         MixHopperCommand = new MixHopper(indexer);
         StopAutoShootCommand = new StopAutoShoot();
+        StopAutoIntakeCommand = new StopAutoIntake();
+        IndexerOverrideOnCommand = new IndexerOverride(true);
+        IndexerOverrideOffCommand = new IndexerOverride(false);
+        AutoMixHopperCommand = new AutoMixHopper(indexer);
 
         // Set Default Commands For Subsystems
         turret.setDefaultCommand(AutoTurretCommand);
         intake.setDefaultCommand(ManualLiftIntakeCommand);
         climber.setDefaultCommand(ManualClimberCommand);
-        indexer.setDefaultCommand(MixHopperCommand);
+        //indexer.setDefaultCommand(MixHopperCommand);
 
         // Register named commands for PathPlanner
         NamedCommands.registerCommand("Intake", AutoIntakeCommand);
@@ -173,6 +185,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("Stop Shoot", StopAutoShootCommand);
         NamedCommands.registerCommand("Lift Intake", LiftIntakeCommand);
         NamedCommands.registerCommand("Climb", RunClimberCommand);
+        NamedCommands.registerCommand("Stop Intake", StopAutoIntakeCommand);
+        NamedCommands.registerCommand("Mix Hopper", AutoMixHopperCommand);
         
         // Set field centric drive
         drivetrain.seedFieldCentric();
@@ -245,6 +259,9 @@ public class RobotContainer {
         DisableAutoTurretButton.onFalse(EnableAutoTurretCommand);
         ShootingModeButton.onTrue(ShooterModeCommand);
         ShootingModeButton.onFalse(ShuttleModeCommand);
+        MixHopperButton.whileTrue(MixHopperCommand);
+        IndexerOverrideButton.onTrue(IndexerOverrideOnCommand);
+        IndexerOverrideButton.onFalse(IndexerOverrideOffCommand);
 
     }
     
@@ -289,6 +306,7 @@ public class RobotContainer {
         SmartDashboard.putNumber("Shooter Speed", shooter.getWheelVelocity());
         SmartDashboard.putBoolean("Stop Auto Shoot", MechanismConstants.stopAutoShooter);
         SmartDashboard.putBoolean("Slow Mode?", Mutables.isSlowMode);
+        SmartDashboard.putBoolean("Is Indexer Override On?", MechanismConstants.isIndexerOverride);
     }
 
     /**

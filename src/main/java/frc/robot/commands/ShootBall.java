@@ -49,34 +49,52 @@ public class ShootBall extends Command {
 
     if (MechanismConstants.isShooterMode) {
 
-      if (MechanismConstants.targetDistance > 2) {
-        myShooter.runHood(MechanismConstants.kHoodHighPos);
-        hoodAngle = 53;
-        slipFactor = .3;
+      if (MechanismConstants.numTagsFound != 0) {
+
+        if (MechanismConstants.targetDistance > 2) {
+          myShooter.runHood(MechanismConstants.kHoodHighPos);
+          hoodAngle = 53;
+          slipFactor = .3;
+        } else {
+          myShooter.runHood(MechanismConstants.kHoodLowPos);
+          hoodAngle = 62.5;
+          slipFactor = .23;
+        }
+
+        MechanismConstants.targetVelocity = -myBallistics.calculateLaunchVelcity(MechanismConstants.targetDistance,
+            hoodAngle, slipFactor);
+        myShooter.runShooter(MechanismConstants.targetVelocity);
+        myIntake.runIntake(-0.5);
+        double shooterVelocity = myShooter.getShooterVelocity();
+
+        if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) || MechanismConstants.isIndexerOverride) {
+          myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+        }
+
       } else {
+
+        MechanismConstants.targetVelocity = -35;
         myShooter.runHood(MechanismConstants.kHoodLowPos);
-        hoodAngle = 62.5;
-        slipFactor = .23;
-      }
+        myShooter.runShooter(MechanismConstants.targetVelocity);
+        myIntake.runIntake(-0.5);
 
-      MechanismConstants.targetVelocity = -myBallistics.calculateLaunchVelcity(MechanismConstants.targetDistance, hoodAngle, slipFactor);
-      myShooter.runShooter(MechanismConstants.targetVelocity);
-      myIntake.runIntake(-0.5);
-      double shooterVelocity = myShooter.getShooterVelocity();
+        double shooterVelocity = myShooter.getShooterVelocity();
 
-      if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) {
-        myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+        if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) || MechanismConstants.isIndexerOverride) {
+          myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+        }
+
       }
 
     } else {
 
-      MechanismConstants.targetVelocity = -25;
+      MechanismConstants.targetVelocity = -35;
       myShooter.runShooter(MechanismConstants.targetVelocity);
       double shooterVelocity = myShooter.getShooterVelocity();
       myIntake.runIntake(-0.5);
       myShooter.runHood(MechanismConstants.kHoodShuttlePos);
 
-      if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) {
+      if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) || MechanismConstants.isIndexerOverride) {
         myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
       }
       
@@ -90,7 +108,8 @@ public class ShootBall extends Command {
     myShooter.stopShooter();
     myIntake.stopIntake();
     myShooter.runHood(MechanismConstants.kHoodLowPos);
-    MechanismConstants.isIndexerMixing = true;
+    //MechanismConstants.isIndexerMixing = true;
+    myIndexer.stopIndexer();
 
   }
 

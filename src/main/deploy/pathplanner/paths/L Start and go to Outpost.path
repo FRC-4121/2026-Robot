@@ -3,16 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.38674444444444445,
-        "y": 5.959527777777778
+        "x": 3.57805,
+        "y": 5.0874
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.9504212203447915,
-        "y": 5.9747978913632185
+        "x": 2.7917795852255947,
+        "y": 5.152467373326527
       },
       "isLocked": false,
-      "linkedName": "Outpost Intake End"
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.726605555555556,
+        "y": 5.959527777777778
+      },
+      "prevControl": {
+        "x": 2.437505870779855,
+        "y": 5.224930785379337
+      },
+      "nextControl": {
+        "x": 1.5527501986765417,
+        "y": 6.139178313219425
+      },
+      "isLocked": false,
+      "linkedName": null
     },
     {
       "anchor": {
@@ -20,8 +36,8 @@
         "y": 5.959527777777778
       },
       "prevControl": {
-        "x": 0.5258177804178635,
-        "y": 5.971857272483681
+        "x": 1.3379989017775717,
+        "y": 5.946388069497086
       },
       "nextControl": null,
       "isLocked": false,
@@ -41,14 +57,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 3.0,
+    "velocity": 0,
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Intaking From Depot",
+  "folder": "L Stay on Our Side Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

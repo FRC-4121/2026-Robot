@@ -3,8 +3,9 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
-    "Left Climb",
     "Intaking From Depot",
+    "Left Climb",
+    "L Stay on Our Side Paths",
     "Right Climb"
   ],
   "autoFolders": [],

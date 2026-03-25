@@ -7,25 +7,17 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import org.photonvision.PhotonCamera;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.MotionMagicVelocityDutyCycle;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityDutyCycle;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 //import org.photonvision.*;
@@ -52,22 +44,22 @@ public class Shooter extends SubsystemBase {
 
 
   // Declare shooter PID controller gains
-  private double shooter_kG = 0.0;
-  private double shooter_kS = 0.0;
-  private double shooter_kV = 0.12;
-  private double shooter_kA = 0.0;
-  private double shooter_kP = 0.3;
-  private double shooter_kI = 0.02;
-  private double shooter_kD = 0.005;
+  // private double shooter_kG = 0.0;
+  // private double shooter_kS = 0.0;
+  // private double shooter_kV = 0.12;
+  // private double shooter_kA = 0.0;
+  // private double shooter_kP = 0.3;
+  // private double shooter_kI = 0.02;
+  // private double shooter_kD = 0.005;
 
   // Declare hood PID controller gains
-  private double hood_kG = 0.0;
-  private double hood_kS = 0.1;
-  private double hood_kV = 0.1;
-  private double hood_kA = 0.0;
-  private double hood_kP = 0.1;
-  private double hood_kI = 0.0;
-  private double hood_kD = 0.0;
+  // private double hood_kG = 0.0;
+  // private double hood_kS = 0.1;
+  // private double hood_kV = 0.1;
+  // private double hood_kA = 0.0;
+  // private double hood_kP = 0.1;
+  // private double hood_kI = 0.0;
+  // private double hood_kD = 0.0;
 
   // Declare MotionMagic variables
   private int magic_cruise = 200;
@@ -245,6 +237,15 @@ public double getHoodPosition() {
   return hoodMotor.getPosition().getValueAsDouble();
 
 }
+
+/**
+ * 
+ * @return
+ */
+public void zeroHood(){
+hoodMotor.getConfigurator().setPosition(0);
+}
+
 
 /**
  * Get the current shooter motor velocity

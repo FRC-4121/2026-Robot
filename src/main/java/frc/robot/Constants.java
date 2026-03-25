@@ -116,16 +116,19 @@ public final class Constants {
     
     public static final double kHoodLowPos = 0;
     public static final double kHoodHighPos = 0.2;
-    public static final double kHoodShuttlePos = 0.3;
+    public static final double kHoodShuttlePos = 0.25;
 
     public static boolean isShooterMode = true;
 
     public static boolean stopAutoShooter = false;
 
     public static double targetVelocity = 0;
+    public static double numTagsFound = 0;
 
     // Set hopper/indexer constants
 
+    public static boolean isIndexerOverride = false;
+    public static boolean isAutoIndexerMixing = false;
    
     //Set intake constants
     public static final double kIntakeUp = 0;
@@ -167,13 +170,13 @@ public final class Constants {
     public static final double kTurretSpeedManual = 0.10;//positive is counterclockwise
     public static final double kTurretSpeedAuto = 1.0;
     public static final double kTurretSpeedLock = 0.0625;
-    public static final double kIndexerSpeed = 1;
+    public static final double kIndexerSpeed = .85;
 
     public static final double kTurretCameraHeight = .5207;
     public static final double kTargetHeight = 1.1176;
     public static final double kTurretCameraAngle = 25;
-    public static final double kShooterSlipClose = .25;
-    public static final double kShooterSlipFar = .33;
+    public static final double kShooterSlipClose = .32;
+    public static final double kShooterSlipFar = .29;
     public static final double kShooterDriveRatio = 2;
     public static final double kShooterWheelDiameter = .1016;
 
