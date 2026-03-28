@@ -6,12 +6,18 @@ package frc.robot;
 
 import java.lang.Math;
 import java.util.HashMap;
+import java.util.Optional;
 
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonUtils;
+import org.photonvision.EstimatedRobotPose;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.MechanismConstants;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Transform3d;
 
 /**
  * Define the Luma Helpers class
@@ -33,6 +39,8 @@ public class LumaHelpers {
      */
     private static final int[] redTags = {2, 5, 8, 10, 11};
     private static final int[] redMidTags = {2, 5, 10};
+
+    private static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
     /**
      * Get target hub info
@@ -160,6 +168,31 @@ public class LumaHelpers {
     public double getDistance(PhotonCamera camera){
 
         return 0.0;   
+    }
+
+    public static Optional<EstimatedRobotPose> getPose(PhotonCamera camera, Transform3d camtransform){
+
+        // Create a pose estimator
+        PhotonPoseEstimator photonEstimator = new PhotonPoseEstimator(kTagLayout, camtransform);
+
+        // Get the latest results from the camera pipeline
+        var results = camera.getAllUnreadResults();
+
+        // Estimate robot pose from all tags
+        Optional<EstimatedRobotPose> visionEst = Optional.empty();
+
+        for (var result : results){
+
+            visionEst = photonEstimator.estimateCoprocMultiTagPose(result);
+            if (visionEst.isEmpty()){
+                visionEst = photonEstimator.estimateLowestAmbiguityPose(result);
+            }
+            
+            
+
+        }
+        
+        return visionEst;
     }
 
 }
