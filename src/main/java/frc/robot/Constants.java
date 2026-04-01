@@ -81,13 +81,6 @@ public final class Constants {
     public static final double kA_Shoot = 0;
     public static final double kG_Shoot = 0;
 
-    public static final double kP_Slave = .009;
-    public static final double kI_Slave = .001;
-    public static final double kD_Slave = 0;
-    public static final double kS_Slave = 0;
-    public static final double kV_Slave = .145;
-    public static final double kA_Slave = 0;
-    public static final double kG_Slave = 0;
 
     public static final double kMagicCruise = 200;
     public static final double kMagicAccel = 1000;
@@ -108,6 +101,7 @@ public final class Constants {
     public static double targetVelocity = 0;
 
     // Set hopper/indexer constants
+    public static double kFloorSpeed = 0.3;
 
    
     //Set intake constants

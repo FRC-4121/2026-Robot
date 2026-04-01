@@ -17,19 +17,21 @@ public class ShootBall extends Command {
   private Shooter myShooter;
   private Indexer myIndexer;
   private Intake myIntake;
+  private Floor myFloor;
   private double percentVelocity;
   private Ballistics2026 myBallistics;
   
 
   /** Creates a new ShootBall. */
-  public ShootBall(Shooter shooter, Indexer indexer, Intake intake, Ballistics2026 ballistics) {
+  public ShootBall(Shooter shooter, Indexer indexer, Intake intake, Floor floor, Ballistics2026 ballistics) {
 
     myBallistics = ballistics;
     myShooter = shooter;
     myIndexer = indexer;
     myIntake = intake;
+    myFloor = floor;
     
-    addRequirements(myShooter, myIndexer, myIntake);
+    addRequirements(myShooter, myIndexer, myIntake, myFloor);
   }
 
   // Called when the command is initially scheduled.
@@ -58,10 +60,12 @@ public class ShootBall extends Command {
       MechanismConstants.targetVelocity = -myBallistics.calculateLaunchVelcity(MechanismConstants.targetDistance, hoodAngle, slipFactor);
       myShooter.runShooter(MechanismConstants.targetVelocity);
       myIntake.runIntake(-0.5);
+      //myIntake.runIntakeLift();
       double shooterVelocity = myShooter.getShooterVelocity();
 
       if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) {
         myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+        myFloor.runFloor(MechanismConstants.kFloorSpeed);
       }
 
     } else {
@@ -70,9 +74,11 @@ public class ShootBall extends Command {
       myShooter.runShooter(MechanismConstants.targetVelocity);
       double shooterVelocity = myShooter.getShooterVelocity();
       myIntake.runIntake(-0.5);
+      //myIntake.runIntakeLift();
 
       if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) {
         myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+        myFloor.runFloor(MechanismConstants.kFloorSpeed);
       }
       
     }

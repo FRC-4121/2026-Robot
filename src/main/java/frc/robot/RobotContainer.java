@@ -141,8 +141,8 @@ public class RobotContainer {
         RunTurretLeftCommand = new ManualTurret(turret, .1);
         AutoTurretCommand = new AutoTurret(turret);
         LiftIntakeCommand = new LiftIntake(intake);
-        ShootBallCommand = new ShootBall(shooter, indexer, intake, myBallistics);
-        AutoShootCommand = new AutoShoot(shooter, indexer, intake, myBallistics);
+        ShootBallCommand = new ShootBall(shooter, indexer, intake, floor, myBallistics);
+        AutoShootCommand = new AutoShoot(shooter, indexer, intake, floor, myBallistics);
         ManualLiftIntakeCommand = new ManualLiftIntake(intake, aux);
         DisableAutoTurretCommand = new DisableAutoTurret(false);
         EnableAutoTurretCommand = new DisableAutoTurret(true);
