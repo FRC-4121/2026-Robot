@@ -68,12 +68,6 @@ public final class Constants {
     public static final double kDutyCycleDeadband = 0.001;
     public static boolean isDisableState = false;
 
-    // Set climber constants
-    public static final double kClimberDown = 0;
-    public static final double kClimberUp = 112; //Actual encode value at max height is 110
-    public static final int CLIMBER_LIMIT_SWITCH = 2;
-    public static boolean isClimberUp = false;
-    public static final double kClimberSpeedFactor = 0.5;
     
     // Set shooter constants
     public static final int SHOOTER_LEAD = 1;
@@ -87,6 +81,14 @@ public final class Constants {
     public static final double kA_Shoot = 0;
     public static final double kG_Shoot = 0;
 
+    public static final double kP_Slave = .009;
+    public static final double kI_Slave = .001;
+    public static final double kD_Slave = 0;
+    public static final double kS_Slave = 0;
+    public static final double kV_Slave = .145;
+    public static final double kA_Slave = 0;
+    public static final double kG_Slave = 0;
+
     public static final double kMagicCruise = 200;
     public static final double kMagicAccel = 1000;
     public static final double kMagicJerk = 1500;
@@ -97,26 +99,7 @@ public final class Constants {
 
     public static final double kShooterSpeed = -1.0;
 
-    /*public static final double kP_Hood = 0;
-    public static final double kI_Hood = 0;
-    public static final double kD_Hood = 0;
-    public static final double kS_Hood = 0;
-    public static final double kV_Hood = 0;
-    public static final double kA_Hood = 0;
-    public static final double kG_Hood = 0;
-    */
-    
-    public static final double kP_Hood = 3.2;
-    public static final double kI_Hood = 1;
-    public static final double kD_Hood = 0.01;
-    public static final double kS_Hood = 0;
-    public static final double kV_Hood = 0;
-    public static final double kA_Hood = 0;
-    public static final double kG_Hood = 0;
-    
-    public static final double kHoodLowPos = 0;
-    public static final double kHoodHighPos = 0.2;
-    public static final double kHoodShuttlePos = 0.3;
+   
 
     public static boolean isShooterMode = true;
 
@@ -183,7 +166,8 @@ public final class Constants {
 
     public static double targetDistance;
 
-    public static boolean isIndexerMixing = true;
+    public static double shootModeVelocity;
+    public static double shuttleModeVelocity;
 
   }
 

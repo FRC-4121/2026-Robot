@@ -13,16 +13,16 @@ public class ZeroEncoders extends Command {
 
   Intake myIntake;
   Turret myTurret;
-  Climber myClimber;
+
 
   /** Creates a new ZeroEncoder. */
-  public ZeroEncoders(Intake intake, Turret turret, Climber climber) {
+  public ZeroEncoders(Intake intake, Turret turret) {
     
     myIntake = intake;
     myTurret = turret;
-    myClimber = climber;
+  
 
-    addRequirements(myIntake, myTurret, myClimber);
+    addRequirements(myIntake, myTurret);
 
   }
 
@@ -36,7 +36,7 @@ public class ZeroEncoders extends Command {
 
     myIntake.zeroIntakeLift();
     myTurret.zeroTurret();
-    myClimber.zeroClimber();
+    
 
   }
 

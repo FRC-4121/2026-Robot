@@ -43,7 +43,7 @@ public class Robot extends TimedRobot {
     public Robot() {
         m_robotContainer = new RobotContainer();
         
-        CameraServer.startAutomaticCapture();
+        //CameraServer.startAutomaticCapture();
 
         frontCamera = new PhotonCamera("hoppercam");
 
@@ -57,6 +57,7 @@ public class Robot extends TimedRobot {
 
         //Call pose estimation method
         Optional<EstimatedRobotPose> robotPose = LumaHelpers.getPose(frontCamera, kRobotToCam);
+        SmartDashboard.putBoolean("Pose Found", robotPose.isPresent());
         if (robotPose.isPresent()) {
             EstimatedRobotPose est = robotPose.get();
             Pose2d robotPose2d = est.estimatedPose.toPose2d();

@@ -39,12 +39,12 @@ import frc.robot.LumaHelpers;
 public class Shooter extends SubsystemBase {
   
   // Declare CAN ID for motor
-  private final int shooterMotorID = 24;
-  private final int hoodMotorID = 25;
+  private final int shooterMasterID = 24;
+  private final int shooterSlaveID = 25;
 
   // Declare motor variables
-  private TalonFX shooterMotor;
-  private TalonFX hoodMotor;
+  private TalonFX shooterMaster;
+  private TalonFX shooterSlave;
 
   // Declare turret camera
   private PhotonCamera turretCam;
@@ -60,14 +60,7 @@ public class Shooter extends SubsystemBase {
   private double shooter_kI = 0.02;
   private double shooter_kD = 0.005;
 
-  // Declare hood PID controller gains
-  private double hood_kG = 0.0;
-  private double hood_kS = 0.1;
-  private double hood_kV = 0.1;
-  private double hood_kA = 0.0;
-  private double hood_kP = 0.1;
-  private double hood_kI = 0.0;
-  private double hood_kD = 0.0;
+ 
 
   // Declare MotionMagic variables
   private int magic_cruise = 200;
@@ -84,14 +77,17 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
 
     // Create motors
-    shooterMotor = new TalonFX(shooterMotorID, GeneralConstants.kMechBus);
-    hoodMotor = new TalonFX(hoodMotorID, GeneralConstants.kMechBus);
+    shooterMaster = new TalonFX(shooterMasterID, GeneralConstants.kMechBus);
+    shooterSlave = new TalonFX(shooterSlaveID, GeneralConstants.kMechBus);
 
     // Create shooter camera
     //shooterCamera = new PhotonCamera("shootercamera");
 
     // Initialize motors
     InitializeMotors();
+
+    // Set slave motor to follow master motor
+    //shooterSlave.setControl(new Follower(shooterMaster.getDeviceID(), false));
 
   }
 
@@ -101,20 +97,20 @@ public class Shooter extends SubsystemBase {
   public void InitializeMotors() {
 
     // Create shooter motor configuration
-    var shooterConfigs = new TalonFXConfiguration();
+    var shooterMasterConfigs = new TalonFXConfiguration();
 
     // Set shooter motor output configuration
-    var shooterOutputConfigs = shooterConfigs.MotorOutput;
-    shooterOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
-    shooterOutputConfigs.NeutralMode = NeutralModeValue.Brake;
-    shooterOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
+    var shooterMasterOutputConfigs = shooterMasterConfigs.MotorOutput;
+    shooterMasterOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    shooterMasterOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+    shooterMasterOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
 
     // Set shooter motor feedback sensor
-    var shooterSensorConfig = shooterConfigs.Feedback;
+    var shooterSensorConfig = shooterMasterConfigs.Feedback;
     shooterSensorConfig.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
 
     // Set shooter motor PID constants
-    var slot0Configs = shooterConfigs.Slot0;
+    var slot0Configs = shooterMasterConfigs.Slot0;
     slot0Configs.kG = MechanismConstants.kG_Shoot;
     slot0Configs.kS = MechanismConstants.kS_Shoot;
     slot0Configs.kV = MechanismConstants.kV_Shoot;
@@ -124,53 +120,44 @@ public class Shooter extends SubsystemBase {
     slot0Configs.kD = MechanismConstants.kD_Shoot;
 
     // Set MotionMagic constants
-    var motionMagicConfigs = shooterConfigs.MotionMagic;
+    var motionMagicConfigs = shooterMasterConfigs.MotionMagic;
     motionMagicConfigs.MotionMagicCruiseVelocity = magic_cruise;
     motionMagicConfigs.MotionMagicAcceleration = magic_accel;
     motionMagicConfigs.MotionMagicJerk = magic_jerk;
 
     // Apply shooter motor configuration and initialize position to 0
-    StatusCode shooterStatus = shooterMotor.getConfigurator().apply(shooterConfigs, 0.050);
-    if (!shooterStatus.isOK()) {
-      System.err.println("Could not apply shooter motor configs. Error code: " + shooterStatus.toString());
+    StatusCode shooterMasterStatus = shooterMaster.getConfigurator().apply(shooterMasterConfigs, 0.050);
+    if (!shooterMasterStatus.isOK()) {
+      System.err.println("Could not apply shooter motor configs. Error code: " + shooterMasterStatus.toString());
       DriverStation.reportError("Could not apply shooter motor configs.", false);
     } else {
-      System.out.println("Successfully applied shooter motor configs. Error code: " + shooterStatus.toString());
+      System.out.println("Successfully applied shooter motor configs. Error code: " + shooterMasterStatus.toString());
     }
-    shooterMotor.getConfigurator().setPosition(0);
+    shooterMaster.getConfigurator().setPosition(0);
 
-    // Create hood motor configuration
-    var hoodConfigs = new TalonFXConfiguration();
 
-    // Set hood motor output configuration
-    var hoodOutputConfigs = hoodConfigs.MotorOutput;
-    hoodOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
-    hoodOutputConfigs.NeutralMode = NeutralModeValue.Brake;
-    hoodOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
 
-    // Set hood motor feedback sensor
-    var hoodSensorConfig = hoodConfigs.Feedback;
-    hoodSensorConfig.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
+    // Create slave motor configuration
+    var shooterSlaveConfigs = new TalonFXConfiguration();
 
-    // Set hood motor PID constants
-    var hoodSlot0Configs = hoodConfigs.Slot0;
-    hoodSlot0Configs.kG = MechanismConstants.kG_Hood;
-    hoodSlot0Configs.kS = MechanismConstants.kS_Hood;
-    hoodSlot0Configs.kV = MechanismConstants.kV_Hood;
-    hoodSlot0Configs.kA = MechanismConstants.kA_Hood;
-    hoodSlot0Configs.kP = MechanismConstants.kP_Hood;
-    hoodSlot0Configs.kI = MechanismConstants.kI_Hood;
-    hoodSlot0Configs.kD = MechanismConstants.kD_Hood;
+    // Set slave motor output configuration
+    var shooterSlaveOutputConfigs = shooterSlaveConfigs.MotorOutput;
+    shooterSlaveOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    shooterSlaveOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+    shooterSlaveOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
 
-    // Apply hood motor configs and initialize position to 0
-    StatusCode hoodStatus = hoodMotor.getConfigurator().apply(hoodConfigs, 0.050);
-    if (!hoodStatus.isOK()) {
-      System.err.println("Could not apply hood motor configs. Error code: " + hoodStatus.toString());
-      DriverStation.reportError("Could not apply hood motor configs.", false);
+
+
+
+    // Apply shooter slave motor configs and initialize position to 0
+    StatusCode shooterSlaveStatus = shooterSlave.getConfigurator().apply(shooterSlaveConfigs, 0.050);
+    if (!shooterSlaveStatus.isOK()) {
+      System.err.println("Could not apply slave motor configs. Error code: " + shooterSlaveStatus.toString());
+      DriverStation.reportError("Could not apply slave motor configs.", false);
     } else {
-      System.out.println("Successfully applied hood motor configs. Error code: " + hoodStatus.toString());
+      System.out.println("Successfully applied slave motor configs. Error code: " + shooterSlaveStatus.toString());
     }
-    hoodMotor.getConfigurator().setPosition(0);
+    shooterSlave.getConfigurator().setPosition(0);
 
   }
 
@@ -179,14 +166,14 @@ public class Shooter extends SubsystemBase {
    * @param speed speed and direction of the motor rotation (+ = clockwise)
    */
   public void runShooter(double speed) {
-    shooterMotor.setControl(new MotionMagicVelocityVoltage(speed));
+    shooterMaster.setControl(new MotionMagicVelocityVoltage(speed));
   }
 
   /**
    * Halts shooter motors
    */
   public void stopShooter(){
-    shooterMotor.stopMotor();
+    shooterMaster.stopMotor();
   }
 
   /**
@@ -195,25 +182,10 @@ public class Shooter extends SubsystemBase {
    */
   public double getShooterVelocity() {
 
-    return shooterMotor.getRotorVelocity().getValueAsDouble();
+    return shooterMaster.getRotorVelocity().getValueAsDouble();
     
   }
 
-  /**
-   *  Runs hood motor
-   * 
-   * @param position The desired position of the hood
-   */
-  public void runHood(double position) {
-    hoodMotor.setControl(new PositionDutyCycle(position));
-  }
-
- /**
- * Halts hood motor
- */
-public void stopHood() {
-  hoodMotor.stopMotor();
-}
 
 /**
  * Get the current target offset from the turret camera
@@ -236,15 +208,7 @@ public double[] getHubInfo() {
 
 }
 
-/**
- * Get position from hood
- * @return hood position
- */
-public double getHoodPosition() {
 
-  return hoodMotor.getPosition().getValueAsDouble();
-
-}
 
 /**
  * Get the current shooter motor velocity
@@ -252,7 +216,7 @@ public double getHoodPosition() {
  */
 public double getWheelVelocity() {
 
-  return shooterMotor.getVelocity().getValueAsDouble();
+  return shooterMaster.getVelocity().getValueAsDouble();
 
 }
 

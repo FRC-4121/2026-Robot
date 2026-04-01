@@ -36,7 +36,6 @@ public class AutoShoot extends Command {
   public void initialize() {
     
     percentVelocity = 0.95;
-    MechanismConstants.isIndexerMixing = false;
     MechanismConstants.stopAutoShooter = false;
 
   }
@@ -48,12 +47,8 @@ public class AutoShoot extends Command {
     double slipFactor = .25;
 
       if (MechanismConstants.targetDistance > 2) {
-        myShooter.runHood(MechanismConstants.kHoodHighPos);
-        hoodAngle = 53;
         slipFactor = .3;
       } else {
-        myShooter.runHood(MechanismConstants.kHoodLowPos);
-        hoodAngle = 62.5;
         slipFactor = .23;
       }
 
@@ -75,8 +70,6 @@ public class AutoShoot extends Command {
     myShooter.stopShooter();
     myIntake.stopIntake();
     myIndexer.stopIndexer();
-    myShooter.runHood(MechanismConstants.kHoodLowPos);
-    MechanismConstants.isIndexerMixing = true;
 
   }
 

@@ -170,7 +170,17 @@ public class LumaHelpers {
         return 0.0;   
     }
 
+    /**
+     * Get the pose of the robot based on found AprilTags
+     * 
+     * @param camera The camera to use for pose estimation
+     * @param camtransform The position of the camera on the robot
+     * @return The estimated pose
+     */
     public static Optional<EstimatedRobotPose> getPose(PhotonCamera camera, Transform3d camtransform){
+
+        AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
+        SmartDashboard.putNumber("Field Length", kTagLayout.getFieldLength());
 
         // Create a pose estimator
         PhotonPoseEstimator photonEstimator = new PhotonPoseEstimator(kTagLayout, camtransform);
@@ -181,15 +191,16 @@ public class LumaHelpers {
         // Estimate robot pose from all tags
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
 
-        for (var result : results){
+        SmartDashboard.putNumber("Num Tags", results.size());
 
+        for (var result : results){
+            SmartDashboard.putBoolean("Pose Fallback", false);
             visionEst = photonEstimator.estimateCoprocMultiTagPose(result);
             if (visionEst.isEmpty()){
+                SmartDashboard.putBoolean("Pose Fallback", true);
                 visionEst = photonEstimator.estimateLowestAmbiguityPose(result);
             }
             
-            
-
         }
         
         return visionEst;

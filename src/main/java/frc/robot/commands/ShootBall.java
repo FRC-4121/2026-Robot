@@ -19,6 +19,7 @@ public class ShootBall extends Command {
   private Intake myIntake;
   private double percentVelocity;
   private Ballistics2026 myBallistics;
+  
 
   /** Creates a new ShootBall. */
   public ShootBall(Shooter shooter, Indexer indexer, Intake intake, Ballistics2026 ballistics) {
@@ -27,7 +28,7 @@ public class ShootBall extends Command {
     myShooter = shooter;
     myIndexer = indexer;
     myIntake = intake;
-
+    
     addRequirements(myShooter, myIndexer, myIntake);
   }
 
@@ -35,7 +36,6 @@ public class ShootBall extends Command {
   @Override
   public void initialize() {
 
-    MechanismConstants.isIndexerMixing = false;
     percentVelocity = 0.95;
 
   }
@@ -50,12 +50,8 @@ public class ShootBall extends Command {
     if (MechanismConstants.isShooterMode) {
 
       if (MechanismConstants.targetDistance > 2) {
-        myShooter.runHood(MechanismConstants.kHoodHighPos);
-        hoodAngle = 53;
         slipFactor = .3;
       } else {
-        myShooter.runHood(MechanismConstants.kHoodLowPos);
-        hoodAngle = 62.5;
         slipFactor = .23;
       }
 
@@ -74,7 +70,6 @@ public class ShootBall extends Command {
       myShooter.runShooter(MechanismConstants.targetVelocity);
       double shooterVelocity = myShooter.getShooterVelocity();
       myIntake.runIntake(-0.5);
-      myShooter.runHood(MechanismConstants.kHoodShuttlePos);
 
       if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) {
         myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
@@ -89,8 +84,6 @@ public class ShootBall extends Command {
 
     myShooter.stopShooter();
     myIntake.stopIntake();
-    myShooter.runHood(MechanismConstants.kHoodLowPos);
-    MechanismConstants.isIndexerMixing = true;
 
   }
 

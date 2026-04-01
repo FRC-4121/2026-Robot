@@ -7,6 +7,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.Follower;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,10 +24,13 @@ public class Indexer extends SubsystemBase{
                                                // to zero
     
   // Declare CAN ID for motor
-  private final int indexerMotorID = 22;
+  private final int indexerMasterID = 22;
+  private final int indexerSlaveID = 23;
+
 
   // Declare motor variable
-  private TalonFX indexerMotor;
+  private TalonFX indexerMaster;
+  private TalonFX indexerSlave;
 
   private PhotonCamera hopperCam;
 
@@ -39,16 +43,22 @@ public class Indexer extends SubsystemBase{
   private double indexer_kI = 0.0;
   private double indexer_kD = 0.0;
 
+
+
   /** 
    * Create new indexer 
    */
   public Indexer(){
 
     //Create motors
-    indexerMotor = new TalonFX(indexerMotorID, GeneralConstants.kMechBus);
+    indexerMaster = new TalonFX(indexerMasterID, GeneralConstants.kMechBus);
+    indexerSlave = new TalonFX(indexerSlaveID, GeneralConstants.kMechBus);
 
     // Configure the motors
     InitializeMotor();
+
+    // Set slave motor to follow master motor
+    //indexerSlave.setControl(new Follower(indexerMaster.getDeviceID()), false));
 
     //Create a new indexer camera
     hopperCam = new PhotonCamera("hoppercam");
@@ -61,20 +71,20 @@ public class Indexer extends SubsystemBase{
   private void InitializeMotor(){
 
     // Create indexer motor configuration
-    var indexerMotorConfigs = new TalonFXConfiguration();
+    var indexerMasterConfigs = new TalonFXConfiguration();
 
     // Set indexer motor output configuration
-    var indexerMotorOutputConfigs = indexerMotorConfigs.MotorOutput;
-    indexerMotorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
-    indexerMotorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
-    indexerMotorOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
+    var indexerMasterOutputConfigs = indexerMasterConfigs.MotorOutput;
+    indexerMasterOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    indexerMasterOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+    indexerMasterOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
 
     // Set indexer motor feedback sensor
-    var indexerSensorConfig = indexerMotorConfigs.Feedback;
+    var indexerSensorConfig = indexerMasterConfigs.Feedback;
     indexerSensorConfig.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
 
     // Set indexer motor PID constants
-    var slot0Configs = indexerMotorConfigs.Slot0;
+    var slot0Configs = indexerMasterConfigs.Slot0;
     slot0Configs.kG = indexer_kG;
     slot0Configs.kS = indexer_kS;
     slot0Configs.kV = indexer_kV;
@@ -84,14 +94,40 @@ public class Indexer extends SubsystemBase{
     slot0Configs.kD = indexer_kD;
 
     // Apply indexer motor configuration and initialize position to 0
-    StatusCode indexerMotorStatus = indexerMotor.getConfigurator().apply(indexerMotorConfigs, 0.050);
-    if (!indexerMotorStatus.isOK()) {
-      System.err.println("Could not apply indexer motor configs. Error code: " + indexerMotor.toString());
+    StatusCode indexerMasterStatus = indexerMaster.getConfigurator().apply(indexerMasterConfigs, 0.050);
+    if (!indexerMasterStatus.isOK()) {
+      System.err.println("Could not apply indexer motor configs. Error code: " + indexerMaster.toString());
       DriverStation.reportError("Could not apply indexer motor configs.", false);
     } else {
-      System.out.println("Successfully applied indexer motor configs. Error code: " + indexerMotorStatus.toString());
+      System.out.println("Successfully applied indexer motor configs. Error code: " + indexerMasterStatus.toString());
     }
-    indexerMotor.getConfigurator().setPosition(0);
+    indexerMaster.getConfigurator().setPosition(0);
+
+
+
+
+    // Create slave configuration
+    var indexerSlaveConfigs = new TalonFXConfiguration();
+
+    // Set indexer motor output configuration
+    var indexerSlaveOutputConfigs = indexerMasterConfigs.MotorOutput;
+    indexerSlaveOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    indexerSlaveOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+    indexerSlaveOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
+
+  
+
+    // Apply indexer motor configuration and initialize position to 0
+    StatusCode indexerSlaveStatus = indexerSlave.getConfigurator().apply(indexerSlaveConfigs, 0.050);
+    if (!indexerSlaveStatus.isOK()) {
+      System.err.println("Could not apply indexer motor configs. Error code: " + indexerSlave.toString());
+      DriverStation.reportError("Could not apply indexer motor configs.", false);
+    } else {
+      System.out.println("Successfully applied indexer motor configs. Error code: " + indexerSlaveStatus.toString());
+    }
+    indexerSlave.getConfigurator().setPosition(0);
+    
+
 
   }
 
@@ -101,14 +137,14 @@ public class Indexer extends SubsystemBase{
    * @param speed  Output duty (-1 to 1) for the motor
    */
   public void runIndexer(double speed) {
-    indexerMotor.setControl(new DutyCycleOut(speed));
+    indexerMaster.setControl(new DutyCycleOut(speed));
   }
 
   /**
    * Halt indexer
    */
   public void stopIndexer() {
-    indexerMotor.stopMotor();
+    indexerMaster.stopMotor();
   }
   
 }

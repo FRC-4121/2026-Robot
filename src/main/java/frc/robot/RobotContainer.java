@@ -44,8 +44,8 @@ public class RobotContainer {
     private final Intake intake;
     private final Shooter shooter;
     private final Turret turret;
-    private final Climber climber;
     private final Indexer indexer;
+    private final Floor floor;
 
     private final Pigeon2 pigeon;
 
@@ -60,8 +60,6 @@ public class RobotContainer {
     private final Command ShootBallCommand;
     private final Command AutoShootCommand;
     private final Command ManualLiftIntakeCommand;
-    private final Command RunClimberCommand;
-    private final Command ManualClimberCommand;
     private final Command DisableAutoTurretCommand;
     private final Command EnableAutoTurretCommand;
     private final Command ChangeDrivingSpeedCommand;
@@ -71,7 +69,6 @@ public class RobotContainer {
     private final Command ShooterModeCommand;
     private final Command ShuttleModeCommand;
     private final Command AutoIntakeCommand;
-    private final Command MixHopperCommand;
     private final Command StopAutoShootCommand;
 
     //===Declare Buttons===//
@@ -113,8 +110,8 @@ public class RobotContainer {
         intake = new Intake();
         shooter = new Shooter();
         turret = new Turret();
-        climber = new Climber();
         indexer = new Indexer();
+        floor = new Floor();
 
         pigeon = new Pigeon2(13);
 
@@ -147,32 +144,28 @@ public class RobotContainer {
         ShootBallCommand = new ShootBall(shooter, indexer, intake, myBallistics);
         AutoShootCommand = new AutoShoot(shooter, indexer, intake, myBallistics);
         ManualLiftIntakeCommand = new ManualLiftIntake(intake, aux);
-        RunClimberCommand = new RunClimber(climber);
-        ManualClimberCommand = new ManualClimber(climber, aux);
         DisableAutoTurretCommand = new DisableAutoTurret(false);
         EnableAutoTurretCommand = new DisableAutoTurret(true);
         ChangeDrivingSpeedCommand = new ChangeDrivingSpeed();
         DisableStateTrueCommand = new DisableState(true);
         DisableStateFalseCommand = new DisableState(false);
-        ZeroEncodersCommand = new ZeroEncoders(intake, turret, climber);
+        ZeroEncodersCommand = new ZeroEncoders(intake, turret);
         ShooterModeCommand = new ChangeShootingMode(true);
         ShuttleModeCommand = new ChangeShootingMode(false);
         AutoIntakeCommand = new AutoIntake(intake, -.75);
-        MixHopperCommand = new MixHopper(indexer);
         StopAutoShootCommand = new StopAutoShoot();
 
         // Set Default Commands For Subsystems
         turret.setDefaultCommand(AutoTurretCommand);
         intake.setDefaultCommand(ManualLiftIntakeCommand);
-        climber.setDefaultCommand(ManualClimberCommand);
-        indexer.setDefaultCommand(MixHopperCommand);
+    
 
         // Register named commands for PathPlanner
         NamedCommands.registerCommand("Intake", AutoIntakeCommand);
         NamedCommands.registerCommand("Shoot", AutoShootCommand);
         NamedCommands.registerCommand("Stop Shoot", StopAutoShootCommand);
         NamedCommands.registerCommand("Lift Intake", LiftIntakeCommand);
-        NamedCommands.registerCommand("Climb", RunClimberCommand);
+        
         
         // Set field centric drive
         drivetrain.seedFieldCentric();
@@ -231,7 +224,6 @@ public class RobotContainer {
 
         //Subsystem Buttons on Aux Controller
         aux.x().onTrue(LiftIntakeCommand);
-        aux.b().onTrue(RunClimberCommand);
         aux.rightBumper().whileTrue(RunTurretRightCommand);
         aux.leftBumper().whileTrue(RunTurretLeftCommand);
         aux.y().whileTrue(ShootBallCommand);
