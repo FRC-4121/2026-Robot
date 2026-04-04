@@ -34,28 +34,14 @@ public final class Constants {
      * Swerve drive values
      */
 
-    // Motor Limits
-    public static final double MaxLinearSpeed = 3.7; // 3.7 Max Speed in Meters per second
-    public static final double MaxRadiansPerSecond = Math.PI;
-    public static final double SlowMaxLinearSpeed = 0.75;// 0.75 Max Speed during slow mode in meters per second
-    public static final double SlowRadiansPerSecond = (Math.PI / 2);// Max rotational speed during slow mode
-    public static final double swerveDriveSpeedLimiter = 0.7;
-    public static double LinearSpeed = 3.7;
-    public static double RotationalSpeed = Math.PI;
-    public static double RotationalSpeedFast = 2 * Math.PI;
 
     // PathPlanner constants
     //public static final PIDConstants translationConstants = new PIDConstants(4.5, 0.0, 0.0);
     //public static final PIDConstants rotationConstants = new PIDConstants(1.5, 0.0, 0.0);
 
-    // General drive constants
-    public static final double GyroCorrection = 0;
-
     // Fast / Slow Mode Constants
     public static double slowModeMultiplier = 1;
     public static double slowModeAngularMultiplier = 1;
-
-    public static boolean kUseLimelight = false;
 
   }
 
@@ -65,14 +51,9 @@ public final class Constants {
   public static final class MechanismConstants {
 
     // Set general constants
-    public static final double kDutyCycleDeadband = 0.001;
     public static boolean isDisableState = false;
 
-    
-    // Set shooter constants
-    public static final int SHOOTER_LEAD = 1;
-    public static final int SHOOTER_FOLLOW = 0;
-
+    // Set shooter PID constants
     public static final double kP_Shoot = .009;
     public static final double kI_Shoot = .001;
     public static final double kD_Shoot = 0;
@@ -81,71 +62,38 @@ public final class Constants {
     public static final double kA_Shoot = 0;
     public static final double kG_Shoot = 0;
 
-
+    // Set shooter Motion Magic constants
     public static final double kMagicCruise = 200;
     public static final double kMagicAccel = 1000;
     public static final double kMagicJerk = 1500;
 
-    public static final int kPIDLoopIdxShoot = 0;
-    public static final int kTimeoutMsShoot = 20;
-    public static final int kShooterMaxRPM = 6100;
-
-    public static final double kShooterSpeed = -1.0;
-
-   
-
+    // Set shooter behavior constants
     public static boolean isShooterMode = true;
-
     public static boolean stopAutoShooter = false;
-
     public static double targetVelocity = 0;
 
     // Set hopper/indexer constants
     public static double kFloorSpeed = 0.3;
+    public static final double kIndexerSpeed = 1;
 
-   
-    //Set intake constants
+    // Set intake constants
     public static final double kIntakeUp = 0;
     public static final double kIntakeDown = 11.24; // Exact value
     public static boolean isIntakeUp = true;
     public static final double kIntakeSpeedFactor = 0.2;
+    public static boolean stopAutoIntake = true;
 
+    // Set intake motor PID constants
     public static final double kP_IntakeLift = 0.06;
     public static final double kI_IntakeLift = 0;
     public static final double kD_IntakeLift = 0.005;
 
-    public static boolean stopAutoIntake = true;
-
-    //Set turret constants
-    public static final int TURRET = 9;
-
-    public static final double kTalonFXPPR = 2048;
-    public static final double kTurretEncoderPPR = 10.5;
-    public static final int TURRET_LIMIT_SWITCH  = 2;
-
+    // Set turret constants
     public static final double kTurretMinAngle = -3.239;
     public static final double kTurretMaxAngle = .35;
         //0 is facing to the climber side of the bot parallel with the front and back frame stock
 
-    public static final double kP_Turret = 0.01;
-    public static final double kI_Turret = 0.0005;
-    public static final double kD_Turret = 0.0;
-
-    public static final double kP_TurretLock = 0.00115;
-    public static final double kI_TurretLock = 0.0005;//try .0006
-    public static final double kD_TurretLock = 0.000055;//try 0.000007
-
-    public static final double kTurretAngleTolerance = 2.0;
-
-    public static final double kTurretGearReduction = .5;
-    public static final double kTurretSprocketRatio = 16.0/120;
-    public static final double kTurretDiskDia = 13.75;
-
-    public static final double kTurretSpeedManual = 0.10;//positive is counterclockwise
-    public static final double kTurretSpeedAuto = 1.0;
-    public static final double kTurretSpeedLock = 0.0625;
-    public static final double kIndexerSpeed = 1;
-
+    // Set ballistics constants
     public static final double kTurretCameraHeight = .5207;
     public static final double kTargetHeight = 1.1176;
     public static final double kTurretCameraAngle = 25;
@@ -238,6 +186,10 @@ public final class Constants {
     // CANBus variables
     public static final CANBus kDriveBus = new CANBus("rio");
     public static final CANBus kMechBus = new CANBus("Mechanisms");
+
+    //Hub coordinates in meters
+    public static final double[] kBlueHub = {4.63, 4.03};
+    public static final double[] kRedHub = {11.92, 4.03};
 
   }
 

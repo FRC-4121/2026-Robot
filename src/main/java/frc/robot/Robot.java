@@ -19,21 +19,13 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 
-import org.photonvision.EstimatedRobotPose;
-import org.photonvision.PhotonCamera;
-import frc.robot.LumaHelpers;
-import java.util.Optional;
+
 
 
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
 
     private final RobotContainer m_robotContainer;
-
-    private PhotonCamera frontCamera;
-    public static final Transform3d kRobotToCam = new Transform3d(new Translation3d(0.381, 0.0, 0.0), new Rotation3d(0, 0, 0));
-
-    Field2d fieldPose = new Field2d();
 
     /* log and replay timestamp and joystick data */
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
@@ -45,7 +37,7 @@ public class Robot extends TimedRobot {
         
         //CameraServer.startAutomaticCapture();
 
-        frontCamera = new PhotonCamera("hoppercam");
+ 
 
     }
 
@@ -54,21 +46,7 @@ public class Robot extends TimedRobot {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
         m_robotContainer.UpdateStatus();
-
-        //Call pose estimation method
-        Optional<EstimatedRobotPose> robotPose = LumaHelpers.getPose(frontCamera, kRobotToCam);
-        SmartDashboard.putBoolean("Pose Found", robotPose.isPresent());
-        if (robotPose.isPresent()) {
-            EstimatedRobotPose est = robotPose.get();
-            Pose2d robotPose2d = est.estimatedPose.toPose2d();
-            fieldPose.setRobotPose(robotPose2d);
-            SmartDashboard.putData("RobotPose", fieldPose);
-        }
-        
-        
-
-    
-
+        m_robotContainer.updateRobotPose();
     }
 
     @Override
