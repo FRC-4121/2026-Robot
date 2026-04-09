@@ -39,33 +39,12 @@ import frc.robot.LumaHelpers;
 public class Shooter extends SubsystemBase {
   
   // Declare CAN ID for motor
-  private final int shooterMasterID = 24;
-  private final int shooterSlaveID = 25;
+  private final int shooterMasterID = 25;
+  private final int shooterSlaveID = 26;
 
   // Declare motor variables
   private TalonFX shooterMaster;
   private TalonFX shooterSlave;
-
-  // Declare turret camera
-  private PhotonCamera turretCam;
-
-
-
-  // Declare shooter PID controller gains
-  private double shooter_kG = 0.0;
-  private double shooter_kS = 0.0;
-  private double shooter_kV = 0.12;
-  private double shooter_kA = 0.0;
-  private double shooter_kP = 0.3;
-  private double shooter_kI = 0.02;
-  private double shooter_kD = 0.005;
-
- 
-
-  // Declare MotionMagic variables
-  private int magic_cruise = 200;
-  private int magic_accel = 1000;
-  private int magic_jerk = 1500;
 
   // Declare motor constants
   private final double MOTOR_DEADBAND = 0.05; // Deadband for the drive motor. Values smaller than this will be rounded
@@ -80,14 +59,11 @@ public class Shooter extends SubsystemBase {
     shooterMaster = new TalonFX(shooterMasterID, GeneralConstants.kMechBus);
     shooterSlave = new TalonFX(shooterSlaveID, GeneralConstants.kMechBus);
 
-    // Create shooter camera
-    //shooterCamera = new PhotonCamera("shootercamera");
-
     // Initialize motors
     InitializeMotors();
 
     // Set slave motor to follow master motor
-    //shooterSlave.setControl(new Follower(shooterMaster.getDeviceID(), false));
+    shooterSlave.setControl(new Follower(shooterMaster.getDeviceID(), MotorAlignmentValue.Opposed));
 
   }
 
@@ -102,8 +78,13 @@ public class Shooter extends SubsystemBase {
     // Set shooter motor output configuration
     var shooterMasterOutputConfigs = shooterMasterConfigs.MotorOutput;
     shooterMasterOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
-    shooterMasterOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+    shooterMasterOutputConfigs.NeutralMode = NeutralModeValue.Coast;
     shooterMasterOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
+
+    // Set Current Limit Configuration
+    var shooterMasterLimitConfigs = shooterMasterConfigs.CurrentLimits;
+    shooterMasterLimitConfigs.StatorCurrentLimit = MechanismConstants.shooterCurrentLimit;
+    shooterMasterLimitConfigs.StatorCurrentLimitEnable = true;
 
     // Set shooter motor feedback sensor
     var shooterSensorConfig = shooterMasterConfigs.Feedback;
@@ -121,9 +102,9 @@ public class Shooter extends SubsystemBase {
 
     // Set MotionMagic constants
     var motionMagicConfigs = shooterMasterConfigs.MotionMagic;
-    motionMagicConfigs.MotionMagicCruiseVelocity = magic_cruise;
-    motionMagicConfigs.MotionMagicAcceleration = magic_accel;
-    motionMagicConfigs.MotionMagicJerk = magic_jerk;
+    motionMagicConfigs.MotionMagicCruiseVelocity = MechanismConstants.kMagicCruise;
+    motionMagicConfigs.MotionMagicAcceleration = MechanismConstants.kMagicAccel;
+    motionMagicConfigs.MotionMagicJerk = MechanismConstants.kMagicJerk;
 
     // Apply shooter motor configuration and initialize position to 0
     StatusCode shooterMasterStatus = shooterMaster.getConfigurator().apply(shooterMasterConfigs, 0.050);
@@ -143,11 +124,13 @@ public class Shooter extends SubsystemBase {
     // Set slave motor output configuration
     var shooterSlaveOutputConfigs = shooterSlaveConfigs.MotorOutput;
     shooterSlaveOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
-    shooterSlaveOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+    shooterSlaveOutputConfigs.NeutralMode = NeutralModeValue.Coast;
     shooterSlaveOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
 
-
-
+    // Set Current Limit Configuration
+    var shooterSlaveLimitConfigs = shooterSlaveConfigs.CurrentLimits;
+    shooterSlaveLimitConfigs.StatorCurrentLimit = MechanismConstants.shooterCurrentLimit;
+    shooterSlaveLimitConfigs.StatorCurrentLimitEnable = true;
 
     // Apply shooter slave motor configs and initialize position to 0
     StatusCode shooterSlaveStatus = shooterSlave.getConfigurator().apply(shooterSlaveConfigs, 0.050);
@@ -186,30 +169,6 @@ public class Shooter extends SubsystemBase {
     
   }
 
-
-/**
- * Get the current target offset from the turret camera
- * 
- * @return The current target offset
- */
-public double[] getHubInfo() {
-
-  double[] hubInfo = LumaHelpers.getHubTargetInfo(turretCam,
-      Mutables.blueAlliance,
-      MechanismConstants.kTurretCameraHeight,
-      MechanismConstants.kTurretCameraAngle,
-      MechanismConstants.kTargetHeight);
-
-  SmartDashboard.putNumber("tags found", hubInfo[2]);
-  SmartDashboard.putNumber("hub yaw", hubInfo[0]);
-  SmartDashboard.putNumber("hub dist", hubInfo[1]);
-
-  return hubInfo;
-
-}
-
-
-
 /**
  * Get the current shooter motor velocity
  * @return
@@ -220,17 +179,9 @@ public double getWheelVelocity() {
 
 }
 
-
-/**
- * Get yaw 
- */
-
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
-
-
+@Override
+public void periodic() {
+  // This method will be called once per scheduler run
+}
 
 }

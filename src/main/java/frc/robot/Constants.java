@@ -43,6 +43,10 @@ public final class Constants {
     public static double slowModeMultiplier = 1;
     public static double slowModeAngularMultiplier = 1;
 
+    // Current Limits on Swerve Drive Motors
+    public static double driveCurrentLimit = 120;
+    public static double angleCurrentLimit = 80;
+
   }
 
   /*
@@ -53,12 +57,19 @@ public final class Constants {
     // Set general constants
     public static boolean isDisableState = false;
 
+    // Current Limits on Mechanism Motors;
+    public static double intakeCurrentLimit = 35;
+    public static double intakeLiftCurrentLimit = 30;
+    public static double floorCurrentLimit = 30;
+    public static double indexerCurrentLimit = 60;
+    public static double shooterCurrentLimit = 80;
+
     // Set shooter PID constants
-    public static final double kP_Shoot = .009;
-    public static final double kI_Shoot = .001;
+    public static final double kP_Shoot = 0.12;
+    public static final double kI_Shoot = 0.04;
     public static final double kD_Shoot = 0;
     public static final double kS_Shoot = 0;
-    public static final double kV_Shoot = .145;
+    public static final double kV_Shoot = 0.11;
     public static final double kA_Shoot = 0;
     public static final double kG_Shoot = 0;
 
@@ -74,7 +85,7 @@ public final class Constants {
 
     // Set hopper/indexer constants
     public static double kFloorSpeed = 0.3;
-    public static final double kIndexerSpeed = 1;
+    public static final double kIndexerSpeed = -30;
 
     // Set intake constants
     public static final double kIntakeUp = 0;
@@ -88,19 +99,23 @@ public final class Constants {
     public static final double kI_IntakeLift = 0;
     public static final double kD_IntakeLift = 0.005;
 
+    // Set intake lift motion magic constants
+    public static final double kLiftMagicCruise = 50;
+    public static final double kLiftMagicAccel = 100;
+    public static final double kLiftMagicJerk = 1000;
+
     // Set turret constants
     public static final double kTurretMinAngle = -3.239;
     public static final double kTurretMaxAngle = .35;
         //0 is facing to the climber side of the bot parallel with the front and back frame stock
 
     // Set ballistics constants
-    public static final double kTurretCameraHeight = .5207;
     public static final double kTargetHeight = 1.1176;
-    public static final double kTurretCameraAngle = 25;
-    public static final double kShooterSlipClose = .25;
-    public static final double kShooterSlipFar = .33;
-    public static final double kShooterDriveRatio = 2;
-    public static final double kShooterWheelDiameter = .1016;
+    public static final double kShooterHeight = 0.497;
+    public static final double kShooterSlip = 1.0;
+    public static final double kShooterDriveRatio = 0.5;
+    public static final double kShooterWheelDiameter = 0.1016;
+    public static final double kShooterLaunchAngle = 69.0;
 
     public static boolean isTurretEnabled = true;
     public static boolean shuttleTurretStatus = false;

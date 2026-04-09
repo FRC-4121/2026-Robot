@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.524455555555555,
-        "y": 7.616083333333334
+        "x": 4.425816666666666,
+        "y": 7.625827777777777
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.7620061940484812,
-        "y": 7.538175091461224
+        "x": 4.742511111111111,
+        "y": 7.596594444444445
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.1505833333333335,
-        "y": 7.387088888888888
+        "x": 6.204177777777778,
+        "y": 7.445555555555555
       },
       "prevControl": {
-        "x": 5.65848888888889,
-        "y": 7.430938888888889
+        "x": 5.712083333333334,
+        "y": 7.489405555555556
       },
       "nextControl": {
-        "x": 6.719129635003591,
-        "y": 7.336426347155894
+        "x": 6.772724079448035,
+        "y": 7.394893013822561
       },
       "isLocked": false,
       "linkedName": null
@@ -72,24 +72,11 @@
   ],
   "constraintZones": [
     {
-      "name": "Start Zone",
-      "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0.4496277915632763,
-      "constraints": {
-        "maxVelocity": 1.5,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    },
-    {
       "name": "Intaking Zone",
       "minWaypointRelativePos": 2.1677419354838734,
       "maxWaypointRelativePos": 3.0,
       "constraints": {
-        "maxVelocity": 1.0,
+        "maxVelocity": 1.5,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -109,7 +96,7 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 1.5,
     "rotation": 90.0
   },
   "reversed": false,

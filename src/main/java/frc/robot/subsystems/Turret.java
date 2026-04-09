@@ -120,27 +120,6 @@ public class Turret extends SubsystemBase {
     turretMotor.getConfigurator().setPosition(0);
   }
 
-  /**
-   * Get the current target offset from the turret camera
-   * 
-   * @return The current target offset
-   */
-  public double[] getHubInfo() {
-
-    double[] hubInfo = LumaHelpers.getHubTargetInfo(turretCam, 
-                                        Mutables.blueAlliance, 
-                                        MechanismConstants.kTurretCameraHeight, 
-                                        MechanismConstants.kTurretCameraAngle, 
-                                        MechanismConstants.kTargetHeight);
-
-    SmartDashboard.putNumber("tags found", hubInfo[2]);
-    SmartDashboard.putNumber("hub yaw", hubInfo[0]);
-    SmartDashboard.putNumber("hub dist", hubInfo[1]);
-
-    return hubInfo;
-
-  }
-
   @Override
   public void periodic() {
     SmartDashboard.putNumber("turret Pos", getPosition());

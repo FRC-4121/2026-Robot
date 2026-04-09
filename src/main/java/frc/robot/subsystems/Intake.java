@@ -13,6 +13,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -131,6 +132,12 @@ public class Intake extends SubsystemBase {
     slot0LiftConfigs.kI = MechanismConstants.kI_IntakeLift;
     slot0LiftConfigs.kD = MechanismConstants.kD_IntakeLift;
 
+    // Set MotionMagic constants
+    var motionMagicConfigs = intakeLiftConfigs.MotionMagic;
+    motionMagicConfigs.MotionMagicCruiseVelocity = MechanismConstants.kLiftMagicCruise;
+    motionMagicConfigs.MotionMagicAcceleration = MechanismConstants.kLiftMagicAccel;
+    motionMagicConfigs.MotionMagicJerk = MechanismConstants.kLiftMagicJerk;
+
     // Apply intake lift motor configuration and initialize position to 0
     StatusCode intakeLiftStatus = intakeLift.getConfigurator().apply(intakeLiftConfigs, 0.050);
     if (!intakeLiftStatus.isOK()) {
@@ -159,6 +166,15 @@ public class Intake extends SubsystemBase {
    */
   public void runIntakeLift(double position) {
     intakeLift.setControl(new PositionDutyCycle(position));
+  }
+
+  /**
+   * Run intake lift with a motion magic position
+   * 
+   * @param position desired osition of the intake
+   */
+  public void runShootingIntakeLift(double position) {
+    intakeLift.setControl(new MotionMagicDutyCycle(position));
   }
 
   /**

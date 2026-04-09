@@ -17,21 +17,19 @@ public class ShootBall extends Command {
   private Shooter myShooter;
   private Indexer myIndexer;
   private Intake myIntake;
-  private Floor myFloor;
   private double percentVelocity;
   private Ballistics2026 myBallistics;
   
 
   /** Creates a new ShootBall. */
-  public ShootBall(Shooter shooter, Indexer indexer, Intake intake, Floor floor, Ballistics2026 ballistics) {
+  public ShootBall(Shooter shooter, Indexer indexer, Intake intake, Ballistics2026 ballistics) {
 
     myBallistics = ballistics;
     myShooter = shooter;
     myIndexer = indexer;
     myIntake = intake;
-    myFloor = floor;
     
-    addRequirements(myShooter, myIndexer, myIntake, myFloor);
+    addRequirements(myShooter, myIndexer, myIntake);
   }
 
   // Called when the command is initially scheduled.
@@ -46,26 +44,16 @@ public class ShootBall extends Command {
   @Override
   public void execute() {
 
-    double hoodAngle = 0;
-    double slipFactor = .25;
-
     if (MechanismConstants.isShooterMode) {
 
-      if (MechanismConstants.targetDistance > 2) {
-        slipFactor = .3;
-      } else {
-        slipFactor = .23;
-      }
-
-      MechanismConstants.targetVelocity = -myBallistics.calculateLaunchVelcity(MechanismConstants.targetDistance, hoodAngle, slipFactor);
+      MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(MechanismConstants.targetDistance, MechanismConstants.kShooterLaunchAngle, MechanismConstants.kShooterSlip);
       myShooter.runShooter(MechanismConstants.targetVelocity);
-      myIntake.runIntake(-0.5);
-      //myIntake.runIntakeLift();
       double shooterVelocity = myShooter.getShooterVelocity();
 
       if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) {
         myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
-        myFloor.runFloor(MechanismConstants.kFloorSpeed);
+        myIndexer.runFloor(MechanismConstants.kFloorSpeed);
+        myIntake.runShootingIntakeLift(MechanismConstants.kIntakeDown * (2/3));
       }
 
     } else {
@@ -73,12 +61,11 @@ public class ShootBall extends Command {
       MechanismConstants.targetVelocity = -25;
       myShooter.runShooter(MechanismConstants.targetVelocity);
       double shooterVelocity = myShooter.getShooterVelocity();
-      myIntake.runIntake(-0.5);
-      //myIntake.runIntakeLift();
 
       if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) {
         myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
-        myFloor.runFloor(MechanismConstants.kFloorSpeed);
+        myIndexer.runFloor(MechanismConstants.kFloorSpeed);
+        myIntake.runShootingIntakeLift(MechanismConstants.kIntakeDown * (2/3));
       }
       
     }
@@ -89,7 +76,9 @@ public class ShootBall extends Command {
   public void end(boolean interrupted) {
 
     myShooter.stopShooter();
-    myIntake.stopIntake();
+    myIndexer.stopIndexer();
+    myIndexer.stopFloor();
+    myIntake.runIntakeLift(MechanismConstants.kIntakeDown);
 
   }
 

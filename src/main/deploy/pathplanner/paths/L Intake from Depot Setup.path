@@ -48,7 +48,7 @@
   "folder": "Intaking From Depot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 70.0
+    "rotation": -41.884330860609985
   },
   "useDefaultConstraints": true
 }

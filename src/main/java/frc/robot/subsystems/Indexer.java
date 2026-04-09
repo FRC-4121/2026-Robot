@@ -3,15 +3,19 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GeneralConstants;
+import frc.robot.Constants.MechanismConstants;
+
 import org.photonvision.PhotonCamera;
 
 /**
@@ -24,26 +28,24 @@ public class Indexer extends SubsystemBase{
                                                // to zero
     
   // Declare CAN ID for motor
-  private final int indexerMasterID = 22;
-  private final int indexerSlaveID = 23;
+  private final int indexerMasterID = 23;
+  private final int indexerSlaveID = 24;
+  private final int floorMotorID = 22;
 
 
   // Declare motor variable
   private TalonFX indexerMaster;
   private TalonFX indexerSlave;
-
-  private PhotonCamera hopperCam;
+  private TalonFX floorMotor;
 
   // Declare Phoenix PID controller gains
   private double indexer_kG = 0.0;
-  private double indexer_kS = 0.1;
+  private double indexer_kS = 0.0;
   private double indexer_kV = 0.1;
   private double indexer_kA = 0.0;
   private double indexer_kP = 0.1;
   private double indexer_kI = 0.0;
   private double indexer_kD = 0.0;
-
-
 
   /** 
    * Create new indexer 
@@ -53,15 +55,13 @@ public class Indexer extends SubsystemBase{
     //Create motors
     indexerMaster = new TalonFX(indexerMasterID, GeneralConstants.kMechBus);
     indexerSlave = new TalonFX(indexerSlaveID, GeneralConstants.kMechBus);
+    floorMotor = new TalonFX(floorMotorID, GeneralConstants.kMechBus);
 
     // Configure the motors
     InitializeMotor();
 
     // Set slave motor to follow master motor
-    //indexerSlave.setControl(new Follower(indexerMaster.getDeviceID()), false));
-
-    //Create a new indexer camera
-    hopperCam = new PhotonCamera("hoppercam");
+    indexerSlave.setControl(new Follower(indexerMaster.getDeviceID(), MotorAlignmentValue.Opposed));
 
   }
 
@@ -78,6 +78,11 @@ public class Indexer extends SubsystemBase{
     indexerMasterOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
     indexerMasterOutputConfigs.NeutralMode = NeutralModeValue.Brake;
     indexerMasterOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
+
+    // Set Current Limit Configuration
+    var indexerMasterLimitConfigs = indexerMasterConfigs.CurrentLimits;
+    indexerMasterLimitConfigs.StatorCurrentLimit = MechanismConstants.indexerCurrentLimit;
+    indexerMasterLimitConfigs.StatorCurrentLimitEnable = true;
 
     // Set indexer motor feedback sensor
     var indexerSensorConfig = indexerMasterConfigs.Feedback;
@@ -103,19 +108,19 @@ public class Indexer extends SubsystemBase{
     }
     indexerMaster.getConfigurator().setPosition(0);
 
-
-
-
     // Create slave configuration
     var indexerSlaveConfigs = new TalonFXConfiguration();
 
     // Set indexer motor output configuration
-    var indexerSlaveOutputConfigs = indexerMasterConfigs.MotorOutput;
+    var indexerSlaveOutputConfigs = indexerSlaveConfigs.MotorOutput;
     indexerSlaveOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
     indexerSlaveOutputConfigs.NeutralMode = NeutralModeValue.Brake;
     indexerSlaveOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
 
-  
+    // Set Current Limit Configuration
+    var indexerSlaveLimitConfigs = indexerSlaveConfigs.CurrentLimits;
+    indexerSlaveLimitConfigs.StatorCurrentLimit = MechanismConstants.indexerCurrentLimit;
+    indexerSlaveLimitConfigs.StatorCurrentLimitEnable = true;
 
     // Apply indexer motor configuration and initialize position to 0
     StatusCode indexerSlaveStatus = indexerSlave.getConfigurator().apply(indexerSlaveConfigs, 0.050);
@@ -126,8 +131,30 @@ public class Indexer extends SubsystemBase{
       System.out.println("Successfully applied indexer motor configs. Error code: " + indexerSlaveStatus.toString());
     }
     indexerSlave.getConfigurator().setPosition(0);
-    
 
+    // Create floor configuration
+    var floorConfigs = new TalonFXConfiguration();
+
+    // Set floor motor output configuration
+    var floorOutputConfigs = floorConfigs.MotorOutput;
+    floorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    floorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
+    floorOutputConfigs.withDutyCycleNeutralDeadband(MOTOR_DEADBAND);
+
+    // Set Current Limit Configuration
+    var floorLimitConfigs = floorConfigs.CurrentLimits;
+    floorLimitConfigs.StatorCurrentLimit = MechanismConstants.floorCurrentLimit;
+    floorLimitConfigs.StatorCurrentLimitEnable = true;
+
+    // Apply floor motor configuration and initialize position to 0
+    StatusCode floorStatus = floorMotor.getConfigurator().apply(floorConfigs, 0.050);
+    if (!floorStatus.isOK()) {
+      System.err.println("Could not apply floor motor configs. Error code: " + floorMotor.toString());
+      DriverStation.reportError("Could not apply floor motor configs.", false);
+    } else {
+      System.out.println("Successfully applied floor motor configs. Error code: " + floorStatus.toString());
+    }
+    floorMotor.getConfigurator().setPosition(0);
 
   }
 
@@ -137,7 +164,7 @@ public class Indexer extends SubsystemBase{
    * @param speed  Output duty (-1 to 1) for the motor
    */
   public void runIndexer(double speed) {
-    indexerMaster.setControl(new DutyCycleOut(speed));
+    indexerMaster.setControl(new VelocityVoltage(speed));
   }
 
   /**
@@ -145,6 +172,22 @@ public class Indexer extends SubsystemBase{
    */
   public void stopIndexer() {
     indexerMaster.stopMotor();
+  }
+
+  /**
+   * Runs Floor Motor
+   * 
+   * @param speed Output duty (-1 to 1) for the motor
+   */
+  public void runFloor(double speed) {
+    floorMotor.setControl(new DutyCycleOut(speed));
+  }
+
+  /**
+   * Stops Floor Motor
+   */
+  public void stopFloor() {
+    floorMotor.stopMotor();
   }
   
 }

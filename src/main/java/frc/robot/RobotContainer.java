@@ -7,7 +7,12 @@ package frc.robot;
 import java.util.Optional;
 
 import static edu.wpi.first.units.Units.*;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -28,9 +33,14 @@ import frc.robot.commands.*;
 import frc.robot.extras.Ballistics2026;
 import frc.robot.Constants.*;
 import frc.robot.generated.TunerConstants;
-
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import com.pathplanner.lib.auto.*;
+
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonCamera;
+import frc.robot.LumaHelpers;
+import java.util.Optional;
 
 public class RobotContainer {
 
@@ -45,7 +55,6 @@ public class RobotContainer {
     private final Shooter shooter;
     private final Turret turret;
     private final Indexer indexer;
-    private final Floor floor;
 
     private final Pigeon2 pigeon;
 
@@ -55,7 +64,6 @@ public class RobotContainer {
     private final Command RunIntakeCommand;
     private final Command RunTurretRightCommand;
     private final Command RunTurretLeftCommand;
-    private final Command AutoTurretCommand;
     private final Command LiftIntakeCommand;
     private final Command ShootBallCommand;
     private final Command AutoShootCommand;
@@ -78,6 +86,7 @@ public class RobotContainer {
     private final JoystickButton ZeroEncodersButton;
     private final JoystickButton DisableStateButton;
     private final JoystickButton ShootingModeButton;
+    private final JoystickButton LiftIntakeButton;
 
     //===Swerve Drive Variables===//
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * DriveConstants.slowModeMultiplier; // kSpeedAt12Volts desired top speed
@@ -95,6 +104,19 @@ public class RobotContainer {
 
     //===Declare Extra Systems===//
 
+    //===Declare Camera Variables===//
+    public static PhotonCamera frontCamera;
+    public static PhotonCamera backCamera;
+    public static PhotonCamera leftCamera;
+    public static Transform3d kRobotToFrontCam;
+    public static Transform3d kRobotToBackCam;
+    public static Transform3d kRobotToLeftCam;
+
+    //===Declare Field Pose Variables===//
+    Field2d frontCamPose = new Field2d();
+    Field2d backCamPose = new Field2d();
+    Field2d leftCamPose = new Field2d();
+
     // ===PathPlanner=== //
 
     // Declare PathPlanner variables
@@ -111,7 +133,6 @@ public class RobotContainer {
         shooter = new Shooter();
         turret = new Turret();
         indexer = new Indexer();
-        floor = new Floor();
 
         pigeon = new Pigeon2(13);
 
@@ -122,7 +143,7 @@ public class RobotContainer {
 
         //Creates Ballistics Used by Shooter
         myBallistics = new Ballistics2026(
-            MechanismConstants.kTurretCameraHeight, 
+            MechanismConstants.kShooterHeight, 
             MechanismConstants.kTargetHeight, 
             MechanismConstants.kShooterWheelDiameter,
             MechanismConstants.kShooterDriveRatio);
@@ -134,15 +155,15 @@ public class RobotContainer {
         ZeroEncodersButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch2top);
         DisableStateButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch4);
         ShootingModeButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch7);
+        LiftIntakeButton = new JoystickButton(OI, ControlConstants.LaunchPadButton4);
 
         //Initialize Commands
-        RunIntakeCommand = new RunIntake(intake, -0.5);
+        RunIntakeCommand = new RunIntake(intake, -0.75);
         RunTurretRightCommand = new ManualTurret(turret, -.1);
         RunTurretLeftCommand = new ManualTurret(turret, .1);
-        AutoTurretCommand = new AutoTurret(turret);
         LiftIntakeCommand = new LiftIntake(intake);
-        ShootBallCommand = new ShootBall(shooter, indexer, intake, floor, myBallistics);
-        AutoShootCommand = new AutoShoot(shooter, indexer, intake, floor, myBallistics);
+        ShootBallCommand = new ShootBall(shooter, indexer, intake, myBallistics);
+        AutoShootCommand = new AutoShoot(shooter, indexer, intake, myBallistics);
         ManualLiftIntakeCommand = new ManualLiftIntake(intake, aux);
         DisableAutoTurretCommand = new DisableAutoTurret(false);
         EnableAutoTurretCommand = new DisableAutoTurret(true);
@@ -156,7 +177,6 @@ public class RobotContainer {
         StopAutoShootCommand = new StopAutoShoot();
 
         // Set Default Commands For Subsystems
-        turret.setDefaultCommand(AutoTurretCommand);
         intake.setDefaultCommand(ManualLiftIntakeCommand);
     
 
@@ -173,11 +193,34 @@ public class RobotContainer {
         // Bind commands to buttons
         configureBindings();
 
+        // Create vision cameras
+        createCameras();
+
+        // Create autonomous command chooser and add to dashboard
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
-        turret.getHubInfo();
+
     }
+
+    /**
+     * Create Luma vision cameras for pose estimation
+     */
+    public void createCameras() {
+
+        frontCamera = new PhotonCamera("frontcam");
+        backCamera = new PhotonCamera("backcam");
+        leftCamera = new PhotonCamera("leftcam");
+
+        kRobotToFrontCam = new Transform3d(new Translation3d(0.554, -0.234, 0.384),
+             new Rotation3d(0, 0, 0));
+        kRobotToBackCam = new Transform3d(new Translation3d(-0.283, 0.0, 0.269),
+             new Rotation3d(0, Math.PI/12, Math.PI));
+        kRobotToLeftCam = new Transform3d(new Translation3d(0.470, 0.337, 0.384),
+             new Rotation3d(0, 0, 0.5*Math.PI));
+
+    }
+
 
     /** 
      * Method to configure control bindings
@@ -224,9 +267,6 @@ public class RobotContainer {
 
         //Subsystem Buttons on Aux Controller
         aux.x().onTrue(LiftIntakeCommand);
-        aux.rightBumper().whileTrue(RunTurretRightCommand);
-        aux.leftBumper().whileTrue(RunTurretLeftCommand);
-        aux.y().whileTrue(ShootBallCommand);
 
         //OI Buttons
         DisableStateButton.onTrue(DisableStateTrueCommand);
@@ -237,6 +277,7 @@ public class RobotContainer {
         DisableAutoTurretButton.onFalse(EnableAutoTurretCommand);
         ShootingModeButton.onTrue(ShooterModeCommand);
         ShootingModeButton.onFalse(ShuttleModeCommand);
+        LiftIntakeButton.onTrue(LiftIntakeCommand);
 
     }
     
@@ -310,5 +351,79 @@ public class RobotContainer {
 
         return drivetrain.runOnce(drivetrain::seedFieldCentric);
 
+    }
+
+    /**
+     * Updates robots position on the field from cameras
+     */
+    public void updateRobotPose(){
+
+        // Create local variables
+        double frontPoseX = 0;
+        double frontPoseY = 0;
+        double frontDist = 0;
+        double leftPoseX = 0;
+        double leftPoseY = 0;
+        double leftDist = 0;
+        double backPoseX = 0;
+        double backPoseY = 0;
+        double backDist = 0;
+        double avgDist = 0;
+        double camCount = 0;
+        double hubX = 0;
+        double hubY = 0;
+
+        if (Mutables.blueAlliance) {
+            hubX = GeneralConstants.kBlueHub[0];
+            hubY = GeneralConstants.kBlueHub[1];
+        } else {
+            hubX = GeneralConstants.kRedHub[0];
+            hubY = GeneralConstants.kRedHub[1];
+        }
+
+        //Call pose estimation method
+        Optional<EstimatedRobotPose> frontPose = LumaHelpers.getPose(frontCamera, kRobotToFrontCam);
+        Optional<EstimatedRobotPose> backPose = LumaHelpers.getPose(backCamera, kRobotToBackCam);
+        Optional<EstimatedRobotPose> leftPose = LumaHelpers.getPose(leftCamera, kRobotToLeftCam);
+        SmartDashboard.putBoolean("Pose Found", frontPose.isPresent());
+        if (frontPose.isPresent()) {
+            EstimatedRobotPose est = frontPose.get();
+            Pose2d frontPose2d = est.estimatedPose.toPose2d();
+            frontPoseX = frontPose2d.getX();
+            frontPoseY = frontPose2d.getY();
+            frontDist = Math.sqrt( ((hubX - frontPoseX)*(hubX - frontPoseX)) + ((hubY - frontPoseY) * (hubY - frontPoseY)));
+            camCount++;
+            SmartDashboard.putNumber("front X Pose", frontPoseX);
+            frontCamPose.setRobotPose(frontPose2d);
+            SmartDashboard.putData("frontRobotPose", frontCamPose);
+        }
+        if (backPose.isPresent()) {
+            EstimatedRobotPose est = backPose.get();
+            Pose2d backPose2d = est.estimatedPose.toPose2d();
+            backPoseX = backPose2d.getX();
+            backPoseY = backPose2d.getY();
+            backDist = Math.sqrt( ((hubX - backPoseX)*(hubX - backPoseX)) + ((hubY - backPoseY) * (hubY - backPoseY)));
+            camCount++;
+            SmartDashboard.putNumber("back X Pose", backPoseX);
+            backCamPose.setRobotPose(backPose2d);
+            SmartDashboard.putData("backRobotPose", backCamPose);
+        }
+        if (leftPose.isPresent()) {
+            EstimatedRobotPose est = leftPose.get();
+            Pose2d leftPose2d = est.estimatedPose.toPose2d();
+            leftPoseX = leftPose2d.getX();
+            leftPoseY = leftPose2d.getY();
+            leftDist = Math.sqrt( ((hubX - leftPoseX)*(hubX - leftPoseX)) + ((hubY - leftPoseY) * (hubY - leftPoseY)));
+            camCount++;
+            SmartDashboard.putNumber("left X Pose", leftPoseX);
+            leftCamPose.setRobotPose(leftPose2d);
+            SmartDashboard.putData("leftRobotPose", leftCamPose);
+        }   
+
+        // Average Distance Calculation
+        avgDist = (frontDist + backDist + leftDist) / camCount;
+        MechanismConstants.targetDistance = avgDist;
+        SmartDashboard.putNumber("Average Hub Distance", avgDist);
+        SmartDashboard.putNumber("Target Distance", MechanismConstants.targetDistance);
     }
 }

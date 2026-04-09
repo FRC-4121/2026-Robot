@@ -3,9 +3,7 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
-    "Left Climb",
-    "Intaking From Depot",
-    "Right Climb"
+    "Intaking From Depot"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,

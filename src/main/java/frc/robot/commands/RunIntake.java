@@ -32,7 +32,6 @@ public class RunIntake extends Command {
   public void execute() {
 
     myIntake.runIntake(speed);
-    myIntake.runIntakeLift(MechanismConstants.kIntakeDown + (.2 * MechanismConstants.kIntakeDown));
 
   }
 
@@ -41,7 +40,6 @@ public class RunIntake extends Command {
   public void end(boolean interrupted) {
 
     myIntake.stopIntake();
-    myIntake.stopIntakeLift();
     
   }
 

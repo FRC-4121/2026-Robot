@@ -15,20 +15,18 @@ public class AutoShoot extends Command {
   private Shooter myShooter;
   private Indexer myIndexer;
   private Intake myIntake;
-  private Floor myFloor;
   private double percentVelocity;
   private Ballistics2026 myBallistics;
 
     // Create new AutoShoot
-    public AutoShoot(Shooter shooter, Indexer indexer, Intake intake, Floor floor, Ballistics2026 ballistics) {
+    public AutoShoot(Shooter shooter, Indexer indexer, Intake intake, Ballistics2026 ballistics) {
 
     myBallistics = ballistics;
     myShooter = shooter;
     myIndexer = indexer;
     myIntake = intake;
-    myFloor = floor;
 
-    addRequirements(myShooter, myIndexer, myIntake, myFloor);
+    addRequirements(myShooter, myIndexer, myIntake);
 
   }
 
@@ -62,7 +60,6 @@ public class AutoShoot extends Command {
 
       if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) {
         myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
-        myFloor.runFloor(MechanismConstants.kIndexerSpeed);
       }
 
   }
@@ -74,7 +71,6 @@ public class AutoShoot extends Command {
     myShooter.stopShooter();
     myIntake.stopIntake();
     myIndexer.stopIndexer();
-    myFloor.stopFloor();
 
   }
 
