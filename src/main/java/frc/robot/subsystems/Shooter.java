@@ -179,6 +179,16 @@ public double getWheelVelocity() {
 
 }
 
+/**
+ * Get the current of the shooter motor
+ * @return
+ */
+public double getShooterCurrent() {
+
+  return shooterMaster.getStatorCurrent().getValueAsDouble();
+
+}
+
 @Override
 public void periodic() {
   // This method will be called once per scheduler run

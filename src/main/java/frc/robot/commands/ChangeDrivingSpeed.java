@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.Mutables;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ChangeDrivingSpeed extends Command {
@@ -22,9 +23,11 @@ public class ChangeDrivingSpeed extends Command {
     if (DriveConstants.slowModeMultiplier == 1) {
       DriveConstants.slowModeMultiplier = 0.25;
       DriveConstants.slowModeAngularMultiplier = .5;
+      Mutables.isSlowMode = true;
     } else {
       DriveConstants.slowModeMultiplier = 1;
       DriveConstants.slowModeAngularMultiplier = 1;
+      Mutables.isSlowMode = false;
     }
 
   }

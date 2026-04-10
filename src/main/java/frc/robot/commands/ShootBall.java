@@ -19,7 +19,8 @@ public class ShootBall extends Command {
   private Intake myIntake;
   private double percentVelocity;
   private Ballistics2026 myBallistics;
-  
+
+  private double hubDist;  
 
   /** Creates a new ShootBall. */
   public ShootBall(Shooter shooter, Indexer indexer, Intake intake, Ballistics2026 ballistics) {
@@ -28,7 +29,6 @@ public class ShootBall extends Command {
     myShooter = shooter;
     myIndexer = indexer;
     myIntake = intake;
-    
     addRequirements(myShooter, myIndexer, myIntake);
   }
 
@@ -36,7 +36,8 @@ public class ShootBall extends Command {
   @Override
   public void initialize() {
 
-    percentVelocity = 0.95;
+    percentVelocity = 0.99;
+    hubDist = MechanismConstants.targetDistance;
 
   }
 
@@ -46,14 +47,14 @@ public class ShootBall extends Command {
 
     if (MechanismConstants.isShooterMode) {
 
-      MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(MechanismConstants.targetDistance, MechanismConstants.kShooterLaunchAngle, MechanismConstants.kShooterSlip);
+      MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(hubDist, MechanismConstants.kShooterLaunchAngle, MechanismConstants.kShooterSlip);
       myShooter.runShooter(MechanismConstants.targetVelocity);
       double shooterVelocity = myShooter.getShooterVelocity();
 
       if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) {
         myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
         myIndexer.runFloor(MechanismConstants.kFloorSpeed);
-        myIntake.runShootingIntakeLift(MechanismConstants.kIntakeDown * (2/3));
+        myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
       }
 
     } else {
@@ -65,7 +66,7 @@ public class ShootBall extends Command {
       if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) {
         myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
         myIndexer.runFloor(MechanismConstants.kFloorSpeed);
-        myIntake.runShootingIntakeLift(MechanismConstants.kIntakeDown * (2/3));
+        myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
       }
       
     }

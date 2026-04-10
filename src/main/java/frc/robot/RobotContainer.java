@@ -158,7 +158,7 @@ public class RobotContainer {
         LiftIntakeButton = new JoystickButton(OI, ControlConstants.LaunchPadButton4);
 
         //Initialize Commands
-        RunIntakeCommand = new RunIntake(intake, -0.75);
+        RunIntakeCommand = new RunIntake(intake, -.8);
         RunTurretRightCommand = new ManualTurret(turret, -.1);
         RunTurretLeftCommand = new ManualTurret(turret, .1);
         LiftIntakeCommand = new LiftIntake(intake);
@@ -173,7 +173,7 @@ public class RobotContainer {
         ZeroEncodersCommand = new ZeroEncoders(intake, turret);
         ShooterModeCommand = new ChangeShootingMode(true);
         ShuttleModeCommand = new ChangeShootingMode(false);
-        AutoIntakeCommand = new AutoIntake(intake, -.75);
+        AutoIntakeCommand = new AutoIntake(intake, -1);
         StopAutoShootCommand = new StopAutoShoot();
 
         // Set Default Commands For Subsystems
@@ -322,6 +322,8 @@ public class RobotContainer {
         SmartDashboard.putNumber("Shooter Speed", shooter.getWheelVelocity());
         SmartDashboard.putBoolean("Stop Auto Shoot", MechanismConstants.stopAutoShooter);
         SmartDashboard.putBoolean("Slow Mode?", Mutables.isSlowMode);
+        SmartDashboard.putNumber("Intake Position", intake.getPosition());
+        SmartDashboard.putNumber("Shooter Current", shooter.getShooterCurrent());
     }
 
     /**

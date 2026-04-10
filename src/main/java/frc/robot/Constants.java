@@ -61,7 +61,7 @@ public final class Constants {
     public static double intakeCurrentLimit = 35;
     public static double intakeLiftCurrentLimit = 30;
     public static double floorCurrentLimit = 30;
-    public static double indexerCurrentLimit = 60;
+    public static double indexerCurrentLimit = 100;
     public static double shooterCurrentLimit = 80;
 
     // Set shooter PID constants
@@ -85,11 +85,12 @@ public final class Constants {
 
     // Set hopper/indexer constants
     public static double kFloorSpeed = 0.3;
-    public static final double kIndexerSpeed = -30;
+    public static final double kIndexerSpeed = 40;
 
     // Set intake constants
     public static final double kIntakeUp = 0;
     public static final double kIntakeDown = 11.24; // Exact value
+    public static final double kIntakeShootingPos = 5.5;
     public static boolean isIntakeUp = true;
     public static final double kIntakeSpeedFactor = 0.2;
     public static boolean stopAutoIntake = true;
@@ -100,8 +101,8 @@ public final class Constants {
     public static final double kD_IntakeLift = 0.005;
 
     // Set intake lift motion magic constants
-    public static final double kLiftMagicCruise = 50;
-    public static final double kLiftMagicAccel = 100;
+    public static final double kLiftMagicCruise = 30;
+    public static final double kLiftMagicAccel = 75;
     public static final double kLiftMagicJerk = 1000;
 
     // Set turret constants
@@ -112,7 +113,7 @@ public final class Constants {
     // Set ballistics constants
     public static final double kTargetHeight = 1.1176;
     public static final double kShooterHeight = 0.497;
-    public static final double kShooterSlip = 1.0;
+    public static final double kShooterSlip = 0.93;
     public static final double kShooterDriveRatio = 0.5;
     public static final double kShooterWheelDiameter = 0.1016;
     public static final double kShooterLaunchAngle = 69.0;
