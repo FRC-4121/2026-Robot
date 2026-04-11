@@ -78,61 +78,6 @@
           "data": {
             "name": "Stop Shoot"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "L Trench Center Pass 2"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "L Bump Return 2"
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Shoot"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 3.0
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stop Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "L Trench Center Pass 2"
-          }
         }
       ]
     }

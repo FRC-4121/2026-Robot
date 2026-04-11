@@ -40,7 +40,7 @@ public class LumaHelpers {
     private static final int[] redTags = {2, 5, 8, 10, 11};
     private static final int[] redMidTags = {2, 5, 10};
 
-    private static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+    private static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
 
     /**
      * Get target hub info
@@ -179,7 +179,6 @@ public class LumaHelpers {
      */
     public static Optional<EstimatedRobotPose> getPose(PhotonCamera camera, Transform3d camtransform){
 
-        AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
         SmartDashboard.putNumber("Field Length", kTagLayout.getFieldLength());
 
         // Create a pose estimator

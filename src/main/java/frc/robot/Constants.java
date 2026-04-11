@@ -82,6 +82,12 @@ public final class Constants {
     public static boolean isShooterMode = true;
     public static boolean stopAutoShooter = false;
     public static double targetVelocity = 0;
+    public static boolean canShoot = false;
+
+    // Set up constant for target angle for shooting
+    public static double targetGyroAngle = 0;
+    public static final double gyroAccuracy = .95;
+    public static double currentGyro = 0;
 
     // Set hopper/indexer constants
     public static double kFloorSpeed = 0.3;
@@ -101,9 +107,9 @@ public final class Constants {
     public static final double kD_IntakeLift = 0.005;
 
     // Set intake lift motion magic constants
-    public static final double kLiftMagicCruise = 30;
-    public static final double kLiftMagicAccel = 75;
-    public static final double kLiftMagicJerk = 1000;
+    public static final double kLiftMagicCruise = 20;
+    public static final double kLiftMagicAccel = 60;
+    public static final double kLiftMagicJerk = 500;
 
     // Set turret constants
     public static final double kTurretMinAngle = -3.239;
@@ -118,9 +124,9 @@ public final class Constants {
     public static final double kShooterWheelDiameter = 0.1016;
     public static final double kShooterLaunchAngle = 69.0;
 
-    public static boolean isTurretEnabled = true;
+    public static boolean isRotateEnabled = true;
     public static boolean shuttleTurretStatus = false;
-    public static boolean turretModeSwitch = false;
+    public static boolean rotateModeSwitch = false;
 
     public static double targetDistance;
 

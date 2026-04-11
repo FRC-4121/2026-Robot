@@ -4,6 +4,10 @@
 
 package frc.robot.commands;
 
+import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentricFacingAngle;
+
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.MechanismConstants;
 import frc.robot.subsystems.*;
@@ -16,6 +20,7 @@ public class AutoShoot extends Command {
   private Indexer myIndexer;
   private Intake myIntake;
   private double percentVelocity;
+  private double hubDist = 0;
   private Ballistics2026 myBallistics;
 
     // Create new AutoShoot
@@ -37,30 +42,33 @@ public class AutoShoot extends Command {
     
     percentVelocity = 0.95;
     MechanismConstants.stopAutoShooter = false;
+    hubDist = MechanismConstants.targetDistance;
 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double hoodAngle = 0;
-    double slipFactor = .25;
 
-      if (MechanismConstants.targetDistance > 2) {
-        slipFactor = .3;
-      } else {
-        slipFactor = .23;
-      }
+            MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(hubDist,
+            MechanismConstants.kShooterLaunchAngle, MechanismConstants.kShooterSlip);
+        myShooter.runShooter(MechanismConstants.targetVelocity);
+        double shooterVelocity = myShooter.getShooterVelocity();
 
-      MechanismConstants.targetVelocity = -myBallistics.calculateLaunchVelcity(MechanismConstants.targetDistance, hoodAngle, slipFactor);
-      myShooter.runShooter(MechanismConstants.targetVelocity);
-      myIntake.runIntake(-0.5);
-      //myIntake.runIntakeLift();
-      double shooterVelocity = myShooter.getShooterVelocity();
+        // if (MechanismConstants.isRotateEnabled) {
+        //   SwerveRequest.FieldCentricFacingAngle angleRequest = new FieldCentricFacingAngle()
+        //       .withVelocityX(0)
+        //       .withVelocityY(0)
+        //       .withTargetDirection(new Rotation2d(MechanismConstants.targetGyroAngle));
+        //   mySwerve.setControl(angleRequest);
+        // }
 
-      if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) {
-        myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
-      }
+        if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))) {
+          myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+          myIndexer.runFloor(MechanismConstants.kFloorSpeed);
+          myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
+        }
+
 
   }
 

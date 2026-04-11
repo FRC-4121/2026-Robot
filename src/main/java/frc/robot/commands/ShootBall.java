@@ -5,8 +5,16 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.*;
+import frc.robot.commands.*;
 import frc.robot.extras.Ballistics2026;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import com.ctre.phoenix6.hardware.*;
+import java.math.*;
+
+import com.ctre.phoenix6.mechanisms.swerve.*;
+import com.ctre.phoenix6.swerve.*;
+import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentricFacingAngle;
 
 import frc.robot.Constants.MechanismConstants;
 
@@ -17,26 +25,39 @@ public class ShootBall extends Command {
   private Shooter myShooter;
   private Indexer myIndexer;
   private Intake myIntake;
+  private CommandSwerveDrivetrain mySwerve;
   private double percentVelocity;
   private Ballistics2026 myBallistics;
+  private final Pigeon2 myPigeon;
+
+  private final SwerveRequest.SwerveDriveBrake parkRequest = new SwerveRequest.SwerveDriveBrake();
+  private final SwerveRequest.FieldCentricFacingAngle angleRequest = new SwerveRequest.FieldCentricFacingAngle();
 
   private double hubDist;  
 
   /** Creates a new ShootBall. */
-  public ShootBall(Shooter shooter, Indexer indexer, Intake intake, Ballistics2026 ballistics) {
+  public ShootBall(Shooter shooter, Indexer indexer, Intake intake, CommandSwerveDrivetrain swerve, Pigeon2 pigeon, Ballistics2026 ballistics) {
 
     myBallistics = ballistics;
     myShooter = shooter;
     myIndexer = indexer;
     myIntake = intake;
-    addRequirements(myShooter, myIndexer, myIntake);
+    mySwerve = swerve;
+    myPigeon = pigeon;
+    
+    if (MechanismConstants.isShooterMode) {
+      addRequirements(myShooter, myIndexer, myIntake, mySwerve);
+    } else {
+      addRequirements(myShooter, myIndexer, myIntake);
+    }
+    
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
 
-    percentVelocity = 0.99;
+    percentVelocity = 0.95;
     hubDist = MechanismConstants.targetDistance;
 
   }
@@ -47,30 +68,54 @@ public class ShootBall extends Command {
 
     if (MechanismConstants.isShooterMode) {
 
-      MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(hubDist, MechanismConstants.kShooterLaunchAngle, MechanismConstants.kShooterSlip);
-      myShooter.runShooter(MechanismConstants.targetVelocity);
-      double shooterVelocity = myShooter.getShooterVelocity();
+      if (MechanismConstants.canShoot) {
+        MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(hubDist,
+            MechanismConstants.kShooterLaunchAngle, MechanismConstants.kShooterSlip);
+        myShooter.runShooter(MechanismConstants.targetVelocity);
+        double shooterVelocity = myShooter.getShooterVelocity();
 
-      if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) {
-        myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
-        myIndexer.runFloor(MechanismConstants.kFloorSpeed);
-        myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
+        if (MechanismConstants.isRotateEnabled) {
+          SwerveRequest.FieldCentricFacingAngle angleRequest = new FieldCentricFacingAngle()
+              .withVelocityX(0)
+              .withVelocityY(0)
+              .withTargetDirection(new Rotation2d(MechanismConstants.targetGyroAngle));
+          mySwerve.setControl(angleRequest);
+        }
+
+        if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))) {
+          mySwerve.setControl(parkRequest);
+          myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+          myIndexer.runFloor(MechanismConstants.kFloorSpeed);
+          myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
+        }
+      } else {
+        MechanismConstants.targetVelocity = 50;
+        myShooter.runShooter(MechanismConstants.targetVelocity);
+        double shooterVelocity = myShooter.getShooterVelocity();
+
+        if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))) {
+          mySwerve.setControl(parkRequest);
+          myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+          myIndexer.runFloor(MechanismConstants.kFloorSpeed);
+          myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
+        }
       }
 
     } else {
 
-      MechanismConstants.targetVelocity = -25;
+      MechanismConstants.targetVelocity = 50;
       myShooter.runShooter(MechanismConstants.targetVelocity);
       double shooterVelocity = myShooter.getShooterVelocity();
 
       if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) {
         myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
         myIndexer.runFloor(MechanismConstants.kFloorSpeed);
-        myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
       }
-      
+
     }
+
   }
+
 
   // Called once the command ends or is interrupted.
   @Override

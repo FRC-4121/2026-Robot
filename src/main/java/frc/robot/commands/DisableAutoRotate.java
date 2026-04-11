@@ -8,14 +8,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.MechanismConstants;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class DisableAutoTurret extends Command {
+public class DisableAutoRotate extends Command {
 
-  private boolean myAutoTurretStatus;
+  private boolean myAutoRotateStatus;
 
   /** Creates a new DisableTurret. */
-  public DisableAutoTurret(boolean autoTurretStatus) {
+  public DisableAutoRotate(boolean autoRotateStatus) {
 
-    myAutoTurretStatus = autoTurretStatus;
+    myAutoRotateStatus = autoRotateStatus;
 
 
   }
@@ -28,8 +28,8 @@ public class DisableAutoTurret extends Command {
   @Override
   public void execute() {
 
-    MechanismConstants.isTurretEnabled = myAutoTurretStatus;
-    MechanismConstants.turretModeSwitch = true;
+    MechanismConstants.isRotateEnabled = myAutoRotateStatus;
+    MechanismConstants.rotateModeSwitch = true;
 
   }
 
