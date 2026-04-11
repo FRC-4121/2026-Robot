@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.8033666666666663,
-        "y": 5.248183333333333
+        "x": 2.077405555555556,
+        "y": 5.311522222222222
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.959277777777778,
-        "y": 6.344433333333334
+        "x": 2.2333166666666675,
+        "y": 6.407772222222222
       },
       "isLocked": false,
       "linkedName": "L Bump Shooter 1"
@@ -69,7 +69,7 @@
       },
       "prevControl": {
         "x": 5.963766573843312,
-        "y": 4.5780260568016695
+        "y": 4.57802605680167
       },
       "nextControl": {
         "x": 6.155455555555555,
@@ -153,7 +153,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -33.371564311652556
+    "rotation": -28.41127738675204
   },
   "useDefaultConstraints": true
 }

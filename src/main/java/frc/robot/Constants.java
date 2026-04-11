@@ -124,11 +124,12 @@ public final class Constants {
     public static final double kShooterWheelDiameter = 0.1016;
     public static final double kShooterLaunchAngle = 69.0;
 
-    public static boolean isRotateEnabled = true;
+    public static boolean isRotateEnabled = false;
     public static boolean shuttleTurretStatus = false;
     public static boolean rotateModeSwitch = false;
 
-    public static double targetDistance;
+    public static double targetDistance = 0;
+    public static double hubDistance = 0;
 
     public static double shootModeVelocity;
     public static double shuttleModeVelocity;
@@ -225,6 +226,10 @@ public final class Constants {
     public static boolean isSlowMode = false;
     public static String autoPosition = "Left";
     public static boolean blueAlliance = true; // true = blue, red = false
+
+    public static int frontTags = 0;
+    public static int leftTags = 0;
+    public static int backTags = 0;
 
   }
 

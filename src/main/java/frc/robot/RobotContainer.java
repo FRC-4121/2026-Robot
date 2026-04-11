@@ -256,7 +256,6 @@ public class RobotContainer {
         //Subsystem Buttons on Main Driver Controller
         joystick.a().whileTrue(RunIntakeCommand);
         joystick.b().whileTrue(ShootBallCommand);
-        //joystick.x().onTrue(); //Add command to swap between field and robot oriented driving mode
         joystick.y().onTrue(ChangeDrivingSpeedCommand);
 
         //Subsystem Buttons on Aux Controller
@@ -318,6 +317,11 @@ public class RobotContainer {
         robotPose.setRobotPose(drivetrain.getCurrentPose());
         SmartDashboard.putData("Robot Pose", robotPose);
         SmartDashboard.putNumber("Target Angle", Math.toDegrees(MechanismConstants.targetGyroAngle));
+        SmartDashboard.putBoolean("Blue Alliance", Mutables.blueAlliance);
+        SmartDashboard.putNumber("left tags", Mutables.leftTags);
+        SmartDashboard.putNumber("front tags", Mutables.frontTags);
+        SmartDashboard.putNumber("back tags", Mutables.backTags);
+        SmartDashboard.putNumber("hub distance", MechanismConstants.hubDistance);
     }
 
     /**
@@ -373,25 +377,25 @@ public class RobotContainer {
         }
 
         //Call pose estimation method
-        Optional<EstimatedRobotPose> frontPose = LumaHelpers.getPose(frontCamera, kRobotToFrontCam);
-        Optional<EstimatedRobotPose> backPose = LumaHelpers.getPose(backCamera, kRobotToBackCam);
-        Optional<EstimatedRobotPose> leftPose = LumaHelpers.getPose(leftCamera, kRobotToLeftCam);
+        Optional<EstimatedRobotPose> frontPose = LumaHelpers.getPose(frontCamera, kRobotToFrontCam, "front");
+        Optional<EstimatedRobotPose> backPose = LumaHelpers.getPose(backCamera, kRobotToBackCam, "back");
+        Optional<EstimatedRobotPose> leftPose = LumaHelpers.getPose(leftCamera, kRobotToLeftCam, "left");
         SmartDashboard.putBoolean("Pose Found", frontPose.isPresent());
-        if (frontPose.isPresent()) {
+        if (!frontPose.isEmpty()) {
             EstimatedRobotPose est = frontPose.get();
             frontPose2d = est.estimatedPose.toPose2d();
             frontTime = est.timestampSeconds;
             frontCamPose.setRobotPose(frontPose2d);
             SmartDashboard.putData("frontRobotPose", frontCamPose);
         }
-        if (backPose.isPresent()) {
+        if (!backPose.isEmpty()) {
             EstimatedRobotPose est = backPose.get();
             backPose2d = est.estimatedPose.toPose2d();
             backTime = est.timestampSeconds;
             backCamPose.setRobotPose(backPose2d);
             SmartDashboard.putData("backRobotPose", backCamPose);
         }
-        if (leftPose.isPresent()) {
+        if (!leftPose.isEmpty()) {
             EstimatedRobotPose est = leftPose.get();
             leftPose2d = est.estimatedPose.toPose2d();
             leftTime = est.timestampSeconds;
@@ -436,27 +440,27 @@ public class RobotContainer {
             frontDist = Math.sqrt( (frontXDiff * frontXDiff) + (frontYDiff * frontYDiff));
             frontHubAngle = Math.atan(frontYDiff / (frontXDiff + 1E-6));
             camCount++;
-            drivetrain.addVisionMeasurement(frontPose, frontTime);
+            //drivetrain.addVisionMeasurement(frontPose, frontTime);
         }
         if (leftPose.getX() != -1) {
-            backPoseX = backPose.getX();
-            backPoseY = backPose.getY();
-            leftXDiff = hubX - leftPoseX;
-            leftYDiff = hubY - leftPoseY;
-            backDist = Math.sqrt( (leftXDiff * leftXDiff) + (leftYDiff * leftYDiff));
-            leftHubAngle = Math.atan(leftYDiff / (leftXDiff + 1E-6));
-            camCount++;
-            drivetrain.addVisionMeasurement(leftPose, leftTime);
-        }
-        if (backPose.getX() != -1) {
             leftPoseX = leftPose.getX();
             leftPoseY = leftPose.getY();
+            leftXDiff = hubX - leftPoseX;
+            leftYDiff = hubY - leftPoseY;
+            leftDist = Math.sqrt( (leftXDiff * leftXDiff) + (leftYDiff * leftYDiff));
+            leftHubAngle = Math.atan(leftYDiff / (leftXDiff + 1E-6));
+            camCount++;
+            //drivetrain.addVisionMeasurement(leftPose, leftTime);
+        }
+        if (backPose.getX() != -1) {
+            backPoseX = backPose.getX();
+            backPoseY = backPose.getY();
             backXDiff = hubX - backPoseX;
             backYDiff = hubX - backPoseY;
-            leftDist = Math.sqrt( (backXDiff * backXDiff) + (backYDiff * backYDiff));
+            backDist = Math.sqrt( (backXDiff * backXDiff) + (backYDiff * backYDiff));
             backHubAngle = Math.atan(backYDiff / (backXDiff + 1E-6));
             camCount++;
-            drivetrain.addVisionMeasurement(backPose, backTime);
+            //drivetrain.addVisionMeasurement(backPose, backTime);
         }
 
         // Average Distance Calculation
@@ -477,6 +481,15 @@ public class RobotContainer {
         MechanismConstants.targetGyroAngle = avgAngle;
         SmartDashboard.putNumber("Average Hub Distance", avgDist);
         SmartDashboard.putNumber("Target Distance", MechanismConstants.targetDistance);
+        SmartDashboard.putNumber("leftDist", leftDist);
+        SmartDashboard.putNumber("frontDist", frontDist);
+        SmartDashboard.putNumber("backDist", backDist);
+        SmartDashboard.putNumber("leftX", leftPoseX);
+        SmartDashboard.putNumber("leftY", leftPoseY);
+        SmartDashboard.putNumber("backX", backPoseX);
+        SmartDashboard.putNumber("backY", backPoseY);
+        SmartDashboard.putNumber("frontX", frontPoseX);
+        SmartDashboard.putNumber("frontY", frontPoseY);
 
     }
 

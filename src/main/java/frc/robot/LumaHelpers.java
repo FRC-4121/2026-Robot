@@ -14,6 +14,7 @@ import org.photonvision.PhotonUtils;
 import org.photonvision.EstimatedRobotPose;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.MechanismConstants;
+import frc.robot.Constants.Mutables;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -177,7 +178,7 @@ public class LumaHelpers {
      * @param camtransform The position of the camera on the robot
      * @return The estimated pose
      */
-    public static Optional<EstimatedRobotPose> getPose(PhotonCamera camera, Transform3d camtransform){
+    public static Optional<EstimatedRobotPose> getPose(PhotonCamera camera, Transform3d camtransform, String cameraName){
 
         SmartDashboard.putNumber("Field Length", kTagLayout.getFieldLength());
 
@@ -202,6 +203,14 @@ public class LumaHelpers {
             
         }
         
+        if (cameraName == "front") {
+            Mutables.frontTags = results.size();
+        } else if (cameraName == "left") {
+            Mutables.leftTags = results.size();
+        } else {
+            Mutables.backTags = results.size();
+        }
+
         return visionEst;
     }
 

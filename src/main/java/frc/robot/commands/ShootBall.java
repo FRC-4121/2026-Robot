@@ -58,7 +58,7 @@ public class ShootBall extends Command {
   public void initialize() {
 
     percentVelocity = 0.95;
-    hubDist = MechanismConstants.targetDistance;
+    MechanismConstants.hubDistance = MechanismConstants.targetDistance;
 
   }
 
@@ -69,8 +69,8 @@ public class ShootBall extends Command {
     if (MechanismConstants.isShooterMode) {
 
       if (MechanismConstants.canShoot) {
-        MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(hubDist,
-            MechanismConstants.kShooterLaunchAngle, MechanismConstants.kShooterSlip);
+        MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(MechanismConstants.hubDistance,
+        MechanismConstants.kShooterLaunchAngle, MechanismConstants.kShooterSlip);
         myShooter.runShooter(MechanismConstants.targetVelocity);
         double shooterVelocity = myShooter.getShooterVelocity();
 
