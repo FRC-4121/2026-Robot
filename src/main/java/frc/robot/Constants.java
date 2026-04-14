@@ -44,8 +44,8 @@ public final class Constants {
     public static double slowModeAngularMultiplier = 1;
 
     // Current Limits on Swerve Drive Motors
-    public static double driveCurrentLimit = 120;
-    public static double angleCurrentLimit = 80;
+    public static double driveCurrentLimit = 90;
+    public static double angleCurrentLimit = 60;
 
   }
 
@@ -58,11 +58,11 @@ public final class Constants {
     public static boolean isDisableState = false;
 
     // Current Limits on Mechanism Motors;
-    public static double intakeCurrentLimit = 35;
-    public static double intakeLiftCurrentLimit = 30;
+    public static double intakeCurrentLimit = 40;
+    public static double intakeLiftCurrentLimit = 20;
     public static double floorCurrentLimit = 30;
     public static double indexerCurrentLimit = 100;
-    public static double shooterCurrentLimit = 80;
+    public static double shooterCurrentLimit = 90;
 
     // Set shooter PID constants
     public static final double kP_Shoot = 0.12;
@@ -83,23 +83,27 @@ public final class Constants {
     public static boolean stopAutoShooter = false;
     public static double targetVelocity = 0;
     public static boolean canShoot = false;
+    public static boolean linedUp = false;
+    public static boolean yawLinedUp = false;
 
     // Set up constant for target angle for shooting
     public static double targetGyroAngle = 0;
-    public static final double gyroAccuracy = .95;
+    public static double targetYaw = 0;
+    public static final double gyroAccuracy = 3;
     public static double currentGyro = 0;
 
     // Set hopper/indexer constants
     public static double kFloorSpeed = 0.3;
-    public static final double kIndexerSpeed = 40;
+    public static final double kIndexerSpeed = 60; //40
 
     // Set intake constants
     public static final double kIntakeUp = 0;
-    public static final double kIntakeDown = 11.24; // Exact value
+    public static final double kIntakeDown = 12.65; // Exact value
     public static final double kIntakeShootingPos = 5.5;
     public static boolean isIntakeUp = true;
     public static final double kIntakeSpeedFactor = 0.2;
-    public static boolean stopAutoIntake = true;
+    public static boolean stopAutoIntake = false;
+    public static final double kIntakeSpeed = -1;
 
     // Set intake motor PID constants
     public static final double kP_IntakeLift = 0.06;
@@ -119,12 +123,12 @@ public final class Constants {
     // Set ballistics constants
     public static final double kTargetHeight = 1.1176;
     public static final double kShooterHeight = 0.497;
-    public static final double kShooterSlip = 0.93;
+    public static final double kShooterSlip = 0.96;
     public static final double kShooterDriveRatio = 0.5;
     public static final double kShooterWheelDiameter = 0.1016;
     public static final double kShooterLaunchAngle = 69.0;
 
-    public static boolean isRotateEnabled = false;
+    public static boolean isRotateEnabled = true;
     public static boolean shuttleTurretStatus = false;
     public static boolean rotateModeSwitch = false;
 

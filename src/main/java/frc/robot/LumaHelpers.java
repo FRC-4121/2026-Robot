@@ -32,7 +32,7 @@ public class LumaHelpers {
     /**
      * Blue side hub April Tags (shooting side only)
      */
-    private static final int[] blueTags = {18, 21, 24, 26, 27};
+    private static final int[] blueTags = {18, 21, 26};
     private static final int[] blueMidTags = {18, 21, 26};
 
     /**
@@ -178,15 +178,111 @@ public class LumaHelpers {
      * @param camtransform The position of the camera on the robot
      * @return The estimated pose
      */
-    public static Optional<EstimatedRobotPose> getPose(PhotonCamera camera, Transform3d camtransform, String cameraName){
+    public static Optional<EstimatedRobotPose> getPose(PhotonCamera camera, Transform3d camtransform, String cameraName) {
 
-        SmartDashboard.putNumber("Field Length", kTagLayout.getFieldLength());
+        // Initialize local variables
+        double yawSum = 0.0;
+        int numTagsFound = 0;
+        double avgYaw = 100.0;
+
+        // Get the correct hub tags based on current alliance
+        int[] hubTags = {};
+        if (Mutables.blueAlliance) {
+            hubTags = blueTags;
+        } else {
+            hubTags = redTags;
+        }
 
         // Create a pose estimator
         PhotonPoseEstimator photonEstimator = new PhotonPoseEstimator(kTagLayout, camtransform);
 
         // Get the latest results from the camera pipeline
         var results = camera.getAllUnreadResults();
+
+        if (cameraName == "back") {
+
+            // Make sure there are current results before proceeding
+            if (!results.isEmpty()) {
+
+                int[] foundTags = new int[hubTags.length];
+
+                // Camera processed a new frame since last
+                // Get the last one in the list.
+                var result = results.get(results.size() - 1);
+
+                // Proceed if April Tags were found
+                if (result.hasTargets()) {
+
+                    // Reset tag count
+                    numTagsFound = 0;
+
+                    // At least one AprilTag was seen by the camera
+                    for (var target : result.getTargets()) {
+
+                        // Get the April Tag ID
+                        int targetID = target.getFiducialId();
+
+                        // Determine if it is one of the taret tags
+                        boolean targetFound = false;
+                        for (int tag : hubTags) {
+                            if (tag == targetID) {
+                                targetFound = true;
+                                foundTags[numTagsFound] = targetID;
+                                break;
+                            }
+                        }
+
+                        // If this is a target tag, continue processing
+                        if (targetFound) {
+
+                            // Get yaw and add to running sum
+                            yawSum += target.getYaw();
+
+                            // Increment target count
+                            numTagsFound++;
+
+                        }
+                    }
+
+                    // Calculate final results if at least one tag found
+                    if (numTagsFound > 0) {
+
+                        if (numTagsFound == 1) {
+
+                            if (foundTags[0] == 26 || foundTags[0] == 10) {
+
+                                if (yawSum < 0) {
+                                    yawSum += 5;
+                                } else {
+                                    yawSum -= 5;
+                                }
+                            }
+
+                            if (foundTags[0] == 18 || foundTags[0] == 2) {
+
+                                yawSum -= 5;
+                            }
+
+                            if (foundTags[0] == 21 || foundTags[0] == 5) {
+
+                                yawSum += 5;
+                            }
+
+                        }
+
+                        // Calculate the averages
+                        avgYaw = yawSum / numTagsFound;
+
+                    }
+
+                    // Update target info array
+                    MechanismConstants.targetYaw = avgYaw;
+
+                }
+
+            }
+
+        }
 
         // Estimate robot pose from all tags
         Optional<EstimatedRobotPose> visionEst = Optional.empty();

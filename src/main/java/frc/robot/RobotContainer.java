@@ -15,7 +15,6 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -76,6 +75,7 @@ public class RobotContainer {
     private final Command ShuttleModeCommand;
     private final Command AutoIntakeCommand;
     private final Command StopAutoShootCommand;
+    private final Command StopAutoIntakeCommand;
 
     //===Declare Buttons===//
     private final JoystickButton ParkButton;
@@ -157,10 +157,10 @@ public class RobotContainer {
         LiftIntakeButton = new JoystickButton(OI, ControlConstants.LaunchPadButton3);
 
         //Initialize Commands
-        RunIntakeCommand = new RunIntake(intake, -.8);
+        RunIntakeCommand = new RunIntake(intake, MechanismConstants.kIntakeSpeed);
         LiftIntakeCommand = new LiftIntake(intake);
         ShootBallCommand = new ShootBall(shooter, indexer, intake, drivetrain, pigeon, myBallistics);
-        AutoShootCommand = new AutoShoot(shooter, indexer, intake, myBallistics);
+        AutoShootCommand = new AutoShoot(shooter, indexer, intake, drivetrain, myBallistics);
         ManualLiftIntakeCommand = new ManualLiftIntake(intake, aux);
         DisableAutoRotateCommand = new DisableAutoRotate(false);
         EnableAutoRotateCommand = new DisableAutoRotate(true);
@@ -170,8 +170,9 @@ public class RobotContainer {
         ZeroEncodersCommand = new ZeroEncoders(intake, turret);
         ShooterModeCommand = new ChangeShootingMode(true);
         ShuttleModeCommand = new ChangeShootingMode(false);
-        AutoIntakeCommand = new AutoIntake(intake, -1);
+        AutoIntakeCommand = new AutoIntake(intake, MechanismConstants.kIntakeSpeed);
         StopAutoShootCommand = new StopAutoShoot();
+        StopAutoIntakeCommand = new StopAutoIntake();
 
         // Set Default Commands For Subsystems
         intake.setDefaultCommand(ManualLiftIntakeCommand);
@@ -179,6 +180,7 @@ public class RobotContainer {
 
         // Register named commands for PathPlanner
         NamedCommands.registerCommand("Intake", AutoIntakeCommand);
+        NamedCommands.registerCommand("Stop Intake", StopAutoIntakeCommand);
         NamedCommands.registerCommand("Shoot", AutoShootCommand);
         NamedCommands.registerCommand("Stop Shoot", StopAutoShootCommand);
         NamedCommands.registerCommand("Lift Intake", LiftIntakeCommand);
@@ -248,7 +250,7 @@ public class RobotContainer {
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        // Reset the field-centric heading on left bumper press.
+        // Reset the field-centric heading on x button press.
         joystick.x().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
         drivetrain.registerTelemetry(logger::telemeterize);
@@ -316,12 +318,15 @@ public class RobotContainer {
         SmartDashboard.putBoolean("Can Shoot?", MechanismConstants.canShoot);
         robotPose.setRobotPose(drivetrain.getCurrentPose());
         SmartDashboard.putData("Robot Pose", robotPose);
-        SmartDashboard.putNumber("Target Angle", Math.toDegrees(MechanismConstants.targetGyroAngle));
+        SmartDashboard.putNumber("Target Angle", MechanismConstants.targetGyroAngle);
         SmartDashboard.putBoolean("Blue Alliance", Mutables.blueAlliance);
         SmartDashboard.putNumber("left tags", Mutables.leftTags);
         SmartDashboard.putNumber("front tags", Mutables.frontTags);
         SmartDashboard.putNumber("back tags", Mutables.backTags);
         SmartDashboard.putNumber("hub distance", MechanismConstants.hubDistance);
+        SmartDashboard.putBoolean("Lined Up?", MechanismConstants.linedUp);
+        SmartDashboard.putBoolean("Yaw Lined Up?", MechanismConstants.yawLinedUp);
+        SmartDashboard.putNumber("Target Yaw", MechanismConstants.targetYaw);
     }
 
     /**
@@ -380,13 +385,16 @@ public class RobotContainer {
         Optional<EstimatedRobotPose> frontPose = LumaHelpers.getPose(frontCamera, kRobotToFrontCam, "front");
         Optional<EstimatedRobotPose> backPose = LumaHelpers.getPose(backCamera, kRobotToBackCam, "back");
         Optional<EstimatedRobotPose> leftPose = LumaHelpers.getPose(leftCamera, kRobotToLeftCam, "left");
-        SmartDashboard.putBoolean("Pose Found", frontPose.isPresent());
+        SmartDashboard.putBoolean("Front Pose Found", false);
+        SmartDashboard.putBoolean("Left Pose Found", false);
+        SmartDashboard.putBoolean("Back Pose Found", false);
         if (!frontPose.isEmpty()) {
             EstimatedRobotPose est = frontPose.get();
             frontPose2d = est.estimatedPose.toPose2d();
             frontTime = est.timestampSeconds;
             frontCamPose.setRobotPose(frontPose2d);
             SmartDashboard.putData("frontRobotPose", frontCamPose);
+            SmartDashboard.putBoolean("Front Pose Found", true);
         }
         if (!backPose.isEmpty()) {
             EstimatedRobotPose est = backPose.get();
@@ -394,6 +402,7 @@ public class RobotContainer {
             backTime = est.timestampSeconds;
             backCamPose.setRobotPose(backPose2d);
             SmartDashboard.putData("backRobotPose", backCamPose);
+            SmartDashboard.putBoolean("Back Pose Found", true);
         }
         if (!leftPose.isEmpty()) {
             EstimatedRobotPose est = leftPose.get();
@@ -401,6 +410,7 @@ public class RobotContainer {
             leftTime = est.timestampSeconds;
             leftCamPose.setRobotPose(leftPose2d);
             SmartDashboard.putData("leftRobotPose", leftCamPose);
+            SmartDashboard.putBoolean("Left Pose Found", true);
         }   
 
         getDistanceAndAverage(frontPose2d, frontTime, leftPose2d, leftTime, backPose2d, backTime, hubX, hubY);
@@ -431,6 +441,7 @@ public class RobotContainer {
         double avgAngle = 0;
         double avgYDiff = 0;
         double camCount = 0;
+        double angleDiff = 0;
 
         if (frontPose.getX() != -1) {
             frontPoseX = frontPose.getX();
@@ -438,7 +449,8 @@ public class RobotContainer {
             frontXDiff = hubX - frontPoseX;
             frontYDiff = hubY - frontPoseY;
             frontDist = Math.sqrt( (frontXDiff * frontXDiff) + (frontYDiff * frontYDiff));
-            frontHubAngle = Math.atan(frontYDiff / (frontXDiff + 1E-6));
+            frontHubAngle = Math.toDegrees(Math.atan(frontYDiff / (frontXDiff + 1E-6)));
+            SmartDashboard.putNumber("Front Hub Angle", frontHubAngle);
             camCount++;
             //drivetrain.addVisionMeasurement(frontPose, frontTime);
         }
@@ -448,7 +460,8 @@ public class RobotContainer {
             leftXDiff = hubX - leftPoseX;
             leftYDiff = hubY - leftPoseY;
             leftDist = Math.sqrt( (leftXDiff * leftXDiff) + (leftYDiff * leftYDiff));
-            leftHubAngle = Math.atan(leftYDiff / (leftXDiff + 1E-6));
+            leftHubAngle = Math.toDegrees(Math.atan(leftYDiff / (leftXDiff + 1E-6)));
+            SmartDashboard.putNumber("Left Hub Angle", leftHubAngle);
             camCount++;
             //drivetrain.addVisionMeasurement(leftPose, leftTime);
         }
@@ -458,7 +471,8 @@ public class RobotContainer {
             backXDiff = hubX - backPoseX;
             backYDiff = hubX - backPoseY;
             backDist = Math.sqrt( (backXDiff * backXDiff) + (backYDiff * backYDiff));
-            backHubAngle = Math.atan(backYDiff / (backXDiff + 1E-6));
+            backHubAngle = Math.toDegrees(Math.atan(backYDiff / (backXDiff + 1E-6)));
+            SmartDashboard.putNumber("Back Hub Angle", backHubAngle);
             camCount++;
             //drivetrain.addVisionMeasurement(backPose, backTime);
         }
@@ -470,9 +484,24 @@ public class RobotContainer {
             avgYDiff = (frontYDiff + backYDiff + leftYDiff) / camCount;
 
             if (avgYDiff < 0) {
-                avgAngle = 360 - avgAngle;
+                avgAngle = 360 + avgAngle;
             }
+
+            angleDiff = Math.abs(getGyroYaw() - avgAngle);
+            if (angleDiff <= MechanismConstants.gyroAccuracy) {
+                MechanismConstants.linedUp = true;
+            } else {
+                MechanismConstants.linedUp = false;
+            }
+
+            if (Math.abs(MechanismConstants.targetYaw) <= MechanismConstants.gyroAccuracy) {
+                MechanismConstants.yawLinedUp = true;
+            } else {
+                MechanismConstants.yawLinedUp = false;
+            }
+
             MechanismConstants.canShoot = true;
+
         } else {
             MechanismConstants.canShoot = false;
         }
@@ -490,11 +519,20 @@ public class RobotContainer {
         SmartDashboard.putNumber("backY", backPoseY);
         SmartDashboard.putNumber("frontX", frontPoseX);
         SmartDashboard.putNumber("frontY", frontPoseY);
+        SmartDashboard.putNumber("hubX", hubX);
+        SmartDashboard.putNumber("hubY", hubY);
+        SmartDashboard.putNumber("Angle Diff", angleDiff);
 
     }
 
     private double getGyroYaw () {
-        return pigeon.getYaw().getValueAsDouble() % 360;
+        double angle = 0;
+        if ((pigeon.getYaw().getValueAsDouble() % 360) >= 0) {
+            angle = pigeon.getYaw().getValueAsDouble() % 360;
+        } else {
+            angle = 360 + ((pigeon.getYaw().getValueAsDouble()) % 360);
+        }
+        return angle;
     }
 
 }

@@ -5,7 +5,7 @@
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
               {
@@ -36,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "L Start and Intake"
+                  "pathName": "R Start and Intake"
                 }
               }
             ]
@@ -45,13 +45,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Intake"
+            "name": "Stop Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "L Bump Return 1"
+            "pathName": "R Trench Return"
           }
         },
         {
@@ -80,21 +80,34 @@
           }
         },
         {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "R Trench Center Pass 2"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "Intake"
+            "name": "Stop Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "L Trench Center Pass 2"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "L Bump Return 2"
+            "pathName": "R Return 2"
           }
         },
         {
@@ -123,15 +136,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "L Trench Center Pass 2"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "R Trench Center Pass 2"
+                }
+              }
+            ]
           }
         }
       ]
