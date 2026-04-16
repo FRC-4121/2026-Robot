@@ -40,6 +40,7 @@ public class AutoShoot extends Command {
   private double m_kP;
   private double m_kI;
   private double m_kD;
+  private double shooterVelocity;
 
   private PIDController m_myPIDControl;
 
@@ -50,7 +51,7 @@ public class AutoShoot extends Command {
   private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
   //Drive swerve request
-  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+  private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric()
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
@@ -75,13 +76,12 @@ public class AutoShoot extends Command {
   @Override
   public void initialize() {
     
-    speed = 0.1;
-    m_kP = 1;
+    m_kP = .04;
     m_kI = 0;
-    m_kD = 0;
+    m_kD = 0.0001;
 
     m_myPIDControl = new PIDController(m_kP, m_kI, m_kD);
-    m_myPIDControl.setTolerance(0.05);
+    m_myPIDControl.setTolerance(0.5);
 
     percentVelocity = 0.99;
     MechanismConstants.hubDistance = MechanismConstants.targetDistance;
@@ -97,6 +97,7 @@ public class AutoShoot extends Command {
 
         offset = -MechanismConstants.targetYaw;
         output = m_myPIDControl.calculate(offset, 0);
+        SmartDashboard.putNumber("Auto Rotate PID Output", output);
 
         MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(MechanismConstants.hubDistance,
         MechanismConstants.kShooterLaunchAngle, 
@@ -104,12 +105,12 @@ public class AutoShoot extends Command {
 
         myShooter.runShooter(MechanismConstants.targetVelocity);
         double shooterVelocity = myShooter.getShooterVelocity();
-
         if (MechanismConstants.isRotateEnabled) {
-          SwerveRequest.FieldCentric driveRequest = new FieldCentric();
-            drive.withVelocityX(0) // Drive forward with negative Y (forward)
-                 .withVelocityY(0) // Drive left with negative X (left)
-                 .withRotationalRate(output * speed * MaxAngularRate); // Drive counterclockwise with negative X (left)
+          SwerveRequest.FieldCentric driveRequest = new FieldCentric()
+            .withVelocityX(0) // Drive forward with negative Y (forward)
+            .withVelocityY(0) // Drive left with negative X (left)
+            .withRotationalRate(output * MaxAngularRate); // Drive counterclockwise with negative X (left)
+        
 
           mySwerve.setControl(driveRequest);
         }
@@ -120,10 +121,11 @@ public class AutoShoot extends Command {
           myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
         }
 
+
       } else {
-        MechanismConstants.targetVelocity = 50;
+        MechanismConstants.targetVelocity = 45;
         myShooter.runShooter(MechanismConstants.targetVelocity);
-        double shooterVelocity = myShooter.getShooterVelocity();
+        shooterVelocity = myShooter.getShooterVelocity();
 
         if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))) {
           myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);

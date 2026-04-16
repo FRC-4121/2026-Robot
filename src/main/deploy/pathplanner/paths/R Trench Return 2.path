@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.768161111111111,
-        "y": 3.5965
+        "x": 5.75,
+        "y": 4.570944444444445
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.6561,
-        "y": 0.17132777777777664
+        "x": 7.167816666666666,
+        "y": 2.3443388888888888
       },
       "isLocked": false,
-      "linkedName": "R Center Intake End"
+      "linkedName": "R Center Pass 2 End"
     },
     {
       "anchor": {
-        "x": 5.327177777777778,
+        "x": 5.458727777777779,
         "y": 0.717016666666666
       },
       "prevControl": {
-        "x": 5.603593164428911,
-        "y": 0.717016666666666
+        "x": 6.2529,
+        "y": 0.7462499999999985
       },
       "nextControl": {
-        "x": 5.077177777777778,
-        "y": 0.717016666666666
+        "x": 4.431200071810626,
+        "y": 0.6791935609255446
       },
       "isLocked": false,
       "linkedName": null
@@ -36,8 +36,8 @@
         "y": 0.717016666666666
       },
       "prevControl": {
-        "x": 4.036038888888889,
-        "y": 0.7121444444444442
+        "x": 4.094505555555555,
+        "y": 0.6585499999999991
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,29 +46,15 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.53443983402489,
+      "waypointRelativePos": 0.856431535269714,
       "rotationDegrees": 90.0
     },
     {
-      "waypointRelativePos": 1.6929460580912912,
+      "waypointRelativePos": 1.65145228215769,
       "rotationDegrees": 90.0
     }
   ],
-  "constraintZones": [
-    {
-      "name": "Bump Zone",
-      "minWaypointRelativePos": 0.6332506203474013,
-      "maxWaypointRelativePos": 1.4451612903225766,
-      "constraints": {
-        "maxVelocity": 2.0,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    }
-  ],
+  "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {

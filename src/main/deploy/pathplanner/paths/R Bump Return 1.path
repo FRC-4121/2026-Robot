@@ -3,62 +3,62 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.75,
-        "y": 4.570944444444445
+        "x": 7.768161111111111,
+        "y": 3.5965
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.167816666666666,
-        "y": 2.3443388888888888
+        "x": 7.134772222222222,
+        "y": 2.285872222222222
       },
       "isLocked": false,
-      "linkedName": "R Center Pass 2 End"
+      "linkedName": "R Center Intake End"
     },
     {
       "anchor": {
-        "x": 5.458727777777779,
-        "y": 0.717016666666666
+        "x": 4.625577777777778,
+        "y": 2.548972222222221
       },
       "prevControl": {
-        "x": 6.2529,
-        "y": 0.7462499999999985
+        "x": 6.671911111111111,
+        "y": 2.5587166666666654
       },
       "nextControl": {
-        "x": 4.431200071810626,
-        "y": 0.6791935609255446
+        "x": 3.1005194667201135,
+        "y": 2.541710039788614
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.5634333333333332,
-        "y": 0.717016666666666
+        "x": 1.6827555555555556,
+        "y": 2.7633500000000004
       },
       "prevControl": {
-        "x": 4.094505555555555,
-        "y": 0.6585499999999991
+        "x": 2.7205388888888886,
+        "y": 2.4125499999999986
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R Bump Leave"
+      "linkedName": "R Bump Shoot 1"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.856431535269714,
-      "rotationDegrees": 90.0
+      "waypointRelativePos": 0.6721991701244814,
+      "rotationDegrees": 45.0
     },
     {
-      "waypointRelativePos": 1.65145228215769,
-      "rotationDegrees": 90.0
+      "waypointRelativePos": 1.5850622406639003,
+      "rotationDegrees": 45.0
     }
   ],
   "constraintZones": [
     {
       "name": "Bump Zone",
-      "minWaypointRelativePos": 0.6193548387096804,
-      "maxWaypointRelativePos": 1.3915632754342393,
+      "minWaypointRelativePos": 0.6689826302729527,
+      "maxWaypointRelativePos": 1.5821339950372348,
       "constraints": {
         "maxVelocity": 2.0,
         "maxAcceleration": 3.0,
@@ -81,7 +81,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 71.56505117707798
+    "rotation": 20.85842232238616
   },
   "reversed": false,
   "folder": null,

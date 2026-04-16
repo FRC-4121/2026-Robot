@@ -76,6 +76,7 @@ public class RobotContainer {
     private final Command AutoIntakeCommand;
     private final Command StopAutoShootCommand;
     private final Command StopAutoIntakeCommand;
+    private final Command AutoShuttleCommand;
 
     //===Declare Buttons===//
     private final JoystickButton ParkButton;
@@ -173,6 +174,7 @@ public class RobotContainer {
         AutoIntakeCommand = new AutoIntake(intake, MechanismConstants.kIntakeSpeed);
         StopAutoShootCommand = new StopAutoShoot();
         StopAutoIntakeCommand = new StopAutoIntake();
+        AutoShuttleCommand = new AutoShuttle(shooter, indexer);
 
         // Set Default Commands For Subsystems
         intake.setDefaultCommand(ManualLiftIntakeCommand);
@@ -184,6 +186,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Shoot", AutoShootCommand);
         NamedCommands.registerCommand("Stop Shoot", StopAutoShootCommand);
         NamedCommands.registerCommand("Lift Intake", LiftIntakeCommand);
+        NamedCommands.registerCommand("Shuttle", AutoShuttleCommand);
         
         
         // Set field centric drive
@@ -494,7 +497,7 @@ public class RobotContainer {
                 MechanismConstants.linedUp = false;
             }
 
-            if (Math.abs(MechanismConstants.targetYaw) <= MechanismConstants.gyroAccuracy) {
+            if (Math.abs(MechanismConstants.targetYaw) <= 1) {
                 MechanismConstants.yawLinedUp = true;
             } else {
                 MechanismConstants.yawLinedUp = false;

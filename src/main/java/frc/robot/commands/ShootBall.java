@@ -86,7 +86,7 @@ public class ShootBall extends Command {
     m_kD = 0.0001;
 
     m_myPIDControl = new PIDController(m_kP, m_kI, m_kD);
-    m_myPIDControl.setTolerance(0.1);
+    m_myPIDControl.setTolerance(0.5);
 
     percentVelocity = 0.99;
     MechanismConstants.hubDistance = MechanismConstants.targetDistance;

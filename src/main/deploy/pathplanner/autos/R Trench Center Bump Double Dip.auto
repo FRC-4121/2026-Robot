@@ -51,7 +51,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R Trench Return 1"
+            "pathName": "R Bump Return 1"
           }
         },
         {
@@ -59,15 +59,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "Shoot"
-                }
-              },
-              {
                 "type": "wait",
                 "data": {
                   "waitTime": 3.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shoot"
                 }
               }
             ]
@@ -92,7 +92,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "R Trench Center Pass 2"
+                  "pathName": "R Bump Trench Center Pass 2"
                 }
               }
             ]
@@ -107,7 +107,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R Trench Return 2"
+            "pathName": "R Bump Return 2"
           }
         },
         {
@@ -115,15 +115,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "Shoot"
-                }
-              },
-              {
                 "type": "wait",
                 "data": {
                   "waitTime": 3.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shoot"
                 }
               }
             ]
@@ -148,7 +148,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "R Trench Center Pass 2"
+                  "pathName": "R Bump Trench Center Pass 2"
                 }
               }
             ]

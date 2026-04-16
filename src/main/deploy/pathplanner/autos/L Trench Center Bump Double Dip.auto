@@ -36,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "R Start and Intake"
+                  "pathName": "L Start and Intake"
                 }
               }
             ]
@@ -51,7 +51,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R Trench Return 1"
+            "pathName": "L Bump Return 1"
           }
         },
         {
@@ -59,15 +59,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "Shoot"
-                }
-              },
-              {
                 "type": "wait",
                 "data": {
                   "waitTime": 3.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shoot"
                 }
               }
             ]
@@ -92,7 +92,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "R Trench Center Pass 2"
+                  "pathName": "L Bump Trench Center Pass 2"
                 }
               }
             ]
@@ -107,7 +107,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R Trench Return 2"
+            "pathName": "L Bump Return 2"
           }
         },
         {
@@ -115,15 +115,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "Shoot"
-                }
-              },
-              {
                 "type": "wait",
                 "data": {
                   "waitTime": 3.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shoot"
                 }
               }
             ]
@@ -148,7 +148,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "R Trench Center Pass 2"
+                  "pathName": "L Bump Trench Center Pass 2"
                 }
               }
             ]
