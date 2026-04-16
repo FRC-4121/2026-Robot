@@ -37,8 +37,6 @@ public class Robot extends TimedRobot {
         
         CameraServer.startAutomaticCapture();
 
- 
-
     }
 
     @Override
@@ -51,6 +49,7 @@ public class Robot extends TimedRobot {
 
         // Get alliance color from driver station
         m_robotContainer.getAlliance();
+        //CameraServer.startAutomaticCapture();
 
     }
 

@@ -82,7 +82,7 @@ public class Indexer extends SubsystemBase{
     // Set Current Limit Configuration
     var indexerMasterLimitConfigs = indexerMasterConfigs.CurrentLimits;
     indexerMasterLimitConfigs.StatorCurrentLimit = MechanismConstants.indexerCurrentLimit;
-    indexerMasterLimitConfigs.StatorCurrentLimitEnable = false;
+    indexerMasterLimitConfigs.StatorCurrentLimitEnable = true;
 
     // Set indexer motor feedback sensor
     var indexerSensorConfig = indexerMasterConfigs.Feedback;
@@ -120,7 +120,7 @@ public class Indexer extends SubsystemBase{
     // Set Current Limit Configuration
     var indexerSlaveLimitConfigs = indexerSlaveConfigs.CurrentLimits;
     indexerSlaveLimitConfigs.StatorCurrentLimit = MechanismConstants.indexerCurrentLimit;
-    indexerSlaveLimitConfigs.StatorCurrentLimitEnable = false;
+    indexerSlaveLimitConfigs.StatorCurrentLimitEnable = true;
 
     // Apply indexer motor configuration and initialize position to 0
     StatusCode indexerSlaveStatus = indexerSlave.getConfigurator().apply(indexerSlaveConfigs, 0.050);

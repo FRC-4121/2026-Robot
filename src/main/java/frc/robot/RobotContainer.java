@@ -161,7 +161,7 @@ public class RobotContainer {
         RunIntakeCommand = new RunIntake(intake, MechanismConstants.kIntakeSpeed);
         LiftIntakeCommand = new LiftIntake(intake);
         ShootBallCommand = new ShootBall(shooter, indexer, intake, drivetrain, pigeon, myBallistics);
-        AutoShootCommand = new AutoShoot(shooter, indexer, intake, drivetrain, myBallistics);
+        AutoShootCommand = new AutoShoot(shooter, indexer, intake, myBallistics);
         ManualLiftIntakeCommand = new ManualLiftIntake(intake, aux);
         DisableAutoRotateCommand = new DisableAutoRotate(false);
         EnableAutoRotateCommand = new DisableAutoRotate(true);
@@ -332,10 +332,12 @@ public class RobotContainer {
         SmartDashboard.putNumber("Target Yaw", MechanismConstants.targetYaw);
         SmartDashboard.putBoolean("Yaw 1 to 5", MechanismConstants.yawLinedUp1);
         SmartDashboard.putBoolean("Yaw 5 to 10", MechanismConstants.yawLinedUp2);
-        SmartDashboard.putBoolean("Yaw 10 to 10", MechanismConstants.yawLinedUp3);
+        SmartDashboard.putBoolean("Yaw 10 to 20", MechanismConstants.yawLinedUp3);
         SmartDashboard.putBoolean("Yaw -1 to -5", MechanismConstants.yawLinedUp4);
         SmartDashboard.putBoolean("Yaw -5 to -10", MechanismConstants.yawLinedUp5);
         SmartDashboard.putBoolean("Yaw -10 to -20", MechanismConstants.yawLinedUp6);
+        SmartDashboard.putBoolean("Back Tags Found?", MechanismConstants.backTags);
+        SmartDashboard.putBoolean("Auto Rotate", MechanismConstants.isRotateEnabled);
     }
 
     /**
@@ -397,6 +399,7 @@ public class RobotContainer {
         SmartDashboard.putBoolean("Front Pose Found", false);
         SmartDashboard.putBoolean("Left Pose Found", false);
         SmartDashboard.putBoolean("Back Pose Found", false);
+        SmartDashboard.putBoolean("Blue Alliance", Mutables.blueAlliance);
         if (!frontPose.isEmpty()) {
             EstimatedRobotPose est = frontPose.get();
             frontPose2d = est.estimatedPose.toPose2d();
@@ -451,6 +454,8 @@ public class RobotContainer {
         double avgYDiff = 0;
         double camCount = 0;
         double angleDiff = 0;
+        
+        MechanismConstants.backTags = false;
 
         if (frontPose.getX() != -1) {
             frontPoseX = frontPose.getX();
@@ -478,11 +483,14 @@ public class RobotContainer {
             backPoseX = backPose.getX();
             backPoseY = backPose.getY();
             backXDiff = hubX - backPoseX;
-            backYDiff = hubX - backPoseY;
+            backYDiff = hubY - backPoseY;
             backDist = Math.sqrt( (backXDiff * backXDiff) + (backYDiff * backYDiff));
             backHubAngle = Math.toDegrees(Math.atan(backYDiff / (backXDiff + 1E-6)));
             SmartDashboard.putNumber("Back Hub Angle", backHubAngle);
+            SmartDashboard.putNumber("Back xDiff", backXDiff);
+            SmartDashboard.putNumber("Back yDiff", backYDiff);
             camCount++;
+            MechanismConstants.backTags = true;
             //drivetrain.addVisionMeasurement(backPose, backTime);
         }
 
@@ -503,56 +511,54 @@ public class RobotContainer {
                 MechanismConstants.linedUp = false;
             }
 
-            if (Math.abs(MechanismConstants.targetYaw) <= 1) {
+            if (Math.abs(MechanismConstants.targetYaw) <= .5) {
                 MechanismConstants.yawLinedUp = true;
             } else {
                 MechanismConstants.yawLinedUp = false;
             }
             
-            if ((MechanismConstants.targetYaw >= 1) && (MechanismConstants.targetYaw <= 5)) {
+            if (((MechanismConstants.targetYaw >= 1) && (MechanismConstants.targetYaw <= 10)) || MechanismConstants.yawLinedUp) {
                 MechanismConstants.yawLinedUp1 = true;
             } else {
                 MechanismConstants.yawLinedUp1 = false;
             }
 
-            if ((MechanismConstants.targetYaw >= 5) && (MechanismConstants.targetYaw <= 10)) {
+            if (((MechanismConstants.targetYaw >= 10) && (MechanismConstants.targetYaw <= 30)) || MechanismConstants.yawLinedUp) {
                 MechanismConstants.yawLinedUp2 = true;
             } else {
                 MechanismConstants.yawLinedUp2 = false;
             }
 
-            if ((MechanismConstants.targetYaw >= 10) && (MechanismConstants.targetYaw <= 20)) {
+            if (((MechanismConstants.targetYaw >= 30) && (MechanismConstants.targetYaw <= 50)) || MechanismConstants.yawLinedUp) {
                 MechanismConstants.yawLinedUp3 = true;
             } else {
                 MechanismConstants.yawLinedUp3 = false;
             }
 
-            if ((MechanismConstants.targetYaw <= -1) && (MechanismConstants.targetYaw >= -5)) {
+            if (((MechanismConstants.targetYaw <= -1) && (MechanismConstants.targetYaw >= -10)) || MechanismConstants.yawLinedUp) {
                 MechanismConstants.yawLinedUp4 = true;
             } else {
                 MechanismConstants.yawLinedUp4 = false;
             }
 
-            if ((MechanismConstants.targetYaw <= -5) && (MechanismConstants.targetYaw >= -10)) {
+            if (((MechanismConstants.targetYaw <= -10) && (MechanismConstants.targetYaw >= -30)) || MechanismConstants.yawLinedUp) {
                 MechanismConstants.yawLinedUp5 = true;
             } else {
                 MechanismConstants.yawLinedUp5 = false;
             }
 
-            if ((MechanismConstants.targetYaw <= -10) && (MechanismConstants.targetYaw >= -20)) {
+            if (((MechanismConstants.targetYaw <= -30) && (MechanismConstants.targetYaw >= -50)) || MechanismConstants.yawLinedUp) {
                 MechanismConstants.yawLinedUp6 = true;
             } else {
                 MechanismConstants.yawLinedUp6 = false;
             }
 
-
-
-
-
             MechanismConstants.canShoot = true;
 
         } else {
+
             MechanismConstants.canShoot = false;
+
         }
 
         MechanismConstants.targetDistance = avgDist;

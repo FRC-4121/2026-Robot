@@ -57,17 +57,14 @@ public class AutoShoot extends Command {
 
 
     // Create new AutoShoot
-    public AutoShoot(Shooter shooter, Indexer indexer, Intake intake, CommandSwerveDrivetrain swerve, Ballistics2026 ballistics) {
+    public AutoShoot(Shooter shooter, Indexer indexer, Intake intake, Ballistics2026 ballistics) {
 
     myBallistics = ballistics;
     myShooter = shooter;
     myIndexer = indexer;
     myIntake = intake;
-    mySwerve = swerve;
 
-    
-
-    addRequirements(myShooter, myIndexer, myIntake, mySwerve);
+    addRequirements(myShooter, myIndexer, myIntake);
 
   }
 
@@ -85,7 +82,6 @@ public class AutoShoot extends Command {
 
     percentVelocity = 0.99;
     MechanismConstants.hubDistance = MechanismConstants.targetDistance;
-    mySwerve.setControl(idleRequest);
 
   }
 
@@ -95,27 +91,14 @@ public class AutoShoot extends Command {
 
       if (MechanismConstants.canShoot) {
 
-        offset = -MechanismConstants.targetYaw;
-        output = m_myPIDControl.calculate(offset, 0);
-        SmartDashboard.putNumber("Auto Rotate PID Output", output);
-
         MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(MechanismConstants.hubDistance,
         MechanismConstants.kShooterLaunchAngle, 
         MechanismConstants.kShooterSlip);
 
         myShooter.runShooter(MechanismConstants.targetVelocity);
         double shooterVelocity = myShooter.getShooterVelocity();
-        if (MechanismConstants.isRotateEnabled) {
-          SwerveRequest.FieldCentric driveRequest = new FieldCentric()
-            .withVelocityX(0) // Drive forward with negative Y (forward)
-            .withVelocityY(0) // Drive left with negative X (left)
-            .withRotationalRate(output * MaxAngularRate); // Drive counterclockwise with negative X (left)
-        
 
-          mySwerve.setControl(driveRequest);
-        }
-
-        if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) && MechanismConstants.yawLinedUp) {
+        if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))) {
           myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
           myIndexer.runFloor(MechanismConstants.kFloorSpeed);
           myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);

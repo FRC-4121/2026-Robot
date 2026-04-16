@@ -44,8 +44,8 @@ public final class Constants {
     public static double slowModeAngularMultiplier = 1;
 
     // Current Limits on Swerve Drive Motors
-    public static double driveCurrentLimit = 90;
-    public static double angleCurrentLimit = 60;
+    public static double driveCurrentLimit = 50;
+    public static double angleCurrentLimit = 30;
 
   }
 
@@ -58,11 +58,11 @@ public final class Constants {
     public static boolean isDisableState = false;
 
     // Current Limits on Mechanism Motors;
-    public static double intakeCurrentLimit = 40;
+    public static double intakeCurrentLimit = 30;
     public static double intakeLiftCurrentLimit = 20;
     public static double floorCurrentLimit = 30;
-    public static double indexerCurrentLimit = 100;
-    public static double shooterCurrentLimit = 90;
+    public static double indexerCurrentLimit = 90; // Enabled
+    public static double shooterCurrentLimit = 60;
 
     // Set shooter PID constants
     public static final double kP_Shoot = 0.12;
@@ -84,6 +84,7 @@ public final class Constants {
     public static double targetVelocity = 0;
     public static boolean canShoot = false;
     public static boolean linedUp = false;
+    public static boolean backTags = false;
 
     // Yaw lining up status booleans
     public static boolean yawLinedUp = false;
@@ -102,7 +103,7 @@ public final class Constants {
 
     // Set hopper/indexer constants
     public static double kFloorSpeed = 0.3;
-    public static final double kIndexerSpeed = 60; //40
+    public static final double kIndexerSpeed = 30; //60
 
     // Set intake constants
     public static final double kIntakeUp = 0;
@@ -120,7 +121,7 @@ public final class Constants {
 
     // Set intake lift motion magic constants
     public static final double kLiftMagicCruise = 20;
-    public static final double kLiftMagicAccel = 60;
+    public static final double kLiftMagicAccel = 50;
     public static final double kLiftMagicJerk = 500;
 
     // Set turret constants

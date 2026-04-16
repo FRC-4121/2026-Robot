@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.0883444444444443,
+        "x": 1.2,
         "y": 5.959527777777778
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1269564461845,
+        "x": 2.2386120017400555,
         "y": 5.663603695582339
       },
       "isLocked": false,
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -32.101248895835546
+    "rotation": -34.90435110928566
   },
   "reversed": false,
   "folder": "Intaking From Depot",

@@ -23,6 +23,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.MechanismConstants;
+import frc.robot.Constants.Mutables;
 
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -56,6 +57,7 @@ public class ShootBall extends Command {
   private double m_kP;
   private double m_kI;
   private double m_kD;
+  private double shooterVelocity;
 
   private PIDController m_myPIDControl;
 
@@ -81,8 +83,8 @@ public class ShootBall extends Command {
   @Override
   public void initialize() {
 
-    m_kP = .04;
-    m_kI = 0;
+    m_kP = .02;
+    m_kI = 0.001;
     m_kD = 0.0001;
 
     m_myPIDControl = new PIDController(m_kP, m_kI, m_kD);
@@ -102,62 +104,71 @@ public class ShootBall extends Command {
 
       if (MechanismConstants.canShoot) {
 
-        offset = -MechanismConstants.targetYaw;
+        if (Mutables.blueAlliance) {
+          offset = MechanismConstants.targetYaw;
+        } else {
+          offset = -MechanismConstants.targetYaw;
+        }
         output = m_myPIDControl.calculate(offset, 0);
         SmartDashboard.putNumber("Auto Rotate PID Output", output);
 
         MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(MechanismConstants.hubDistance,
-        MechanismConstants.kShooterLaunchAngle, 
-        MechanismConstants.kShooterSlip);
+            MechanismConstants.kShooterLaunchAngle,
+            MechanismConstants.kShooterSlip);
 
         myShooter.runShooter(MechanismConstants.targetVelocity);
         double shooterVelocity = myShooter.getShooterVelocity();
-      SmartDashboard.putBoolean("Auto Rotate", false);
-        if (MechanismConstants.isRotateEnabled) {
-          SmartDashboard.putBoolean("Auto Rotate", true);
-          SwerveRequest.FieldCentric driveRequest = new FieldCentric()
-            .withVelocityX(0) // Drive forward with negative Y (forward)
-            .withVelocityY(0) // Drive left with negative X (left)
-            .withRotationalRate(output * MaxAngularRate); // Drive counterclockwise with negative X (left)
         
+        if (MechanismConstants.isRotateEnabled) {
+
+          SwerveRequest.FieldCentric driveRequest = new FieldCentric()
+              .withVelocityX(0) // Drive forward with negative Y (forward)
+              .withVelocityY(0) // Drive left with negative X (left)
+              .withRotationalRate(output * MaxAngularRate); // Drive counterclockwise with negative X (left)
 
           mySwerve.setControl(driveRequest);
+
         }
 
-        if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) && MechanismConstants.yawLinedUp) {
+        if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))
+            && (MechanismConstants.yawLinedUp || !MechanismConstants.isRotateEnabled)) {
+
           mySwerve.setControl(parkRequest);
           myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
           myIndexer.runFloor(MechanismConstants.kFloorSpeed);
           myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
+
         }
 
       } else {
-        MechanismConstants.targetVelocity = 50;
+
+        MechanismConstants.targetVelocity = 45;
         mySwerve.setControl(parkRequest);
         myShooter.runShooter(MechanismConstants.targetVelocity);
-        double shooterVelocity = myShooter.getShooterVelocity();
+        shooterVelocity = myShooter.getShooterVelocity();
 
         if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))) {
           myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
           myIndexer.runFloor(MechanismConstants.kFloorSpeed);
           myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
         }
+
       }
 
-    } else {
+      } else {
 
-      MechanismConstants.targetVelocity = 50;
-      myShooter.runShooter(MechanismConstants.targetVelocity);
-      double shooterVelocity = myShooter.getShooterVelocity();
+        MechanismConstants.targetVelocity = 50;
+        myShooter.runShooter(MechanismConstants.targetVelocity);
+        double shooterVelocity = myShooter.getShooterVelocity();
 
-      if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) {
-        myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
-        myIndexer.runFloor(MechanismConstants.kFloorSpeed);
+        if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) {
+          myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+          myIndexer.runFloor(MechanismConstants.kFloorSpeed);
+        }
+
       }
 
     }
-
-  }
 
   // Called once the command ends or is interrupted.
   @Override

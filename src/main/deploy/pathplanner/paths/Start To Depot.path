@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.26493888888888895,
-        "y": 5.959527777777778
+        "x": 3.5,
+        "y": 4.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.8286156647892359,
-        "y": 5.9747978913632185
+        "x": 1.5842285101574949,
+        "y": 4.352920330656578
       },
       "isLocked": false,
-      "linkedName": "Outpost Intake End"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 5.959527777777778
       },
       "prevControl": {
-        "x": 0.6374733359734192,
-        "y": 5.971857272483681
+        "x": 2.2520411059935825,
+        "y": 4.627989125606875
       },
       "nextControl": null,
       "isLocked": false,
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 3.0,
+    "velocity": 0,
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Intaking From Depot",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
