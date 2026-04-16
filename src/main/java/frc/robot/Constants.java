@@ -84,7 +84,15 @@ public final class Constants {
     public static double targetVelocity = 0;
     public static boolean canShoot = false;
     public static boolean linedUp = false;
+
+    // Yaw lining up status booleans
     public static boolean yawLinedUp = false;
+    public static boolean yawLinedUp1 = false;
+    public static boolean yawLinedUp2 = false;
+    public static boolean yawLinedUp3 = false;
+    public static boolean yawLinedUp4 = false;
+    public static boolean yawLinedUp5 = false;
+    public static boolean yawLinedUp6 = false;
 
     // Set up constant for target angle for shooting
     public static double targetGyroAngle = 0;

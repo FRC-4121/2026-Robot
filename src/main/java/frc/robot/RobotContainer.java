@@ -330,6 +330,12 @@ public class RobotContainer {
         SmartDashboard.putBoolean("Lined Up?", MechanismConstants.linedUp);
         SmartDashboard.putBoolean("Yaw Lined Up?", MechanismConstants.yawLinedUp);
         SmartDashboard.putNumber("Target Yaw", MechanismConstants.targetYaw);
+        SmartDashboard.putBoolean("Yaw 1 to 5", MechanismConstants.yawLinedUp1);
+        SmartDashboard.putBoolean("Yaw 5 to 10", MechanismConstants.yawLinedUp2);
+        SmartDashboard.putBoolean("Yaw 10 to 10", MechanismConstants.yawLinedUp3);
+        SmartDashboard.putBoolean("Yaw -1 to -5", MechanismConstants.yawLinedUp4);
+        SmartDashboard.putBoolean("Yaw -5 to -10", MechanismConstants.yawLinedUp5);
+        SmartDashboard.putBoolean("Yaw -10 to -20", MechanismConstants.yawLinedUp6);
     }
 
     /**
@@ -502,6 +508,46 @@ public class RobotContainer {
             } else {
                 MechanismConstants.yawLinedUp = false;
             }
+            
+            if ((MechanismConstants.targetYaw >= 1) && (MechanismConstants.targetYaw <= 5)) {
+                MechanismConstants.yawLinedUp1 = true;
+            } else {
+                MechanismConstants.yawLinedUp1 = false;
+            }
+
+            if ((MechanismConstants.targetYaw >= 5) && (MechanismConstants.targetYaw <= 10)) {
+                MechanismConstants.yawLinedUp2 = true;
+            } else {
+                MechanismConstants.yawLinedUp2 = false;
+            }
+
+            if ((MechanismConstants.targetYaw >= 10) && (MechanismConstants.targetYaw <= 20)) {
+                MechanismConstants.yawLinedUp3 = true;
+            } else {
+                MechanismConstants.yawLinedUp3 = false;
+            }
+
+            if ((MechanismConstants.targetYaw <= -1) && (MechanismConstants.targetYaw >= -5)) {
+                MechanismConstants.yawLinedUp4 = true;
+            } else {
+                MechanismConstants.yawLinedUp4 = false;
+            }
+
+            if ((MechanismConstants.targetYaw <= -5) && (MechanismConstants.targetYaw >= -10)) {
+                MechanismConstants.yawLinedUp5 = true;
+            } else {
+                MechanismConstants.yawLinedUp5 = false;
+            }
+
+            if ((MechanismConstants.targetYaw <= -10) && (MechanismConstants.targetYaw >= -20)) {
+                MechanismConstants.yawLinedUp6 = true;
+            } else {
+                MechanismConstants.yawLinedUp6 = false;
+            }
+
+
+
+
 
             MechanismConstants.canShoot = true;
 
