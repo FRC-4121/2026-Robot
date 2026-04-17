@@ -90,12 +90,24 @@ public class AutoShoot extends Command {
   @Override
   public void execute() {
 
-      if (MechanismConstants.canShoot) {
+      // if (MechanismConstants.canShoot) {
 
-        MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(MechanismConstants.hubDistance,
-        MechanismConstants.kShooterLaunchAngle, 
-        MechanismConstants.kShooterSlip);
+      //   MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(MechanismConstants.hubDistance,
+      //   MechanismConstants.kShooterLaunchAngle, 
+      //   MechanismConstants.kShooterSlip);
 
+      //   myShooter.runShooter(MechanismConstants.targetVelocity);
+      //   shooterVelocity = myShooter.getShooterVelocity();
+
+      //   if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))) {
+      //     myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+      //     myIndexer.runFloor(MechanismConstants.kFloorSpeed);
+      //     myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
+      //   }
+
+
+      // } else {
+        MechanismConstants.targetVelocity = 50;
         myShooter.runShooter(MechanismConstants.targetVelocity);
         shooterVelocity = myShooter.getShooterVelocity();
 
@@ -104,19 +116,7 @@ public class AutoShoot extends Command {
           myIndexer.runFloor(MechanismConstants.kFloorSpeed);
           myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
         }
-
-
-      } else {
-        MechanismConstants.targetVelocity = 45;
-        myShooter.runShooter(MechanismConstants.targetVelocity);
-        shooterVelocity = myShooter.getShooterVelocity();
-
-        if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))) {
-          myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
-          myIndexer.runFloor(MechanismConstants.kFloorSpeed);
-          myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
-        }
-      }
+      //}
 
 
 

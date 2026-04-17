@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.76,
-        "y": 4.570944444444445
+        "x": 6.062883333333333,
+        "y": 4.580688888888889
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.623188888888889,
-        "y": 3.5429055555555555
+        "x": 6.9260722222222215,
+        "y": 3.55265
       },
       "isLocked": false,
       "linkedName": "R Center Pass 2 End"
@@ -81,7 +81,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 20.85842232238616
+    "rotation": 20.858422322386165
   },
   "reversed": false,
   "folder": null,

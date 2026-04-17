@@ -83,9 +83,9 @@ public class ShootBall extends Command {
   @Override
   public void initialize() {
 
-    m_kP = .02;
-    m_kI = 0.001;
-    m_kD = 0.0001;
+    m_kP = .025;
+    m_kI = 0.01;
+    m_kD = 0.00008;
 
     m_myPIDControl = new PIDController(m_kP, m_kI, m_kD);
     m_myPIDControl.setTolerance(0.5);
@@ -100,75 +100,85 @@ public class ShootBall extends Command {
   @Override
   public void execute() {
 
-    if (MechanismConstants.isShooterMode) {
+    // if (MechanismConstants.isShooterMode) {
 
-      if (MechanismConstants.canShoot) {
+    //   if (MechanismConstants.canShoot) {
 
-        if (Mutables.blueAlliance) {
-          offset = MechanismConstants.targetYaw;
-        } else {
-          offset = -MechanismConstants.targetYaw;
-        }
-        output = m_myPIDControl.calculate(offset, 0);
-        SmartDashboard.putNumber("Auto Rotate PID Output", output);
+    //     if (MechanismConstants.targetYaw != 100) {
 
-        MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(MechanismConstants.hubDistance,
-            MechanismConstants.kShooterLaunchAngle,
-            MechanismConstants.kShooterSlip);
+    //       offset = MechanismConstants.targetYaw;
 
-        myShooter.runShooter(MechanismConstants.targetVelocity);
-        double shooterVelocity = myShooter.getShooterVelocity();
-        
-        if (MechanismConstants.isRotateEnabled) {
+    //     }
 
-          SwerveRequest.FieldCentric driveRequest = new FieldCentric()
-              .withVelocityX(0) // Drive forward with negative Y (forward)
-              .withVelocityY(0) // Drive left with negative X (left)
-              .withRotationalRate(output * MaxAngularRate); // Drive counterclockwise with negative X (left)
+    //     output = m_myPIDControl.calculate(offset, 0);
+    //     SmartDashboard.putNumber("Auto Rotate PID Output", output);
 
-          mySwerve.setControl(driveRequest);
+    //     MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(MechanismConstants.hubDistance,
+    //         MechanismConstants.kShooterLaunchAngle,
+    //         MechanismConstants.kShooterSlip);
 
-        }
+    //     myShooter.runShooter(MechanismConstants.targetVelocity);
+    //     shooterVelocity = myShooter.getShooterVelocity();
 
-        if (((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) || MechanismConstants.isIndexerOverride)
-            && (MechanismConstants.yawLinedUp || !MechanismConstants.isRotateEnabled)) {
+    //     if (MechanismConstants.isRotateEnabled) {
 
-          mySwerve.setControl(parkRequest);
-          myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
-          myIndexer.runFloor(MechanismConstants.kFloorSpeed);
-          myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
+    //       SwerveRequest.FieldCentric driveRequest = new FieldCentric()
+    //           .withVelocityX(0) // Drive forward with negative Y (forward)
+    //           .withVelocityY(0) // Drive left with negative X (left)
+    //           .withRotationalRate(output * MaxAngularRate); // Drive counterclockwise with negative X (left)
 
-        }
+    //       mySwerve.setControl(driveRequest);
 
-      } else {
+    //     }
 
-        MechanismConstants.targetVelocity = 45;
-        mySwerve.setControl(parkRequest);
-        myShooter.runShooter(MechanismConstants.targetVelocity);
-        shooterVelocity = myShooter.getShooterVelocity();
+    //     if (((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))
+    //         || MechanismConstants.isIndexerOverride)
+    //         && ((Math.abs(MechanismConstants.targetYaw) <= 1) || !MechanismConstants.isRotateEnabled
+    //             || MechanismConstants.targetYaw == 100)) {
 
-        if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))) {
-          myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
-          myIndexer.runFloor(MechanismConstants.kFloorSpeed);
-          myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
-        }
+    //       mySwerve.setControl(parkRequest);
+    //       myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+    //       myIndexer.runFloor(MechanismConstants.kFloorSpeed);
+    //       myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
 
-      }
+    //     }
 
-      } else {
+    //   } else {
 
-        MechanismConstants.targetVelocity = 50;
-        myShooter.runShooter(MechanismConstants.targetVelocity);
-        double shooterVelocity = myShooter.getShooterVelocity();
+    //     MechanismConstants.targetVelocity = 45;
+    //     mySwerve.setControl(parkRequest);
+    //     myShooter.runShooter(MechanismConstants.targetVelocity);
+    //     shooterVelocity = myShooter.getShooterVelocity();
 
-        if (Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) {
-          myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
-          myIndexer.runFloor(MechanismConstants.kFloorSpeed);
-        }
+    //     if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))
+    //         || MechanismConstants.isIndexerOverride) {
+    //       myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+    //       myIndexer.runFloor(MechanismConstants.kFloorSpeed);
+    //       myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
+    //     }
+
+    //   }
+
+    // } else {
+
+      MechanismConstants.targetVelocity = 50;
+      myShooter.runShooter(MechanismConstants.targetVelocity);
+      double shooterVelocity = myShooter.getShooterVelocity();
+
+      mySwerve.setControl(parkRequest);
+
+      if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))
+          || MechanismConstants.isIndexerOverride) {
+            
+        myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+        myIndexer.runFloor(MechanismConstants.kFloorSpeed);
+        myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
 
       }
 
     }
+
+  //}
 
   // Called once the command ends or is interrupted.
   @Override

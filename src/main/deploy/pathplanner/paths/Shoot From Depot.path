@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2386120017400555,
-        "y": 5.663603695582339
+        "x": 1.3220100283257608,
+        "y": 5.215243490816342
       },
       "isLocked": false,
       "linkedName": "Outpost Setup"
     },
     {
       "anchor": {
-        "x": 2.2820388888888887,
-        "y": 5.545388888888888
+        "x": 1.366061111111111,
+        "y": 4.941233333333332
       },
       "prevControl": {
-        "x": 1.2113262484253888,
-        "y": 5.9896799573063815
+        "x": 1.3067533290723894,
+        "y": 5.252471200806122
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,12 +42,12 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -34.90435110928566
+    "rotation": -16.11517744520802
   },
   "reversed": false,
   "folder": "Intaking From Depot",
   "idealStartingState": {
-    "velocity": 3.0,
+    "velocity": 0.0,
     "rotation": 0.0
   },
   "useDefaultConstraints": true

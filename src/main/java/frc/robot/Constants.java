@@ -44,8 +44,8 @@ public final class Constants {
     public static double slowModeAngularMultiplier = 1;
 
     // Current Limits on Swerve Drive Motors
-    public static double driveCurrentLimit = 50; // Enabled
-    public static double angleCurrentLimit = 30; // Enabled
+    public static double driveCurrentLimit = 30; // Enabled
+    public static double angleCurrentLimit = 25; // Enabled
 
   }
 
@@ -61,7 +61,7 @@ public final class Constants {
     public static double intakeCurrentLimit = 30; // Enabled
     public static double intakeLiftCurrentLimit = 20; // Enabled
     public static double floorCurrentLimit = 30; // Enabled
-    public static double indexerCurrentLimit = 90; // Enabled
+    public static double indexerCurrentLimit = 60; // Enabled
     public static double shooterCurrentLimit = 60; // Enabled
 
     // Set shooter PID constants

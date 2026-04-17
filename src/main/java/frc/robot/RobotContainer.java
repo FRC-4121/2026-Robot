@@ -77,6 +77,8 @@ public class RobotContainer {
     private final Command StopAutoShootCommand;
     private final Command StopAutoIntakeCommand;
     private final Command AutoShuttleCommand;
+    private final Command IndexerOverrideOnCommand;
+    private final Command IndexerOverrideOffCommand;
 
     //===Declare Buttons===//
     private final JoystickButton ParkButton;
@@ -86,6 +88,7 @@ public class RobotContainer {
     private final JoystickButton DisableStateButton;
     private final JoystickButton ShootingModeButton;
     private final JoystickButton LiftIntakeButton;
+    private final JoystickButton IndexerOverrideButton;
 
     //===Swerve Drive Variables===//
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * DriveConstants.slowModeMultiplier; // kSpeedAt12Volts desired top speed
@@ -156,6 +159,7 @@ public class RobotContainer {
         DisableStateButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch4);
         ShootingModeButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch7);
         LiftIntakeButton = new JoystickButton(OI, ControlConstants.LaunchPadButton3);
+        IndexerOverrideButton = new JoystickButton(OI, ControlConstants.LaunchPadButton1);
 
         //Initialize Commands
         RunIntakeCommand = new RunIntake(intake, MechanismConstants.kIntakeSpeed);
@@ -175,6 +179,8 @@ public class RobotContainer {
         StopAutoShootCommand = new StopAutoShoot();
         StopAutoIntakeCommand = new StopAutoIntake();
         AutoShuttleCommand = new AutoShuttle(shooter, indexer);
+        IndexerOverrideOnCommand = new IndexerOverride(true);
+        IndexerOverrideOffCommand = new IndexerOverride(false);
 
         // Set Default Commands For Subsystems
         intake.setDefaultCommand(ManualLiftIntakeCommand);
@@ -276,6 +282,8 @@ public class RobotContainer {
         ShootingModeButton.onTrue(ShooterModeCommand);
         ShootingModeButton.onFalse(ShuttleModeCommand);
         LiftIntakeButton.onTrue(LiftIntakeCommand);
+        IndexerOverrideButton.onTrue(IndexerOverrideOnCommand);
+        IndexerOverrideButton.onFalse(IndexerOverrideOffCommand);
 
     }
     
