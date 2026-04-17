@@ -38,7 +38,7 @@ public class LumaHelpers {
     /**
      * Red side hub April Tags (shooting side only)
      */
-    private static final int[] redTags = {2, 5, 8, 10, 11};
+    private static final int[] redTags = {2, 8, 10};
     private static final int[] redMidTags = {2, 5, 10};
 
     private static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);

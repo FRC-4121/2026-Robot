@@ -72,13 +72,14 @@ public class AutoShoot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
-    m_kP = .04;
-    m_kI = 0;
-    m_kD = 0.0001;
 
-    m_myPIDControl = new PIDController(m_kP, m_kI, m_kD);
-    m_myPIDControl.setTolerance(0.5);
+    //This PID has incorrect values. If you are going to use auto rotate in autoShoot, copy PID values from shootBall
+    // m_kP = .04;
+    // m_kI = 0;
+    // m_kD = 0.0001;
+
+    // m_myPIDControl = new PIDController(m_kP, m_kI, m_kD);
+    // m_myPIDControl.setTolerance(0.5);
 
     percentVelocity = 0.99;
     MechanismConstants.hubDistance = MechanismConstants.targetDistance;
@@ -96,7 +97,7 @@ public class AutoShoot extends Command {
         MechanismConstants.kShooterSlip);
 
         myShooter.runShooter(MechanismConstants.targetVelocity);
-        double shooterVelocity = myShooter.getShooterVelocity();
+        shooterVelocity = myShooter.getShooterVelocity();
 
         if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))) {
           myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);

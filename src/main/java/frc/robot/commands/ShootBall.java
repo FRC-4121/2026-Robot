@@ -130,7 +130,7 @@ public class ShootBall extends Command {
 
         }
 
-        if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))
+        if (((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity)) || MechanismConstants.isIndexerOverride)
             && (MechanismConstants.yawLinedUp || !MechanismConstants.isRotateEnabled)) {
 
           mySwerve.setControl(parkRequest);

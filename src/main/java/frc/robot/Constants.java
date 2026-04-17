@@ -44,8 +44,8 @@ public final class Constants {
     public static double slowModeAngularMultiplier = 1;
 
     // Current Limits on Swerve Drive Motors
-    public static double driveCurrentLimit = 50;
-    public static double angleCurrentLimit = 30;
+    public static double driveCurrentLimit = 50; // Enabled
+    public static double angleCurrentLimit = 30; // Enabled
 
   }
 
@@ -58,11 +58,11 @@ public final class Constants {
     public static boolean isDisableState = false;
 
     // Current Limits on Mechanism Motors;
-    public static double intakeCurrentLimit = 30;
-    public static double intakeLiftCurrentLimit = 20;
-    public static double floorCurrentLimit = 30;
+    public static double intakeCurrentLimit = 30; // Enabled
+    public static double intakeLiftCurrentLimit = 20; // Enabled
+    public static double floorCurrentLimit = 30; // Enabled
     public static double indexerCurrentLimit = 90; // Enabled
-    public static double shooterCurrentLimit = 60;
+    public static double shooterCurrentLimit = 60; // Enabled
 
     // Set shooter PID constants
     public static final double kP_Shoot = 0.12;
@@ -102,8 +102,9 @@ public final class Constants {
     public static double currentGyro = 0;
 
     // Set hopper/indexer constants
-    public static double kFloorSpeed = 0.3;
+    public static final double kFloorSpeed = 0.3;
     public static final double kIndexerSpeed = 30; //60
+    public static boolean isIndexerOverride = false;
 
     // Set intake constants
     public static final double kIntakeUp = 0;
@@ -126,13 +127,14 @@ public final class Constants {
 
     // Set turret constants
     public static final double kTurretMinAngle = -3.239;
-    public static final double kTurretMaxAngle = .35;
+    public static final double kTurretMaxAngle = 0.35;
         //0 is facing to the climber side of the bot parallel with the front and back frame stock
 
     // Set ballistics constants
     public static final double kTargetHeight = 1.1176;
     public static final double kShooterHeight = 0.497;
-    public static final double kShooterSlip = 0.96;
+    public static final double kShooterSlip = 0.96
+    ;
     public static final double kShooterDriveRatio = 0.5;
     public static final double kShooterWheelDiameter = 0.1016;
     public static final double kShooterLaunchAngle = 69.0;
