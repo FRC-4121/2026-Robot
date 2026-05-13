@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.1931444444444446,
-        "y": 7.33349444444421
+        "x": 3.1882722222222224,
+        "y": 7.011927777777778
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.646261111111111,
-        "y": 7.314005555555554
+        "x": 3.202888888888889,
+        "y": 7.523511111111111
       },
       "isLocked": false,
       "linkedName": "L Bump Shooter 1"
@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 5.814399999999999,
-        "y": 5.243311111111111
+        "x": 6.131094444444444,
+        "y": 5.238438888888888
       },
       "prevControl": {
-        "x": 5.814399999999999,
-        "y": 5.745149999999999
+        "x": 6.131094444444444,
+        "y": 5.740277777777776
       },
       "nextControl": {
-        "x": 5.814399999999999,
-        "y": 4.687792306771145
+        "x": 6.131094444444444,
+        "y": 4.682920084548923
       },
       "isLocked": false,
       "linkedName": null
@@ -62,11 +62,11 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.2116182572614137,
+      "waypointRelativePos": 0.37842323651451965,
       "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 0.6522821576763618,
+      "waypointRelativePos": 0.7867219917012537,
       "rotationDegrees": -90.0
     },
     {
@@ -107,7 +107,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -67.49144573101553
+    "rotation": -65.28853424579486
   },
   "useDefaultConstraints": true
 }

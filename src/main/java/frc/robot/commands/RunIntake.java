@@ -32,7 +32,7 @@ public class RunIntake extends Command {
   public void execute() {
 
     myIntake.runIntake(speed);
-    myIntake.runIntakeLift(MechanismConstants.kIntakeDown);
+    //myIntake.runIntakeLift(MechanismConstants.kIntakeDownLow);
 
   }
 

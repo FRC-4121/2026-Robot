@@ -59,6 +59,10 @@ public class ShootBall extends Command {
   private double m_kD;
   private double shooterVelocity;
 
+  private double liftPos;
+  private double liftCurrent;
+  private boolean isLiftUp;
+
   private PIDController m_myPIDControl;
 
   /** Creates a new ShootBall. */
@@ -83,16 +87,22 @@ public class ShootBall extends Command {
   @Override
   public void initialize() {
 
-    m_kP = .025;
-    m_kI = 0.01;
-    m_kD = 0.00008;
+    m_kP = .005; //.02
+    m_kI = 0.04;
+    m_kD = 0.0001;
 
     m_myPIDControl = new PIDController(m_kP, m_kI, m_kD);
-    m_myPIDControl.setTolerance(0.5);
+    m_myPIDControl.setTolerance(0.25);
 
     percentVelocity = 0.99;
     MechanismConstants.hubDistance = MechanismConstants.targetDistance;
-    mySwerve.setControl(idleRequest);
+
+    if (MechanismConstants.isShooterMode) {
+      mySwerve.setControl(idleRequest);
+    }
+
+    MechanismConstants.isMultApplied = false;
+    isLiftUp = false;
 
   }
 
@@ -100,83 +110,113 @@ public class ShootBall extends Command {
   @Override
   public void execute() {
 
-    // if (MechanismConstants.isShooterMode) {
+    if (MechanismConstants.isShooterMode) {
 
-    //   if (MechanismConstants.canShoot) {
+      if (MechanismConstants.canShoot) {
 
-    //     if (MechanismConstants.targetYaw != 100) {
+        if (MechanismConstants.targetYaw != 100) {
 
-    //       offset = MechanismConstants.targetYaw;
+          offset = MechanismConstants.targetYaw;
 
-    //     }
+        } else {
 
-    //     output = m_myPIDControl.calculate(offset, 0);
-    //     SmartDashboard.putNumber("Auto Rotate PID Output", output);
+          offset = 0;
 
-    //     MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(MechanismConstants.hubDistance,
-    //         MechanismConstants.kShooterLaunchAngle,
-    //         MechanismConstants.kShooterSlip);
+        }
 
-    //     myShooter.runShooter(MechanismConstants.targetVelocity);
-    //     shooterVelocity = myShooter.getShooterVelocity();
+        output = m_myPIDControl.calculate(offset, 0);
+        SmartDashboard.putNumber("Auto Rotate PID Output", output);
 
-    //     if (MechanismConstants.isRotateEnabled) {
+        MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(MechanismConstants.hubDistance,
+            MechanismConstants.kShooterLaunchAngle,
+            MechanismConstants.kShooterSlip);
 
-    //       SwerveRequest.FieldCentric driveRequest = new FieldCentric()
-    //           .withVelocityX(0) // Drive forward with negative Y (forward)
-    //           .withVelocityY(0) // Drive left with negative X (left)
-    //           .withRotationalRate(output * MaxAngularRate); // Drive counterclockwise with negative X (left)
+        if (!MechanismConstants.isMultApplied) {
+          MechanismConstants.velocityOutput = MechanismConstants.targetVelocity * MechanismConstants.kStartingMult;
+          MechanismConstants.isMultApplied = true;
+        }
 
-    //       mySwerve.setControl(driveRequest);
+        myShooter.runShooter(MechanismConstants.velocityOutput);
+        shooterVelocity = myShooter.getShooterVelocity();
 
-    //     }
+        if (MechanismConstants.isRotateEnabled) {
 
-    //     if (((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))
-    //         || MechanismConstants.isIndexerOverride)
-    //         && ((Math.abs(MechanismConstants.targetYaw) <= 1) || !MechanismConstants.isRotateEnabled
-    //             || MechanismConstants.targetYaw == 100)) {
+          SwerveRequest.FieldCentric driveRequest = new FieldCentric()
+              .withVelocityX(0) // Drive forward with negative Y (forward)
+              .withVelocityY(0) // Drive left with negative X (left)
+              .withRotationalRate(output * MaxAngularRate); // Drive counterclockwise with negative X (left)
 
-    //       mySwerve.setControl(parkRequest);
-    //       myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
-    //       myIndexer.runFloor(MechanismConstants.kFloorSpeed);
-    //       myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
+          mySwerve.setControl(driveRequest);
 
-    //     }
+        }
 
-    //   } else {
+        if (((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.velocityOutput))
+            || MechanismConstants.isIndexerOverride)
+            && ((Math.abs(MechanismConstants.targetYaw) <= 0.5) 
+            || !MechanismConstants.isRotateEnabled
+            || MechanismConstants.targetYaw == 100)) {
 
-    //     MechanismConstants.targetVelocity = 45;
-    //     mySwerve.setControl(parkRequest);
-    //     myShooter.runShooter(MechanismConstants.targetVelocity);
-    //     shooterVelocity = myShooter.getShooterVelocity();
+          if (MechanismConstants.velocityOutput > MechanismConstants.targetVelocity) {
+          MechanismConstants.velocityOutput = MechanismConstants.velocityOutput * MechanismConstants.kSubtractMult;
+        } else if (MechanismConstants.velocityOutput < MechanismConstants.targetVelocity) {
+          MechanismConstants.velocityOutput = MechanismConstants.targetVelocity;
+        }
 
-    //     if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))
-    //         || MechanismConstants.isIndexerOverride) {
-    //       myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
-    //       myIndexer.runFloor(MechanismConstants.kFloorSpeed);
-    //       myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
-    //     }
+          mySwerve.setControl(parkRequest);
+          myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+          myIndexer.runFloor(MechanismConstants.kFloorSpeed);
 
-    //   }
+          liftCurrent = myIntake.getLiftCurrent();
+          liftPos = myIntake.getPosition();
 
-    // } else {
+          if ((liftPos < 3  || liftCurrent >= (MechanismConstants.intakeLiftCurrentLimit * 0.75)) && isLiftUp) {
+            myIntake.runShootingIntakeLift(MechanismConstants.kIntakeDown);
+            isLiftUp = false;
+          } else if ((liftPos > 12 || liftCurrent >= (MechanismConstants.intakeLiftCurrentLimit * 0.75)) && !isLiftUp) {
+            myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
+            isLiftUp = true;
+          }
+          myIntake.runIntake(MechanismConstants.kIntakeSpeed / 4);
+
+        }
+
+      } else {
+
+        MechanismConstants.targetVelocity = 45;
+        mySwerve.setControl(parkRequest);
+        myShooter.runShooter(MechanismConstants.targetVelocity);
+        shooterVelocity = myShooter.getShooterVelocity();
+
+        if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))
+            || MechanismConstants.isIndexerOverride) {
+          myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+          myIndexer.runFloor(MechanismConstants.kFloorSpeed);
+          myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
+          myIntake.runIntake(MechanismConstants.kIntakeSpeed / 4);
+        }
+
+      }
+
+    } else {
 
       MechanismConstants.targetVelocity = 50;
       myShooter.runShooter(MechanismConstants.targetVelocity);
       double shooterVelocity = myShooter.getShooterVelocity();
 
-      mySwerve.setControl(parkRequest);
+      //mySwerve.setControl(parkRequest);
 
       if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))
           || MechanismConstants.isIndexerOverride) {
-            
+
         myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
         myIndexer.runFloor(MechanismConstants.kFloorSpeed);
-        myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
+        //myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
 
       }
 
     }
+
+  }
 
   //}
 
@@ -184,10 +224,10 @@ public class ShootBall extends Command {
   @Override
   public void end(boolean interrupted) {
 
-    myShooter.stopShooter();
     myIndexer.stopIndexer();
     myIndexer.stopFloor();
     myIntake.runIntakeLift(MechanismConstants.kIntakeDown);
+    myIntake.stopIntake();
 
   }
 

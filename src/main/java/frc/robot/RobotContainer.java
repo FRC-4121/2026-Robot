@@ -79,6 +79,8 @@ public class RobotContainer {
     private final Command AutoShuttleCommand;
     private final Command IndexerOverrideOnCommand;
     private final Command IndexerOverrideOffCommand;
+    private final Command SpoolShooterCommand;
+    private final Command AutoSpoolShooterCommand;
 
     //===Declare Buttons===//
     private final JoystickButton ParkButton;
@@ -89,6 +91,7 @@ public class RobotContainer {
     private final JoystickButton ShootingModeButton;
     private final JoystickButton LiftIntakeButton;
     private final JoystickButton IndexerOverrideButton;
+    private final JoystickButton ShooterSpoolButton;
 
     //===Swerve Drive Variables===//
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * DriveConstants.slowModeMultiplier; // kSpeedAt12Volts desired top speed
@@ -160,12 +163,13 @@ public class RobotContainer {
         ShootingModeButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch7);
         LiftIntakeButton = new JoystickButton(OI, ControlConstants.LaunchPadButton3);
         IndexerOverrideButton = new JoystickButton(OI, ControlConstants.LaunchPadButton1);
+        ShooterSpoolButton = new JoystickButton(OI, ControlConstants.LaunchPadSwitch6bottom);
 
         //Initialize Commands
         RunIntakeCommand = new RunIntake(intake, MechanismConstants.kIntakeSpeed);
         LiftIntakeCommand = new LiftIntake(intake);
         ShootBallCommand = new ShootBall(shooter, indexer, intake, drivetrain, pigeon, myBallistics);
-        AutoShootCommand = new AutoShoot(shooter, indexer, intake, myBallistics);
+        AutoShootCommand = new AutoShoot(shooter, indexer, intake, drivetrain, myBallistics);
         ManualLiftIntakeCommand = new ManualLiftIntake(intake, aux);
         DisableAutoRotateCommand = new DisableAutoRotate(false);
         EnableAutoRotateCommand = new DisableAutoRotate(true);
@@ -181,9 +185,12 @@ public class RobotContainer {
         AutoShuttleCommand = new AutoShuttle(shooter, indexer);
         IndexerOverrideOnCommand = new IndexerOverride(true);
         IndexerOverrideOffCommand = new IndexerOverride(false);
+        SpoolShooterCommand = new SpoolShooter(shooter);
+        AutoSpoolShooterCommand = new AutoSpoolShooter(shooter);
 
         // Set Default Commands For Subsystems
         intake.setDefaultCommand(ManualLiftIntakeCommand);
+        shooter.setDefaultCommand(SpoolShooterCommand);
     
 
         // Register named commands for PathPlanner
@@ -193,6 +200,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Stop Shoot", StopAutoShootCommand);
         NamedCommands.registerCommand("Lift Intake", LiftIntakeCommand);
         NamedCommands.registerCommand("Shuttle", AutoShuttleCommand);
+        NamedCommands.registerCommand("Spool Shooter", AutoSpoolShooterCommand);
         
         
         // Set field centric drive
@@ -203,6 +211,9 @@ public class RobotContainer {
 
         // Create vision cameras
         createCameras();
+
+        // Checks origional button status
+        getButtonState();
 
         // Create autonomous command chooser and add to dashboard
         autoChooser = AutoBuilder.buildAutoChooser();
@@ -219,8 +230,8 @@ public class RobotContainer {
         backCamera = new PhotonCamera("backcam");
         leftCamera = new PhotonCamera("leftcam");
 
-        kRobotToFrontCam = new Transform3d(new Translation3d(0.554, -0.234, 0.384),
-             new Rotation3d(0, 0, 0));
+        kRobotToFrontCam = new Transform3d(new Translation3d(0.568, 0.013, 0.248),
+             new Rotation3d(0, Math.PI/12, 0));
         kRobotToBackCam = new Transform3d(new Translation3d(-0.283, 0.0, 0.269),
              new Rotation3d(0, Math.PI/12, Math.PI));
         kRobotToLeftCam = new Transform3d(new Translation3d(0.470, 0.337, 0.384),
@@ -284,6 +295,16 @@ public class RobotContainer {
         LiftIntakeButton.onTrue(LiftIntakeCommand);
         IndexerOverrideButton.onTrue(IndexerOverrideOnCommand);
         IndexerOverrideButton.onFalse(IndexerOverrideOffCommand);
+        MechanismConstants.isShooterSpooling = ShooterSpoolButton.getAsBoolean();
+
+    }
+
+    public void getButtonState() {
+
+        MechanismConstants.isDisableState = !DisableStateButton.getAsBoolean();
+        //MechanismConstants.isShooterMode = ShootingModeButton.getAsBoolean();
+        MechanismConstants.isRotateEnabled = !DisableAutoRotateButton.getAsBoolean();
+        MechanismConstants.isIndexerOverride = IndexerOverrideButton.getAsBoolean();
 
     }
     
@@ -318,6 +339,9 @@ public class RobotContainer {
      * Update target yaw from limelight camera
      */
     public void UpdateStatus() {
+
+        MechanismConstants.isShooterSpooling = ShooterSpoolButton.getAsBoolean();
+
         MechanismConstants.currentGyro = getGyroYaw();
         SmartDashboard.putNumber("Gyro Data", MechanismConstants.currentGyro);
         SmartDashboard.putNumber("Target Speed", MechanismConstants.targetVelocity);
@@ -346,6 +370,9 @@ public class RobotContainer {
         SmartDashboard.putBoolean("Yaw -10 to -20", MechanismConstants.yawLinedUp6);
         SmartDashboard.putBoolean("Back Tags Found?", MechanismConstants.backTags);
         SmartDashboard.putBoolean("Auto Rotate", MechanismConstants.isRotateEnabled);
+        SmartDashboard.putBoolean("Shooter Mode?", MechanismConstants.isShooterMode);
+        SmartDashboard.putBoolean("Shooter Spooling?", MechanismConstants.isShooterSpooling);
+        SmartDashboard.putNumber("Velocity Output", MechanismConstants.velocityOutput);
     }
 
     /**

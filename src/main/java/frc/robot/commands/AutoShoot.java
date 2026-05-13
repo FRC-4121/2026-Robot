@@ -41,6 +41,9 @@ public class AutoShoot extends Command {
   private double m_kI;
   private double m_kD;
   private double shooterVelocity;
+  private boolean isLiftUp;
+  private double liftCurrent;
+  private double liftPos;
 
   private PIDController m_myPIDControl;
 
@@ -57,12 +60,13 @@ public class AutoShoot extends Command {
 
 
     // Create new AutoShoot
-    public AutoShoot(Shooter shooter, Indexer indexer, Intake intake, Ballistics2026 ballistics) {
+    public AutoShoot(Shooter shooter, Indexer indexer, Intake intake, CommandSwerveDrivetrain swerve, Ballistics2026 ballistics) {
 
     myBallistics = ballistics;
     myShooter = shooter;
     myIndexer = indexer;
     myIntake = intake;
+    mySwerve = swerve;
 
     addRequirements(myShooter, myIndexer, myIntake);
 
@@ -73,16 +77,22 @@ public class AutoShoot extends Command {
   @Override
   public void initialize() {
 
-    //This PID has incorrect values. If you are going to use auto rotate in autoShoot, copy PID values from shootBall
-    // m_kP = .04;
-    // m_kI = 0;
-    // m_kD = 0.0001;
+    m_kP = .025;
+    m_kI = 0.01;
+    m_kD = 0.00008;
 
-    // m_myPIDControl = new PIDController(m_kP, m_kI, m_kD);
-    // m_myPIDControl.setTolerance(0.5);
+    m_myPIDControl = new PIDController(m_kP, m_kI, m_kD);
+    m_myPIDControl.setTolerance(0.5);
 
     percentVelocity = 0.99;
     MechanismConstants.hubDistance = MechanismConstants.targetDistance;
+
+    mySwerve.setControl(idleRequest);
+
+    MechanismConstants.isMultApplied = false;
+    isLiftUp = false;
+
+    MechanismConstants.stopAutoShooter = false;
 
   }
 
@@ -90,35 +100,88 @@ public class AutoShoot extends Command {
   @Override
   public void execute() {
 
-      // if (MechanismConstants.canShoot) {
+      if (MechanismConstants.canShoot) {
 
-      //   MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(MechanismConstants.hubDistance,
-      //   MechanismConstants.kShooterLaunchAngle, 
-      //   MechanismConstants.kShooterSlip);
+        if (MechanismConstants.targetYaw != 100) {
 
-      //   myShooter.runShooter(MechanismConstants.targetVelocity);
-      //   shooterVelocity = myShooter.getShooterVelocity();
+          offset = MechanismConstants.targetYaw;
 
-      //   if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))) {
-      //     myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
-      //     myIndexer.runFloor(MechanismConstants.kFloorSpeed);
-      //     myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
-      //   }
+        } else {
 
+          offset = 0;
 
-      // } else {
-        MechanismConstants.targetVelocity = 50;
+        }
+
+        output = m_myPIDControl.calculate(offset, 0);
+        SmartDashboard.putNumber("Auto Rotate PID Output", output);
+
+        MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(MechanismConstants.hubDistance,
+            MechanismConstants.kShooterLaunchAngle,
+            MechanismConstants.kShooterSlip);
+
+        if (!MechanismConstants.isMultApplied) {
+          MechanismConstants.velocityOutput = MechanismConstants.targetVelocity * MechanismConstants.kStartingMult;
+          MechanismConstants.isMultApplied = true;
+        }
+
+        myShooter.runShooter(MechanismConstants.velocityOutput);
+        shooterVelocity = myShooter.getShooterVelocity();
+
+        if (MechanismConstants.isRotateEnabled) {
+
+          SwerveRequest.FieldCentric driveRequest = new FieldCentric()
+              .withVelocityX(0) // Drive forward with negative Y (forward)
+              .withVelocityY(0) // Drive left with negative X (left)
+              .withRotationalRate(output * MaxAngularRate); // Drive counterclockwise with negative X (left)
+
+          mySwerve.setControl(driveRequest);
+
+        }
+
+        if (((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.velocityOutput))
+            || MechanismConstants.isIndexerOverride)
+            && ((Math.abs(MechanismConstants.targetYaw) <= 1.5) 
+            || !MechanismConstants.isRotateEnabled
+            || MechanismConstants.targetYaw == 100)) {
+
+          if (MechanismConstants.velocityOutput > MechanismConstants.targetVelocity) {
+          MechanismConstants.velocityOutput = MechanismConstants.velocityOutput * MechanismConstants.kSubtractMult;
+        } else if (MechanismConstants.velocityOutput < MechanismConstants.targetVelocity) {
+          MechanismConstants.velocityOutput = MechanismConstants.targetVelocity;
+        }
+
+          myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+          myIndexer.runFloor(MechanismConstants.kFloorSpeed);
+
+          liftCurrent = myIntake.getLiftCurrent();
+          liftPos = myIntake.getPosition();
+
+          if ((liftPos < 3  || liftCurrent >= MechanismConstants.intakeLiftCurrentLimit) && isLiftUp) {
+            myIntake.runShootingIntakeLift(MechanismConstants.kIntakeDown);
+            isLiftUp = false;
+          } else if ((liftPos > 12 || liftCurrent >= MechanismConstants.intakeLiftCurrentLimit) && !isLiftUp) {
+            myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
+            isLiftUp = true;
+          }
+          myIntake.runIntake(MechanismConstants.kIntakeSpeed / 4);
+
+        }
+
+      } else {
+
+        MechanismConstants.targetVelocity = 45;
         myShooter.runShooter(MechanismConstants.targetVelocity);
         shooterVelocity = myShooter.getShooterVelocity();
 
-        if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))) {
+        if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))
+            || MechanismConstants.isIndexerOverride) {
           myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
           myIndexer.runFloor(MechanismConstants.kFloorSpeed);
           myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
+          myIntake.runIntake(MechanismConstants.kIntakeSpeed / 4);
         }
-      //}
 
-
+      }
 
   }
 
@@ -126,9 +189,11 @@ public class AutoShoot extends Command {
   @Override
   public void end(boolean interrupted) {
 
-    myShooter.stopShooter();
+    myShooter.runShooter(MechanismConstants.kSpoolSpeed);
     myIntake.stopIntake();
     myIndexer.stopIndexer();
+    myIntake.runIntakeLift(MechanismConstants.kIntakeDown);
+    myIndexer.stopFloor();
 
   }
 

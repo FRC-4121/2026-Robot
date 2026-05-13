@@ -44,8 +44,8 @@ public final class Constants {
     public static double slowModeAngularMultiplier = 1;
 
     // Current Limits on Swerve Drive Motors
-    public static double driveCurrentLimit = 30; // Enabled
-    public static double angleCurrentLimit = 25; // Enabled
+    public static double driveCurrentLimit = 40; // Enabled
+    public static double angleCurrentLimit = 40; // Enabled
 
   }
 
@@ -58,18 +58,18 @@ public final class Constants {
     public static boolean isDisableState = false;
 
     // Current Limits on Mechanism Motors;
-    public static double intakeCurrentLimit = 30; // Enabled
+    public static double intakeCurrentLimit = 20; // Enabled
     public static double intakeLiftCurrentLimit = 20; // Enabled
     public static double floorCurrentLimit = 30; // Enabled
-    public static double indexerCurrentLimit = 60; // Enabled
-    public static double shooterCurrentLimit = 60; // Enabled
+    public static double indexerCurrentLimit = 70; // Enabled
+    public static double shooterCurrentLimit = 50; // Enabled
 
     // Set shooter PID constants
-    public static final double kP_Shoot = 0.12;
+    public static final double kP_Shoot = 0.14;
     public static final double kI_Shoot = 0.04;
     public static final double kD_Shoot = 0;
     public static final double kS_Shoot = 0;
-    public static final double kV_Shoot = 0.11;
+    public static final double kV_Shoot = 0.13;
     public static final double kA_Shoot = 0;
     public static final double kG_Shoot = 0;
 
@@ -85,6 +85,12 @@ public final class Constants {
     public static boolean canShoot = false;
     public static boolean linedUp = false;
     public static boolean backTags = false;
+    public static boolean isShooterSpooling = false;
+    public static double kSpoolSpeed = 20;
+    public static double kStartingMult = 1.125;
+    public static boolean isMultApplied = false;
+    public static double kSubtractMult = 0.997;
+    public static double velocityOutput = 0;
 
     // Yaw lining up status booleans
     public static boolean yawLinedUp = false;
@@ -108,20 +114,21 @@ public final class Constants {
 
     // Set intake constants
     public static final double kIntakeUp = 0;
-    public static final double kIntakeDown = 12.65; // Exact value
-    public static final double kIntakeShootingPos = 5.5;
+    public static final double kIntakeDown = 17.1; // 12.65
+    public static final double kIntakeDownLow = 15.2;
+    public static final double kIntakeShootingPos = 0.0; //5.5
     public static boolean isIntakeUp = true;
     public static final double kIntakeSpeedFactor = 0.2;
     public static boolean stopAutoIntake = false;
-    public static final double kIntakeSpeed = -1;
+    public static final double kIntakeSpeed = 1;
 
     // Set intake motor PID constants
-    public static final double kP_IntakeLift = 0.06;
+    public static final double kP_IntakeLift = 0.05; //0.06
     public static final double kI_IntakeLift = 0;
-    public static final double kD_IntakeLift = 0.005;
+    public static final double kD_IntakeLift = 0.007;
 
     // Set intake lift motion magic constants
-    public static final double kLiftMagicCruise = 20;
+    public static final double kLiftMagicCruise = 30;
     public static final double kLiftMagicAccel = 50;
     public static final double kLiftMagicJerk = 500;
 
@@ -132,9 +139,8 @@ public final class Constants {
 
     // Set ballistics constants
     public static final double kTargetHeight = 1.1176;
-    public static final double kShooterHeight = 0.497;
-    public static final double kShooterSlip = 0.96
-    ;
+    public static final double kShooterHeight = 0.521;
+    public static final double kShooterSlip = 1.05;
     public static final double kShooterDriveRatio = 0.5;
     public static final double kShooterWheelDiameter = 0.1016;
     public static final double kShooterLaunchAngle = 69.0;

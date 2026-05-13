@@ -204,6 +204,16 @@ public class Intake extends SubsystemBase {
     return rotorPosSignal.getValueAsDouble();
    }
 
+
+   /**
+    * Get current stator current of intake lift motor
+
+    * @return The current stator current of the intake lift motor
+    */
+   public double getLiftCurrent(){
+    return intakeLift.getStatorCurrent().getValueAsDouble();
+   }
+
  
  
    /**

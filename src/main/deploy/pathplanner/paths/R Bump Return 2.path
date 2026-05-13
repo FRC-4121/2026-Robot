@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.062883333333333,
-        "y": 4.580688888888889
+        "x": 6.525744444444444,
+        "y": 4.51735
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.9260722222222215,
-        "y": 3.55265
+        "x": 7.388933333333333,
+        "y": 3.4893111111111113
       },
       "isLocked": false,
       "linkedName": "R Center Pass 2 End"

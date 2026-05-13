@@ -32,13 +32,13 @@ public class LumaHelpers {
     /**
      * Blue side hub April Tags (shooting side only)
      */
-    private static final int[] blueTags = {18, 21, 26};
+    private static final int[] blueTags = {24, 27, 26};
     private static final int[] blueMidTags = {18, 21, 26};
 
     /**
      * Red side hub April Tags (shooting side only)
      */
-    private static final int[] redTags = {2, 5, 10};
+    private static final int[] redTags = {11, 8, 10};
     private static final int[] redMidTags = {2, 5, 10};
 
     private static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
@@ -131,15 +131,31 @@ public class LumaHelpers {
 
                     if (numTagsFound == 1) {
 
-                        if (foundTags[0] == 25 || foundTags[0] == 10) {
+                        if (foundTags[0] == 26 || foundTags[0] == 10) {
 
                             if (yawSum < 0) {
                                 yawSum += 5;
                             } else {
                                 yawSum -= 5;
                             }
-                        }
 
+                        } else if (foundTags[0] == 24 || foundTags[0] == 8) {
+
+                            if (yawSum < 0) {
+                                yawSum += 20;
+                            } else {
+                                yawSum -= 20;
+                            }
+
+                        } else if (foundTags[0] == 27 || foundTags[0] == 11) {
+
+                            if (yawSum > 0) {
+                                yawSum += 3;
+                            } else {
+                                yawSum -= 3;
+                            }
+
+                        }
                     }
 
                     // Calculate the averages
@@ -249,23 +265,31 @@ public class LumaHelpers {
 
                         if (numTagsFound == 1) {
 
-                            if (foundTags[0] == 26 || foundTags[0] == 10) {
+                            // if (foundTags[0] == 26 || foundTags[0] == 10) {
 
-                                if (yawSum > 0) {
-                                    yawSum -= 2;
-                                }
-                            }
+                            //     if (yawSum < 0) {
+                            //         yawSum += 5;
+                            //     } else {
+                            //         yawSum -= 5;
+                            //     }
 
-                            if (foundTags[0] == 18 || foundTags[0] == 2) {
+                            // } else if (foundTags[0] == 24 || foundTags[0] == 8) {
 
-                                yawSum -= 5;
-                            }
+                            //     if (yawSum < 0) {
+                            //         yawSum += 10;
+                            //     } else {
+                            //         yawSum -= 10;
+                            //     }
 
-                            if (foundTags[0] == 21 || foundTags[0] == 5) {
+                            // } else if (foundTags[0] == 27 || foundTags[0] == 11) {
 
-                                yawSum += 5;
-                            }
+                            //     if (yawSum > 0) {
+                            //         yawSum += 3;
+                            //     } else {
+                            //         yawSum -= 3;
+                            //     }
 
+                            // }
                         }
 
                         // Calculate the averages

@@ -5,54 +5,52 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.*;
-import frc.robot.Constants.*;
+import frc.robot.subsystems.Shooter;
+import frc.robot.Constants.MechanismConstants;
+import frc.robot.Constants.MechanismConstants.*;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class AutoIntake extends Command {
+public class SpoolShooter extends Command {
 
-  private Intake myIntake;
-  private double speed;
+  private Shooter myShooter;
 
-  /** Creates a new AutoIntake. */
-  public AutoIntake(Intake intake, double speed) {
+  /** Creates a new SpoolShooter. */
+  public SpoolShooter(Shooter shooter) {
 
-    myIntake = intake;
-    this.speed = speed;
-    addRequirements(myIntake);
+    myShooter = shooter;
 
+    // Use addRequirements() here to declare subsystem dependencies.
+
+    addRequirements(myShooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-
-    MechanismConstants.stopAutoIntake = false;
-
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    myIntake.runIntake(speed);
-    //myIntake.runIntakeLift(MechanismConstants.kIntakeDownLow);
+    if (MechanismConstants.isShooterSpooling) {
+
+      myShooter.runShooter(MechanismConstants.kSpoolSpeed);
+
+    } else {
+
+      myShooter.stopShooter();
+
+    }
 
   }
-    
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-
-    myIntake.stopIntake();
-    myIntake.stopIntakeLift();
-
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return MechanismConstants.stopAutoIntake;
+    return true;
   }
 }

@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.062883333333333,
-        "y": 4.580688888888889
+        "x": 6.525744444444444,
+        "y": 4.51735
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.480699999999999,
-        "y": 2.354083333333333
+        "x": 7.94356111111111,
+        "y": 2.2907444444444445
       },
       "isLocked": false,
       "linkedName": "R Center Pass 2 End"
     },
     {
       "anchor": {
-        "x": 5.458727777777779,
-        "y": 0.717016666666666
+        "x": 5.4928333333333335,
+        "y": 0.6536777777777774
       },
       "prevControl": {
-        "x": 6.871672222222223,
-        "y": 0.7121444444444445
+        "x": 6.905777777777778,
+        "y": 0.6488055555555559
       },
       "nextControl": {
-        "x": 4.4305102897248405,
-        "y": 0.7205622442116755
+        "x": 4.464615845280395,
+        "y": 0.6572233553227869
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.3198222222222227,
-        "y": 0.717016666666666
+        "x": 2.817983333333333,
+        "y": 1.27245
       },
       "prevControl": {
-        "x": 3.8508944444444446,
-        "y": 0.6585499999999991
+        "x": 2.5110333333333337,
+        "y": 0.531872222222221
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,12 +46,12 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.856431535269714,
-      "rotationDegrees": 90.0
+      "waypointRelativePos": 0.9742738589211617,
+      "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 1.65145228215769,
-      "rotationDegrees": 90.0
+      "waypointRelativePos": 1.583402489626562,
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [],
@@ -67,7 +67,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 68.15376983477532
+    "rotation": 58.1914793170233
   },
   "reversed": false,
   "folder": null,
