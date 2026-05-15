@@ -87,9 +87,9 @@ public class ShootBall extends Command {
   @Override
   public void initialize() {
 
-    m_kP = .005; //.02
-    m_kI = 0.04;
-    m_kD = 0.0001;
+    m_kP = MechanismConstants.kP_Rotate;
+    m_kI = MechanismConstants.kI_Rotate;
+    m_kD = MechanismConstants.kD_Rotate;
 
     m_myPIDControl = new PIDController(m_kP, m_kI, m_kD);
     m_myPIDControl.setTolerance(0.25);
@@ -128,8 +128,7 @@ public class ShootBall extends Command {
         SmartDashboard.putNumber("Auto Rotate PID Output", output);
 
         MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(MechanismConstants.hubDistance,
-            MechanismConstants.kShooterLaunchAngle,
-            MechanismConstants.kShooterSlip);
+            MechanismConstants.kShooterLaunchAngle);
 
         if (!MechanismConstants.isMultApplied) {
           MechanismConstants.velocityOutput = MechanismConstants.targetVelocity * MechanismConstants.kStartingMult;
@@ -152,7 +151,7 @@ public class ShootBall extends Command {
 
         if (((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.velocityOutput))
             || MechanismConstants.isIndexerOverride)
-            && ((Math.abs(MechanismConstants.targetYaw) <= 0.5) 
+            && ((Math.abs(MechanismConstants.targetYaw) <= 1.0) 
             || !MechanismConstants.isRotateEnabled
             || MechanismConstants.targetYaw == 100)) {
 
@@ -169,13 +168,14 @@ public class ShootBall extends Command {
           liftCurrent = myIntake.getLiftCurrent();
           liftPos = myIntake.getPosition();
 
-          if ((liftPos < 3  || liftCurrent >= (MechanismConstants.intakeLiftCurrentLimit * 0.75)) && isLiftUp) {
+          if ((liftPos < 3  || liftCurrent >= (MechanismConstants.intakeLiftCurrentLimit * 1)) && isLiftUp) {
             myIntake.runShootingIntakeLift(MechanismConstants.kIntakeDown);
             isLiftUp = false;
-          } else if ((liftPos > 12 || liftCurrent >= (MechanismConstants.intakeLiftCurrentLimit * 0.75)) && !isLiftUp) {
+          } else if ((liftPos > 12 || liftCurrent >= (MechanismConstants.intakeLiftCurrentLimit * 1.2)) && !isLiftUp) {
             myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
             isLiftUp = true;
           }
+
           myIntake.runIntake(MechanismConstants.kIntakeSpeed / 4);
 
         }

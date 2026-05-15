@@ -7,6 +7,7 @@ import frc.robot.commands.*;
 import frc.robot.LumaHelpers;
 import frc.robot.subsystems.*;
 import java.math.*;
+import frc.robot.Constants.MechanismConstants;
 
 /*
 All units are in meters, seconds, and degrees
@@ -44,8 +45,15 @@ public class Ballistics2026 {
 
     //Calculates the launch velocity of the projectile and using it, calulated the wheel speed necessary to launch 
     //the projectile at that desired velocity
-    public double calculateLaunchVelcity(double targetDistance, double launchAngle, double slipFactor){
+    public double calculateLaunchVelcity(double targetDistance, double launchAngle){
 
+        if (targetDistance < 2.7) {
+            slipFactor = MechanismConstants.kShooterCloseSlip;
+            System.out.println("Using Close Slip");
+        } else {
+            slipFactor = MechanismConstants.kShooterSlip;
+            System.out.println("Using Far Slip");
+        }
         double wheelSpeed = 0;        
 
         double launchVelocity = targetDistance / (Math.cos(Math.toRadians(launchAngle)) * calculateTime(targetDistance, launchAngle));

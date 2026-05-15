@@ -77,9 +77,9 @@ public class AutoShoot extends Command {
   @Override
   public void initialize() {
 
-    m_kP = .025;
-    m_kI = 0.01;
-    m_kD = 0.00008;
+    m_kP = MechanismConstants.kP_Rotate;
+    m_kI = MechanismConstants.kI_Rotate;
+    m_kD = MechanismConstants.kD_Rotate;
 
     m_myPIDControl = new PIDController(m_kP, m_kI, m_kD);
     m_myPIDControl.setTolerance(0.5);
@@ -116,8 +116,7 @@ public class AutoShoot extends Command {
         SmartDashboard.putNumber("Auto Rotate PID Output", output);
 
         MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(MechanismConstants.hubDistance,
-            MechanismConstants.kShooterLaunchAngle,
-            MechanismConstants.kShooterSlip);
+            MechanismConstants.kShooterLaunchAngle);
 
         if (!MechanismConstants.isMultApplied) {
           MechanismConstants.velocityOutput = MechanismConstants.targetVelocity * MechanismConstants.kStartingMult;

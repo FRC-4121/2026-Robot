@@ -62,16 +62,21 @@ public final class Constants {
     public static double intakeLiftCurrentLimit = 20; // Enabled
     public static double floorCurrentLimit = 30; // Enabled
     public static double indexerCurrentLimit = 70; // Enabled
-    public static double shooterCurrentLimit = 50; // Enabled
+    public static double shooterCurrentLimit = 70; // Enabled
 
     // Set shooter PID constants
-    public static final double kP_Shoot = 0.14;
+    public static final double kP_Shoot = 0.17;
     public static final double kI_Shoot = 0.04;
     public static final double kD_Shoot = 0;
     public static final double kS_Shoot = 0;
-    public static final double kV_Shoot = 0.13;
+    public static final double kV_Shoot = 0.14;
     public static final double kA_Shoot = 0;
     public static final double kG_Shoot = 0;
+
+    // Set auto rotate PID constants
+    public static final double kP_Rotate = 0.025;
+    public static final double kI_Rotate = 0.02;
+    public static final double kD_Rotate = 0.0001;
 
     // Set shooter Motion Magic constants
     public static final double kMagicCruise = 200;
@@ -89,7 +94,7 @@ public final class Constants {
     public static double kSpoolSpeed = 20;
     public static double kStartingMult = 1.125;
     public static boolean isMultApplied = false;
-    public static double kSubtractMult = 0.997;
+    public static double kSubtractMult = 0.9974;
     public static double velocityOutput = 0;
 
     // Yaw lining up status booleans
@@ -128,8 +133,8 @@ public final class Constants {
     public static final double kD_IntakeLift = 0.007;
 
     // Set intake lift motion magic constants
-    public static final double kLiftMagicCruise = 30;
-    public static final double kLiftMagicAccel = 50;
+    public static final double kLiftMagicCruise = 40;
+    public static final double kLiftMagicAccel = 60;
     public static final double kLiftMagicJerk = 500;
 
     // Set turret constants
@@ -140,7 +145,8 @@ public final class Constants {
     // Set ballistics constants
     public static final double kTargetHeight = 1.1176;
     public static final double kShooterHeight = 0.521;
-    public static final double kShooterSlip = 1.05;
+    public static final double kShooterSlip = 1.12;
+    public static final double kShooterCloseSlip = 1.04;
     public static final double kShooterDriveRatio = 0.5;
     public static final double kShooterWheelDiameter = 0.1016;
     public static final double kShooterLaunchAngle = 69.0;
@@ -149,11 +155,14 @@ public final class Constants {
     public static boolean shuttleTurretStatus = false;
     public static boolean rotateModeSwitch = false;
 
-    public static double targetDistance = 0;
-    public static double hubDistance = 0;
+    public static double targetDistance = 0.0;
+    public static double hubDistance = 0.0;
 
     public static double shootModeVelocity;
     public static double shuttleModeVelocity;
+
+    public static double backX = 0.0;
+    public static double backY = 0.0;
 
   }
 

@@ -13,6 +13,7 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonUtils;
 import org.photonvision.EstimatedRobotPose;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.MechanismConstants;
 import frc.robot.Constants.Mutables;
 import edu.wpi.first.math.util.Units;
@@ -263,33 +264,74 @@ public class LumaHelpers {
                     // Calculate final results if at least one tag found
                     if (numTagsFound > 0) {
 
+                        SmartDashboard.putNumber("Uncorrected Yaw", yawSum/numTagsFound);
+
                         if (numTagsFound == 1) {
 
-                            // if (foundTags[0] == 26 || foundTags[0] == 10) {
 
-                            //     if (yawSum < 0) {
-                            //         yawSum += 5;
-                            //     } else {
-                            //         yawSum -= 5;
-                            //     }
+                            if (foundTags[0] == 8 && MechanismConstants.backX < GeneralConstants.kRedHub[0] + 2) {
 
-                            // } else if (foundTags[0] == 24 || foundTags[0] == 8) {
+                                yawSum += 5;
+                                System.out.println("Running tag 8 yaw correction");
 
-                            //     if (yawSum < 0) {
-                            //         yawSum += 10;
-                            //     } else {
-                            //         yawSum -= 10;
-                            //     }
+                            } else if (foundTags[0] == 24 && MechanismConstants.backX > GeneralConstants.kBlueHub[0] - 2) {
 
-                            // } else if (foundTags[0] == 27 || foundTags[0] == 11) {
+                                yawSum -= 5;
+                                System.out.println("Running tag 24 yaw correction");
 
-                            //     if (yawSum > 0) {
-                            //         yawSum += 3;
-                            //     } else {
-                            //         yawSum -= 3;
-                            //     }
+                            } else if (foundTags[0] == 11 && MechanismConstants.backX < GeneralConstants.kRedHub[0] + 2) {
 
-                            // }
+                                yawSum -= 5;
+                                System.out.println("Running tag 11 yaw correction");
+
+                            } else if (foundTags[0] == 27 && MechanismConstants.backX > GeneralConstants.kBlueHub[0] - 2) {
+
+                                yawSum -= 5;
+                                System.out.println("Running tag 27 yaw correction");
+
+                            // } else if (foundTags[0] == 10 && MechanismConstants.backY < GeneralConstants.kRedHub[1] - 1.3) {
+
+                            //     yawSum += 6;
+                            //     System.out.println("Running tag 10 far left yaw correction");
+
+                            // } else if (foundTags[0] == 10 && MechanismConstants.backY > GeneralConstants.kRedHub[1] + 1.3) {
+
+                            //     yawSum -= 6;
+                            //     System.out.println("Running tag 10 far right yaw correction");
+
+                            // } else if (foundTags[0] == 26 && MechanismConstants.backY < GeneralConstants.kRedHub[1] - 1.3) {
+
+                            //     yawSum -= 6;
+                            //     System.out.println("Running tag 26 far right yaw correction");
+
+                            // } else if (foundTags[0] == 26 && MechanismConstants.backY > GeneralConstants.kRedHub[1] + 1.3) {
+
+                            //     yawSum += 6;
+                            //     System.out.println("Running tag 26 far left yaw correction");
+
+
+                            } else if (foundTags[0] == 10 && MechanismConstants.backY < GeneralConstants.kRedHub[1] - 0.75) {
+
+                                yawSum -= 8;
+                                System.out.println("Running tag 10 left yaw correction");
+
+                            } else if (foundTags[0] == 10 && MechanismConstants.backY > GeneralConstants.kRedHub[1] + 0.75) {
+
+                                yawSum += 8;
+                                System.out.println("Running tag 10 right yaw correction");
+
+                            } else if (foundTags[0] == 26 && MechanismConstants.backY < GeneralConstants.kBlueHub[1] - 0.75) {
+
+                                yawSum += 10;
+                                System.out.println("Running tag 26 right yaw correction");
+
+                            } else if (foundTags[0] == 26 && MechanismConstants.backY > GeneralConstants.kBlueHub[1] + 0.75) {
+
+                                yawSum -= 10;
+                                System.out.println("Running tag 26 left yaw correction");
+
+                            }
+
                         }
 
                         // Calculate the averages

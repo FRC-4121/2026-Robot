@@ -373,6 +373,7 @@ public class RobotContainer {
         SmartDashboard.putBoolean("Shooter Mode?", MechanismConstants.isShooterMode);
         SmartDashboard.putBoolean("Shooter Spooling?", MechanismConstants.isShooterSpooling);
         SmartDashboard.putNumber("Velocity Output", MechanismConstants.velocityOutput);
+        SmartDashboard.putNumber("Intake Lift Current", intake.getLiftCurrent());
     }
 
     /**
@@ -612,6 +613,9 @@ public class RobotContainer {
         SmartDashboard.putNumber("hubX", hubX);
         SmartDashboard.putNumber("hubY", hubY);
         SmartDashboard.putNumber("Angle Diff", angleDiff);
+
+        MechanismConstants.backX = backPoseX;
+        MechanismConstants.backY = backPoseY;
 
     }
 

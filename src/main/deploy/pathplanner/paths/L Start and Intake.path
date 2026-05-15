@@ -8,40 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.742511111111111,
-        "y": 7.596594444444445
+        "x": 4.65613371076306,
+        "y": 7.528595791277963
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.204177777777778,
-        "y": 7.445555555555555
+        "x": 7.821755555555557,
+        "y": 6.719594444444445
       },
       "prevControl": {
-        "x": 5.712083333333334,
-        "y": 7.489405555555556
+        "x": 7.334212799554574,
+        "y": 7.507053462400665
       },
       "nextControl": {
-        "x": 6.772724079448035,
-        "y": 7.394893013822561
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 7.695077777777778,
-        "y": 7.1824555555555545
-      },
-      "prevControl": {
-        "x": 7.558655555555556,
-        "y": 7.538127777777777
-      },
-      "nextControl": {
-        "x": 7.901128450394655,
-        "y": 6.645252016232982
+        "x": 7.953357503397489,
+        "y": 6.507036388082872
       },
       "isLocked": false,
       "linkedName": null
@@ -52,8 +36,8 @@
         "y": 4.60505
       },
       "prevControl": {
-        "x": 7.664043491613514,
-        "y": 5.860833660130719
+        "x": 7.772228755811601,
+        "y": 5.8524530578327525
       },
       "nextControl": null,
       "isLocked": false,
@@ -62,21 +46,21 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.7045643153527023,
+      "waypointRelativePos": 0.35,
       "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 1.9170124481327995,
+      "waypointRelativePos": 0.95,
       "rotationDegrees": 90.0
     }
   ],
   "constraintZones": [
     {
       "name": "Intaking Zone",
-      "minWaypointRelativePos": 2.1677419354838734,
-      "maxWaypointRelativePos": 3.0,
+      "minWaypointRelativePos": 1.1677419354838734,
+      "maxWaypointRelativePos": 2.0,
       "constraints": {
-        "maxVelocity": 1.0,
+        "maxVelocity": 2.5,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,

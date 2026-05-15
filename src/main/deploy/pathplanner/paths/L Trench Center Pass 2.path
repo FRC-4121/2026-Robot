@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.1882722222222224,
-        "y": 7.011927777777778
+        "x": 2.9836388888888887,
+        "y": 6.802422222222222
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.202888888888889,
-        "y": 7.523511111111111
+        "x": 2.8667055555555554,
+        "y": 7.820716666666668
       },
       "isLocked": false,
       "linkedName": "L Bump Shooter 1"
@@ -20,40 +20,40 @@
         "y": 7.33349444444421
       },
       "prevControl": {
-        "x": 5.739760364429367,
-        "y": 7.441054676862021
+        "x": 5.745656279707541,
+        "y": 7.452639753631938
       },
       "nextControl": {
-        "x": 7.63173888888889,
-        "y": 6.539322222222222
+        "x": 6.891161111111111,
+        "y": 6.831655555555556
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.131094444444444,
-        "y": 5.238438888888888
+        "x": 6.501383333333333,
+        "y": 5.189716666666666
       },
       "prevControl": {
-        "x": 6.131094444444444,
-        "y": 5.740277777777776
+        "x": 6.501383333333333,
+        "y": 5.691555555555554
       },
       "nextControl": {
-        "x": 6.131094444444444,
-        "y": 4.682920084548923
+        "x": 6.501383333333333,
+        "y": 4.6341978623267
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.131094444444444,
-        "y": 3.352888888888889
+        "x": 6.501383333333333,
+        "y": 3.2310833333333333
       },
       "prevControl": {
-        "x": 6.1067333333333345,
-        "y": 3.996022222222222
+        "x": 6.477022222222224,
+        "y": 3.8742166666666664
       },
       "nextControl": null,
       "isLocked": false,
@@ -63,11 +63,11 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.37842323651451965,
-      "rotationDegrees": -90.0
+      "rotationDegrees": 0.0
     },
     {
       "waypointRelativePos": 0.7867219917012537,
-      "rotationDegrees": -90.0
+      "rotationDegrees": 0.0
     },
     {
       "waypointRelativePos": 1.74522821576765,
@@ -80,7 +80,7 @@
       "minWaypointRelativePos": 1.908684863523572,
       "maxWaypointRelativePos": 3.0,
       "constraints": {
-        "maxVelocity": 1.0,
+        "maxVelocity": 2.5,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -107,7 +107,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -65.28853424579486
+    "rotation": -61.29221468461234
   },
   "useDefaultConstraints": true
 }
