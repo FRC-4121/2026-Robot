@@ -271,17 +271,17 @@ public class LumaHelpers {
 
                             if (foundTags[0] == 8 && MechanismConstants.backX < GeneralConstants.kRedHub[0] + 2) {
 
-                                yawSum += 5;
+                                yawSum -= 5;
                                 System.out.println("Running tag 8 yaw correction");
 
                             } else if (foundTags[0] == 24 && MechanismConstants.backX > GeneralConstants.kBlueHub[0] - 2) {
 
-                                yawSum -= 5;
+                                yawSum += 5;
                                 System.out.println("Running tag 24 yaw correction");
 
                             } else if (foundTags[0] == 11 && MechanismConstants.backX < GeneralConstants.kRedHub[0] + 2) {
 
-                                yawSum -= 5;
+                                yawSum += 5;
                                 System.out.println("Running tag 11 yaw correction");
 
                             } else if (foundTags[0] == 27 && MechanismConstants.backX > GeneralConstants.kBlueHub[0] - 2) {
@@ -312,12 +312,12 @@ public class LumaHelpers {
 
                             } else if (foundTags[0] == 10 && MechanismConstants.backY < GeneralConstants.kRedHub[1] - 0.75) {
 
-                                yawSum -= 8;
+                                yawSum -= 10;
                                 System.out.println("Running tag 10 left yaw correction");
 
                             } else if (foundTags[0] == 10 && MechanismConstants.backY > GeneralConstants.kRedHub[1] + 0.75) {
 
-                                yawSum += 8;
+                                yawSum += 10;
                                 System.out.println("Running tag 10 right yaw correction");
 
                             } else if (foundTags[0] == 26 && MechanismConstants.backY < GeneralConstants.kBlueHub[1] - 0.75) {

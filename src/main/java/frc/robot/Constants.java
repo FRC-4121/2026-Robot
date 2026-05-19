@@ -133,9 +133,9 @@ public final class Constants {
     public static final double kD_IntakeLift = 0.007;
 
     // Set intake lift motion magic constants
-    public static final double kLiftMagicCruise = 40;
-    public static final double kLiftMagicAccel = 60;
-    public static final double kLiftMagicJerk = 500;
+    public static final double kLiftMagicCruise = 50;
+    public static final double kLiftMagicAccel = 70;
+    public static final double kLiftMagicJerk = 600;
 
     // Set turret constants
     public static final double kTurretMinAngle = -3.239;
