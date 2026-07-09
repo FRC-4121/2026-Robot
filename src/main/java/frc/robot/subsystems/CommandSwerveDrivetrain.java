@@ -46,7 +46,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
 
-    private Pigeon2 gyro;
+    private Pigeon2 gyro = new Pigeon2(13);
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
@@ -165,7 +165,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SwerveModuleConstants<?, ?, ?>... modules
     ) {
         super(drivetrainConstants, odometryUpdateFrequency, modules);
-        gyro = new Pigeon2(13);
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -199,7 +198,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SwerveModuleConstants<?, ?, ?>... modules
     ) {
         super(drivetrainConstants, odometryUpdateFrequency, odometryStandardDeviation, visionStandardDeviation, modules);
-        gyro = new Pigeon2(13);
         if (Utils.isSimulation()) {
             startSimThread();
         }

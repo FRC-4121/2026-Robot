@@ -40,6 +40,7 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import frc.robot.LumaHelpers;
 import java.util.Optional;
+import frc.robot.extras.LumaCam;
 
 public class RobotContainer {
 
@@ -55,14 +56,12 @@ public class RobotContainer {
     private final Turret turret;
     private final Indexer indexer;
 
-    private final Pigeon2 pigeon;
-
     private final Ballistics2026 myBallistics;
 
     //===Declare Commands===//
     private final Command RunIntakeCommand;
     private final Command LiftIntakeCommand;
-    private final Command ShootBallCommand;
+    //private final Command ShootBallCommand;
     private final Command AutoShootCommand;
     private final Command ManualLiftIntakeCommand;
     private final Command DisableAutoRotateCommand;
@@ -110,12 +109,9 @@ public class RobotContainer {
     //===Declare Extra Systems===//
 
     //===Declare Camera Variables===//
-    public static PhotonCamera frontCamera;
-    public static PhotonCamera backCamera;
-    public static PhotonCamera leftCamera;
-    public static Transform3d kRobotToFrontCam;
-    public static Transform3d kRobotToBackCam;
-    public static Transform3d kRobotToLeftCam;
+    public static LumaCam frontCamera;
+    public static LumaCam backCamera;
+    public static LumaCam leftCamera;
 
     //===Declare Field Pose Variables===//
     Field2d frontCamPose = new Field2d();
@@ -139,8 +135,6 @@ public class RobotContainer {
         shooter = new Shooter();
         turret = new Turret();
         indexer = new Indexer();
-
-        pigeon = new Pigeon2(13);
 
         // Initialize controllers
         joystick = new CommandXboxController(0);
@@ -168,7 +162,7 @@ public class RobotContainer {
         //Initialize Commands
         RunIntakeCommand = new RunIntake(intake, MechanismConstants.kIntakeSpeed);
         LiftIntakeCommand = new LiftIntake(intake);
-        ShootBallCommand = new ShootBall(shooter, indexer, intake, drivetrain, pigeon, myBallistics);
+        //ShootBallCommand = new ShootBall(shooter, indexer, intake, drivetrain, pigeon, myBallistics);
         AutoShootCommand = new AutoShoot(shooter, indexer, intake, drivetrain, myBallistics);
         ManualLiftIntakeCommand = new ManualLiftIntake(intake, aux);
         DisableAutoRotateCommand = new DisableAutoRotate(false);
@@ -226,16 +220,9 @@ public class RobotContainer {
      */
     public void createCameras() {
 
-        frontCamera = new PhotonCamera("frontcam");
-        backCamera = new PhotonCamera("backcam");
-        leftCamera = new PhotonCamera("leftcam");
-
-        kRobotToFrontCam = new Transform3d(new Translation3d(0.568, 0.013, 0.248),
-             new Rotation3d(0, Math.PI/12, 0));
-        kRobotToBackCam = new Transform3d(new Translation3d(-0.283, 0.0, 0.269),
-             new Rotation3d(0, Math.PI/12, Math.PI));
-        kRobotToLeftCam = new Transform3d(new Translation3d(0.470, 0.337, 0.384),
-             new Rotation3d(0, 0, 0.5*Math.PI));
+        //frontCamera = new LumaCam("frontcam", 0.568, 0.013, 0.248, 0, Math.PI/12, 0, drivetrain);
+        backCamera = new LumaCam("backcam", -0.283, 0.0, 0.269, 0, Math.PI/12, Math.PI, drivetrain);
+        leftCamera = new LumaCam("leftcam", 0.470, 0.337, 0.384, 0, 0, 0.5*Math.PI, drivetrain);
 
     }
 
@@ -277,7 +264,7 @@ public class RobotContainer {
 
         //Subsystem Buttons on Main Driver Controller
         joystick.a().whileTrue(RunIntakeCommand);
-        joystick.b().whileTrue(ShootBallCommand);
+        //joystick.b().whileTrue(ShootBallCommand);
         joystick.y().onTrue(ChangeDrivingSpeedCommand);
 
         //Subsystem Buttons on Aux Controller
@@ -340,6 +327,18 @@ public class RobotContainer {
      */
     public void UpdateStatus() {
 
+        updateDashboard();
+        //frontCamera.updatePose();
+        backCamera.updatePose();
+        leftCamera.updatePose();
+
+    }
+
+    /**
+     * Update smart dashboard values
+     */
+    public void updateDashboard(){
+
         MechanismConstants.isShooterSpooling = ShooterSpoolButton.getAsBoolean();
         MechanismConstants.currentGyro = drivetrain.getCurrentGyro();
         SmartDashboard.putNumber("Gyro Data", MechanismConstants.currentGyro);
@@ -373,6 +372,8 @@ public class RobotContainer {
         SmartDashboard.putBoolean("Shooter Spooling?", MechanismConstants.isShooterSpooling);
         SmartDashboard.putNumber("Velocity Output", MechanismConstants.velocityOutput);
         SmartDashboard.putNumber("Intake Lift Current", intake.getLiftCurrent());
+
+
     }
 
     /**
@@ -407,218 +408,218 @@ public class RobotContainer {
     /**
      * Updates robots position on the field from cameras
      */
-    public void updateRobotPose(){
+    // public void updateRobotPose(){
 
-        // Create local variables
-        Pose2d frontPose2d = new Pose2d(-1, -1, Rotation2d.kZero);
-        Pose2d leftPose2d = new Pose2d(-1, -1, Rotation2d.kZero);
-        Pose2d backPose2d = new Pose2d(-1, -1, Rotation2d.kZero);
-        double frontTime = 0;
-        double backTime = 0;
-        double leftTime = 0;
-        double hubX = 0;
-        double hubY = 0;
+    //     // Create local variables
+    //     Pose2d frontPose2d = new Pose2d(-1, -1, Rotation2d.kZero);
+    //     Pose2d leftPose2d = new Pose2d(-1, -1, Rotation2d.kZero);
+    //     Pose2d backPose2d = new Pose2d(-1, -1, Rotation2d.kZero);
+    //     double frontTime = 0;
+    //     double backTime = 0;
+    //     double leftTime = 0;
+    //     double hubX = 0;
+    //     double hubY = 0;
 
-        if (Mutables.blueAlliance) {
-            hubX = GeneralConstants.kBlueHub[0];
-            hubY = GeneralConstants.kBlueHub[1];
-        } else {
-            hubX = GeneralConstants.kRedHub[0];
-            hubY = GeneralConstants.kRedHub[1];
-        }
+    //     if (Mutables.blueAlliance) {
+    //         hubX = GeneralConstants.kBlueHub[0];
+    //         hubY = GeneralConstants.kBlueHub[1];
+    //     } else {
+    //         hubX = GeneralConstants.kRedHub[0];
+    //         hubY = GeneralConstants.kRedHub[1];
+    //     }
 
-        //Call pose estimation method
-        Optional<EstimatedRobotPose> frontPose = LumaHelpers.getPose(frontCamera, kRobotToFrontCam, "front");
-        Optional<EstimatedRobotPose> backPose = LumaHelpers.getPose(backCamera, kRobotToBackCam, "back");
-        Optional<EstimatedRobotPose> leftPose = LumaHelpers.getPose(leftCamera, kRobotToLeftCam, "left");
-        SmartDashboard.putBoolean("Front Pose Found", false);
-        SmartDashboard.putBoolean("Left Pose Found", false);
-        SmartDashboard.putBoolean("Back Pose Found", false);
-        SmartDashboard.putBoolean("Blue Alliance", Mutables.blueAlliance);
-        if (!frontPose.isEmpty()) {
-            EstimatedRobotPose est = frontPose.get();
-            frontPose2d = est.estimatedPose.toPose2d();
-            frontTime = est.timestampSeconds;
-            frontCamPose.setRobotPose(frontPose2d);
-            SmartDashboard.putData("frontRobotPose", frontCamPose);
-            SmartDashboard.putBoolean("Front Pose Found", true);
-        }
-        if (!backPose.isEmpty()) {
-            EstimatedRobotPose est = backPose.get();
-            backPose2d = est.estimatedPose.toPose2d();
-            backTime = est.timestampSeconds;
-            backCamPose.setRobotPose(backPose2d);
-            SmartDashboard.putData("backRobotPose", backCamPose);
-            SmartDashboard.putBoolean("Back Pose Found", true);
-        }
-        if (!leftPose.isEmpty()) {
-            EstimatedRobotPose est = leftPose.get();
-            leftPose2d = est.estimatedPose.toPose2d();
-            leftTime = est.timestampSeconds;
-            leftCamPose.setRobotPose(leftPose2d);
-            SmartDashboard.putData("leftRobotPose", leftCamPose);
-            SmartDashboard.putBoolean("Left Pose Found", true);
-        }   
+    //     //Call pose estimation method
+    //     Optional<EstimatedRobotPose> frontPose = LumaHelpers.getPose(frontCamera, kRobotToFrontCam, "front");
+    //     Optional<EstimatedRobotPose> backPose = LumaHelpers.getPose(backCamera, kRobotToBackCam, "back");
+    //     Optional<EstimatedRobotPose> leftPose = LumaHelpers.getPose(leftCamera, kRobotToLeftCam, "left");
+    //     SmartDashboard.putBoolean("Front Pose Found", false);
+    //     SmartDashboard.putBoolean("Left Pose Found", false);
+    //     SmartDashboard.putBoolean("Back Pose Found", false);
+    //     SmartDashboard.putBoolean("Blue Alliance", Mutables.blueAlliance);
+    //     if (!frontPose.isEmpty()) {
+    //         EstimatedRobotPose est = frontPose.get();
+    //         frontPose2d = est.estimatedPose.toPose2d();
+    //         frontTime = est.timestampSeconds;
+    //         frontCamPose.setRobotPose(frontPose2d);
+    //         SmartDashboard.putData("frontRobotPose", frontCamPose);
+    //         SmartDashboard.putBoolean("Front Pose Found", true);
+    //     }
+    //     if (!backPose.isEmpty()) {
+    //         EstimatedRobotPose est = backPose.get();
+    //         backPose2d = est.estimatedPose.toPose2d();
+    //         backTime = est.timestampSeconds;
+    //         backCamPose.setRobotPose(backPose2d);
+    //         SmartDashboard.putData("backRobotPose", backCamPose);
+    //         SmartDashboard.putBoolean("Back Pose Found", true);
+    //     }
+    //     if (!leftPose.isEmpty()) {
+    //         EstimatedRobotPose est = leftPose.get();
+    //         leftPose2d = est.estimatedPose.toPose2d();
+    //         leftTime = est.timestampSeconds;
+    //         leftCamPose.setRobotPose(leftPose2d);
+    //         SmartDashboard.putData("leftRobotPose", leftCamPose);
+    //         SmartDashboard.putBoolean("Left Pose Found", true);
+    //     }   
 
-        getDistanceAndAverage(frontPose2d, frontTime, leftPose2d, leftTime, backPose2d, backTime, hubX, hubY);
+    //     getDistanceAndAverage(frontPose2d, frontTime, leftPose2d, leftTime, backPose2d, backTime, hubX, hubY);
 
-    }
+    // }
 
-    public void getDistanceAndAverage(Pose2d frontPose, double frontTime, Pose2d leftPose, double leftTime, Pose2d backPose, double backTime, double hubX, double hubY) {
+    // public void getDistanceAndAverage(Pose2d frontPose, double frontTime, Pose2d leftPose, double leftTime, Pose2d backPose, double backTime, double hubX, double hubY) {
 
-        double frontPoseX = 0;
-        double frontPoseY = 0;
-        double frontDist = 0;
-        double frontYDiff = 0;
-        double frontXDiff = 0;
-        double frontHubAngle = 0;
-        double leftPoseX = 0;
-        double leftPoseY = 0;
-        double leftDist = 0;
-        double leftXDiff = 0;
-        double leftYDiff = 0;
-        double leftHubAngle = 0;
-        double backPoseX = 0;
-        double backPoseY = 0;
-        double backDist = 0;
-        double backXDiff = 0;
-        double backYDiff = 0;
-        double backHubAngle = 0;
-        double avgDist = 0;
-        double avgAngle = 0;
-        double avgYDiff = 0;
-        double camCount = 0;
-        double angleDiff = 0;
+    //     double frontPoseX = 0;
+    //     double frontPoseY = 0;
+    //     double frontDist = 0;
+    //     double frontYDiff = 0;
+    //     double frontXDiff = 0;
+    //     double frontHubAngle = 0;
+    //     double leftPoseX = 0;
+    //     double leftPoseY = 0;
+    //     double leftDist = 0;
+    //     double leftXDiff = 0;
+    //     double leftYDiff = 0;
+    //     double leftHubAngle = 0;
+    //     double backPoseX = 0;
+    //     double backPoseY = 0;
+    //     double backDist = 0;
+    //     double backXDiff = 0;
+    //     double backYDiff = 0;
+    //     double backHubAngle = 0;
+    //     double avgDist = 0;
+    //     double avgAngle = 0;
+    //     double avgYDiff = 0;
+    //     double camCount = 0;
+    //     double angleDiff = 0;
         
-        MechanismConstants.backTags = false;
+    //     MechanismConstants.backTags = false;
 
-        if (frontPose.getX() != -1) {
-            frontPoseX = frontPose.getX();
-            frontPoseY = frontPose.getY();
-            frontXDiff = hubX - frontPoseX;
-            frontYDiff = hubY - frontPoseY;
-            frontDist = Math.sqrt( (frontXDiff * frontXDiff) + (frontYDiff * frontYDiff));
-            frontHubAngle = Math.toDegrees(Math.atan(frontYDiff / (frontXDiff + 1E-6)));
-            SmartDashboard.putNumber("Front Hub Angle", frontHubAngle);
-            camCount++;
-            Pose2d newFrontPose = new Pose2d(frontPoseX, frontPoseY, new Rotation2d(Math.toRadians(MechanismConstants.currentGyro)));
-            drivetrain.addVisionMeasurement(newFrontPose, frontTime);
-        }
-        if (leftPose.getX() != -1) {
-            leftPoseX = leftPose.getX();
-            leftPoseY = leftPose.getY();
-            leftXDiff = hubX - leftPoseX;
-            leftYDiff = hubY - leftPoseY;
-            leftDist = Math.sqrt( (leftXDiff * leftXDiff) + (leftYDiff * leftYDiff));
-            leftHubAngle = Math.toDegrees(Math.atan(leftYDiff / (leftXDiff + 1E-6)));
-            SmartDashboard.putNumber("Left Hub Angle", leftHubAngle);
-            camCount++;
-            Pose2d newLeftPose = new Pose2d(leftPoseX, leftPoseY, new Rotation2d(Math.toRadians(MechanismConstants.currentGyro)));
-            drivetrain.addVisionMeasurement(newLeftPose, leftTime);
-        }
-        if (backPose.getX() != -1) {
-            backPoseX = backPose.getX();
-            backPoseY = backPose.getY();
-            backXDiff = hubX - backPoseX;
-            backYDiff = hubY - backPoseY;
-            backDist = Math.sqrt( (backXDiff * backXDiff) + (backYDiff * backYDiff));
-            backHubAngle = Math.toDegrees(Math.atan(backYDiff / (backXDiff + 1E-6)));
-            SmartDashboard.putNumber("Back Hub Angle", backHubAngle);
-            SmartDashboard.putNumber("Back xDiff", backXDiff);
-            SmartDashboard.putNumber("Back yDiff", backYDiff);
-            camCount++;
-            MechanismConstants.backTags = true;
-            Pose2d newBackPose = new Pose2d(backPoseX, backPoseY, new Rotation2d(Math.toRadians(MechanismConstants.currentGyro)));
-            drivetrain.addVisionMeasurement(newBackPose, backTime);
-        }
+    //     if (frontPose.getX() != -1) {
+    //         frontPoseX = frontPose.getX();
+    //         frontPoseY = frontPose.getY();
+    //         frontXDiff = hubX - frontPoseX;
+    //         frontYDiff = hubY - frontPoseY;
+    //         frontDist = Math.sqrt( (frontXDiff * frontXDiff) + (frontYDiff * frontYDiff));
+    //         frontHubAngle = Math.toDegrees(Math.atan(frontYDiff / (frontXDiff + 1E-6)));
+    //         SmartDashboard.putNumber("Front Hub Angle", frontHubAngle);
+    //         camCount++;
+    //         Pose2d newFrontPose = new Pose2d(frontPoseX, frontPoseY, new Rotation2d(Math.toRadians(MechanismConstants.currentGyro)));
+    //         drivetrain.addVisionMeasurement(newFrontPose, frontTime);
+    //     }
+    //     if (leftPose.getX() != -1) {
+    //         leftPoseX = leftPose.getX();
+    //         leftPoseY = leftPose.getY();
+    //         leftXDiff = hubX - leftPoseX;
+    //         leftYDiff = hubY - leftPoseY;
+    //         leftDist = Math.sqrt( (leftXDiff * leftXDiff) + (leftYDiff * leftYDiff));
+    //         leftHubAngle = Math.toDegrees(Math.atan(leftYDiff / (leftXDiff + 1E-6)));
+    //         SmartDashboard.putNumber("Left Hub Angle", leftHubAngle);
+    //         camCount++;
+    //         Pose2d newLeftPose = new Pose2d(leftPoseX, leftPoseY, new Rotation2d(Math.toRadians(MechanismConstants.currentGyro)));
+    //         drivetrain.addVisionMeasurement(newLeftPose, leftTime);
+    //     }
+    //     if (backPose.getX() != -1) {
+    //         backPoseX = backPose.getX();
+    //         backPoseY = backPose.getY();
+    //         backXDiff = hubX - backPoseX;
+    //         backYDiff = hubY - backPoseY;
+    //         backDist = Math.sqrt( (backXDiff * backXDiff) + (backYDiff * backYDiff));
+    //         backHubAngle = Math.toDegrees(Math.atan(backYDiff / (backXDiff + 1E-6)));
+    //         SmartDashboard.putNumber("Back Hub Angle", backHubAngle);
+    //         SmartDashboard.putNumber("Back xDiff", backXDiff);
+    //         SmartDashboard.putNumber("Back yDiff", backYDiff);
+    //         camCount++;
+    //         MechanismConstants.backTags = true;
+    //         Pose2d newBackPose = new Pose2d(backPoseX, backPoseY, new Rotation2d(Math.toRadians(MechanismConstants.currentGyro)));
+    //         drivetrain.addVisionMeasurement(newBackPose, backTime);
+    //     }
 
-        // Average Distance Calculation
-        if (camCount != 0) {
-            avgDist = (frontDist + backDist + leftDist) / camCount;
-            avgAngle = (frontHubAngle + backHubAngle + leftHubAngle) / camCount;
-            avgYDiff = (frontYDiff + backYDiff + leftYDiff) / camCount;
+    //     // Average Distance Calculation
+    //     if (camCount != 0) {
+    //         avgDist = (frontDist + backDist + leftDist) / camCount;
+    //         avgAngle = (frontHubAngle + backHubAngle + leftHubAngle) / camCount;
+    //         avgYDiff = (frontYDiff + backYDiff + leftYDiff) / camCount;
 
-            if (avgYDiff < 0) {
-                avgAngle = 360 + avgAngle;
-            }
+    //         if (avgYDiff < 0) {
+    //             avgAngle = 360 + avgAngle;
+    //         }
 
-            angleDiff = Math.abs(drivetrain.getCurrentGyro() - avgAngle);
-            if (angleDiff <= MechanismConstants.gyroAccuracy) {
-                MechanismConstants.linedUp = true;
-            } else {
-                MechanismConstants.linedUp = false;
-            }
+    //         angleDiff = Math.abs(drivetrain.getCurrentGyro() - avgAngle);
+    //         if (angleDiff <= MechanismConstants.gyroAccuracy) {
+    //             MechanismConstants.linedUp = true;
+    //         } else {
+    //             MechanismConstants.linedUp = false;
+    //         }
 
-            if (Math.abs(MechanismConstants.targetYaw) <= .5) {
-                MechanismConstants.yawLinedUp = true;
-            } else {
-                MechanismConstants.yawLinedUp = false;
-            }
+    //         if (Math.abs(MechanismConstants.targetYaw) <= .5) {
+    //             MechanismConstants.yawLinedUp = true;
+    //         } else {
+    //             MechanismConstants.yawLinedUp = false;
+    //         }
             
-            if (((MechanismConstants.targetYaw >= 1) && (MechanismConstants.targetYaw <= 10)) || MechanismConstants.yawLinedUp) {
-                MechanismConstants.yawLinedUp1 = true;
-            } else {
-                MechanismConstants.yawLinedUp1 = false;
-            }
+    //         if (((MechanismConstants.targetYaw >= 1) && (MechanismConstants.targetYaw <= 10)) || MechanismConstants.yawLinedUp) {
+    //             MechanismConstants.yawLinedUp1 = true;
+    //         } else {
+    //             MechanismConstants.yawLinedUp1 = false;
+    //         }
 
-            if (((MechanismConstants.targetYaw >= 10) && (MechanismConstants.targetYaw <= 30)) || MechanismConstants.yawLinedUp) {
-                MechanismConstants.yawLinedUp2 = true;
-            } else {
-                MechanismConstants.yawLinedUp2 = false;
-            }
+    //         if (((MechanismConstants.targetYaw >= 10) && (MechanismConstants.targetYaw <= 30)) || MechanismConstants.yawLinedUp) {
+    //             MechanismConstants.yawLinedUp2 = true;
+    //         } else {
+    //             MechanismConstants.yawLinedUp2 = false;
+    //         }
 
-            if (((MechanismConstants.targetYaw >= 30) && (MechanismConstants.targetYaw <= 50)) || MechanismConstants.yawLinedUp) {
-                MechanismConstants.yawLinedUp3 = true;
-            } else {
-                MechanismConstants.yawLinedUp3 = false;
-            }
+    //         if (((MechanismConstants.targetYaw >= 30) && (MechanismConstants.targetYaw <= 50)) || MechanismConstants.yawLinedUp) {
+    //             MechanismConstants.yawLinedUp3 = true;
+    //         } else {
+    //             MechanismConstants.yawLinedUp3 = false;
+    //         }
 
-            if (((MechanismConstants.targetYaw <= -1) && (MechanismConstants.targetYaw >= -10)) || MechanismConstants.yawLinedUp) {
-                MechanismConstants.yawLinedUp4 = true;
-            } else {
-                MechanismConstants.yawLinedUp4 = false;
-            }
+    //         if (((MechanismConstants.targetYaw <= -1) && (MechanismConstants.targetYaw >= -10)) || MechanismConstants.yawLinedUp) {
+    //             MechanismConstants.yawLinedUp4 = true;
+    //         } else {
+    //             MechanismConstants.yawLinedUp4 = false;
+    //         }
 
-            if (((MechanismConstants.targetYaw <= -10) && (MechanismConstants.targetYaw >= -30)) || MechanismConstants.yawLinedUp) {
-                MechanismConstants.yawLinedUp5 = true;
-            } else {
-                MechanismConstants.yawLinedUp5 = false;
-            }
+    //         if (((MechanismConstants.targetYaw <= -10) && (MechanismConstants.targetYaw >= -30)) || MechanismConstants.yawLinedUp) {
+    //             MechanismConstants.yawLinedUp5 = true;
+    //         } else {
+    //             MechanismConstants.yawLinedUp5 = false;
+    //         }
 
-            if (((MechanismConstants.targetYaw <= -30) && (MechanismConstants.targetYaw >= -50)) || MechanismConstants.yawLinedUp) {
-                MechanismConstants.yawLinedUp6 = true;
-            } else {
-                MechanismConstants.yawLinedUp6 = false;
-            }
+    //         if (((MechanismConstants.targetYaw <= -30) && (MechanismConstants.targetYaw >= -50)) || MechanismConstants.yawLinedUp) {
+    //             MechanismConstants.yawLinedUp6 = true;
+    //         } else {
+    //             MechanismConstants.yawLinedUp6 = false;
+    //         }
 
-            MechanismConstants.canShoot = true;
+    //         MechanismConstants.canShoot = true;
 
-        } else {
+    //     } else {
 
-            MechanismConstants.canShoot = false;
+    //         MechanismConstants.canShoot = false;
 
-        }
+    //     }
 
-        MechanismConstants.targetDistance = avgDist;
-        MechanismConstants.targetGyroAngle = avgAngle;
-        SmartDashboard.putNumber("Average Hub Distance", avgDist);
-        SmartDashboard.putNumber("Target Distance", MechanismConstants.targetDistance);
-        SmartDashboard.putNumber("leftDist", leftDist);
-        SmartDashboard.putNumber("frontDist", frontDist);
-        SmartDashboard.putNumber("backDist", backDist);
-        SmartDashboard.putNumber("leftX", leftPoseX);
-        SmartDashboard.putNumber("leftY", leftPoseY);
-        SmartDashboard.putNumber("backX", backPoseX);
-        SmartDashboard.putNumber("backY", backPoseY);
-        SmartDashboard.putNumber("frontX", frontPoseX);
-        SmartDashboard.putNumber("frontY", frontPoseY);
-        SmartDashboard.putNumber("hubX", hubX);
-        SmartDashboard.putNumber("hubY", hubY);
-        SmartDashboard.putNumber("Angle Diff", angleDiff);
+    //     MechanismConstants.targetDistance = avgDist;
+    //     MechanismConstants.targetGyroAngle = avgAngle;
+    //     SmartDashboard.putNumber("Average Hub Distance", avgDist);
+    //     SmartDashboard.putNumber("Target Distance", MechanismConstants.targetDistance);
+    //     SmartDashboard.putNumber("leftDist", leftDist);
+    //     SmartDashboard.putNumber("frontDist", frontDist);
+    //     SmartDashboard.putNumber("backDist", backDist);
+    //     SmartDashboard.putNumber("leftX", leftPoseX);
+    //     SmartDashboard.putNumber("leftY", leftPoseY);
+    //     SmartDashboard.putNumber("backX", backPoseX);
+    //     SmartDashboard.putNumber("backY", backPoseY);
+    //     SmartDashboard.putNumber("frontX", frontPoseX);
+    //     SmartDashboard.putNumber("frontY", frontPoseY);
+    //     SmartDashboard.putNumber("hubX", hubX);
+    //     SmartDashboard.putNumber("hubY", hubY);
+    //     SmartDashboard.putNumber("Angle Diff", angleDiff);
 
-        MechanismConstants.backX = backPoseX;
-        MechanismConstants.backY = backPoseY;
+    //     MechanismConstants.backX = backPoseX;
+    //     MechanismConstants.backY = backPoseY;
 
-    }
+    // }
 
 }

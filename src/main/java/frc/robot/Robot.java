@@ -45,7 +45,6 @@ public class Robot extends TimedRobot {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
         m_robotContainer.UpdateStatus();
-        m_robotContainer.updateRobotPose();
 
         // Get alliance color from driver station
         m_robotContainer.getAlliance();

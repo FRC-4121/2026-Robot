@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Matrix;
@@ -48,6 +49,8 @@ public class LumaCam {
     private Matrix<N3, N1> curStdDevs;
     private AprilTagFieldLayout tagLayout;
     private CommandSwerveDrivetrain driveTrain;
+    private String camName;
+    private Field2d camPose;
 
     /** 
      * Default constructor 
@@ -60,10 +63,13 @@ public class LumaCam {
      * @param pitch    The pitch of the camera relative to the robot
      * @param yaw      The yaw of the camera relative to the robot
      */
-    public LumaCam(String camName, double xOffset, double yOffset, double zOffset, double roll, double pitch, double yaw, CommandSwerveDrivetrain drive){
+    public LumaCam(String myCamName, double xOffset, double yOffset, double zOffset, double roll, double pitch, double yaw, CommandSwerveDrivetrain drive){
 
         // Store the drivetrain reference
         driveTrain = drive;
+
+        // Creates global variable of the camera name
+        camName = myCamName;
 
         // Create a camera
         camera = new PhotonCamera(camName);
@@ -79,6 +85,7 @@ public class LumaCam {
         // Create a pose estimator
         photonEstimator = new PhotonPoseEstimator(tagLayout, robotToCam);
 
+        camPose = new Field2d();
 
 
     }
@@ -87,7 +94,7 @@ public class LumaCam {
      * Estimates the robot's pose based on idemtified AprilTags
      * 
      */
-    public void UpdatePose() {
+    public void updatePose() {
 
         // Initialize the pose estimate
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
@@ -105,7 +112,7 @@ public class LumaCam {
             }
 
             // Update the accuracy estimates
-            UpdateEstimationStdDevs(visionEst, result.getTargets());
+            updateEstimationStdDevs(visionEst, result.getTargets());
 
             // Add the pose estimation to the drivetrain
             visionEst.ifPresent(
@@ -122,6 +129,10 @@ public class LumaCam {
 
                     // Add the pose to the drivetrain
                     driveTrain.addVisionMeasurement(newPose, est.timestampSeconds, estStdDevs);
+
+                    //Sends pose to smart dashboard
+                    camPose.setRobotPose(newPose);
+                    SmartDashboard.putData(camName + "Pose", camPose);
                 }
             );
             
@@ -136,7 +147,7 @@ public class LumaCam {
      * @param estimatedPose The estimated pose to guess standard deviations for.
      * @param targets All targets in this camera frame
      */
-    private void UpdateEstimationStdDevs (Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
+    private void updateEstimationStdDevs (Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
 
         if (estimatedPose.isEmpty()) {
             // No pose input. Default to single-tag std devs
