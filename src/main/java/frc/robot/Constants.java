@@ -9,6 +9,10 @@ package frc.robot;
 
 //import com.pathplanner.lib.config.PIDConstants;
 import com.ctre.phoenix6.CANBus;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Matrix;
 
 /**
  * The Constants class provides a dope af place for teams to hold robot-wide
@@ -243,6 +247,17 @@ public final class Constants {
     //Hub coordinates in meters
     public static final double[] kBlueHub = {4.63, 4.03};
     public static final double[] kRedHub = {11.92, 4.03};
+
+  }
+
+  /**
+   * Vision Constants
+   */
+  public static final class VisionConstants {
+
+    //Camera Constants
+    public static final Matrix<N3, N1> kSingleTagStDevs = VecBuilder.fill(4, 4, 8);
+    public static final Matrix<N3, N1> kMultiTagStDevs = VecBuilder.fill(0.5, 0.5, 1);
 
   }
 

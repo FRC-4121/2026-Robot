@@ -341,8 +341,7 @@ public class RobotContainer {
     public void UpdateStatus() {
 
         MechanismConstants.isShooterSpooling = ShooterSpoolButton.getAsBoolean();
-
-        MechanismConstants.currentGyro = getGyroYaw();
+        MechanismConstants.currentGyro = drivetrain.getCurrentGyro();
         SmartDashboard.putNumber("Gyro Data", MechanismConstants.currentGyro);
         SmartDashboard.putNumber("Target Speed", MechanismConstants.targetVelocity);
         SmartDashboard.putNumber("Shooter Speed", shooter.getWheelVelocity());
@@ -502,7 +501,8 @@ public class RobotContainer {
             frontHubAngle = Math.toDegrees(Math.atan(frontYDiff / (frontXDiff + 1E-6)));
             SmartDashboard.putNumber("Front Hub Angle", frontHubAngle);
             camCount++;
-            //drivetrain.addVisionMeasurement(frontPose, frontTime);
+            Pose2d newFrontPose = new Pose2d(frontPoseX, frontPoseY, new Rotation2d(Math.toRadians(MechanismConstants.currentGyro)));
+            drivetrain.addVisionMeasurement(newFrontPose, frontTime);
         }
         if (leftPose.getX() != -1) {
             leftPoseX = leftPose.getX();
@@ -513,7 +513,8 @@ public class RobotContainer {
             leftHubAngle = Math.toDegrees(Math.atan(leftYDiff / (leftXDiff + 1E-6)));
             SmartDashboard.putNumber("Left Hub Angle", leftHubAngle);
             camCount++;
-            //drivetrain.addVisionMeasurement(leftPose, leftTime);
+            Pose2d newLeftPose = new Pose2d(leftPoseX, leftPoseY, new Rotation2d(Math.toRadians(MechanismConstants.currentGyro)));
+            drivetrain.addVisionMeasurement(newLeftPose, leftTime);
         }
         if (backPose.getX() != -1) {
             backPoseX = backPose.getX();
@@ -527,7 +528,8 @@ public class RobotContainer {
             SmartDashboard.putNumber("Back yDiff", backYDiff);
             camCount++;
             MechanismConstants.backTags = true;
-            //drivetrain.addVisionMeasurement(backPose, backTime);
+            Pose2d newBackPose = new Pose2d(backPoseX, backPoseY, new Rotation2d(Math.toRadians(MechanismConstants.currentGyro)));
+            drivetrain.addVisionMeasurement(newBackPose, backTime);
         }
 
         // Average Distance Calculation
@@ -540,7 +542,7 @@ public class RobotContainer {
                 avgAngle = 360 + avgAngle;
             }
 
-            angleDiff = Math.abs(getGyroYaw() - avgAngle);
+            angleDiff = Math.abs(drivetrain.getCurrentGyro() - avgAngle);
             if (angleDiff <= MechanismConstants.gyroAccuracy) {
                 MechanismConstants.linedUp = true;
             } else {
@@ -617,16 +619,6 @@ public class RobotContainer {
         MechanismConstants.backX = backPoseX;
         MechanismConstants.backY = backPoseY;
 
-    }
-
-    private double getGyroYaw () {
-        double angle = 0;
-        if ((pigeon.getYaw().getValueAsDouble() % 360) >= 0) {
-            angle = pigeon.getYaw().getValueAsDouble() % 360;
-        } else {
-            angle = 360 + ((pigeon.getYaw().getValueAsDouble()) % 360);
-        }
-        return angle;
     }
 
 }
