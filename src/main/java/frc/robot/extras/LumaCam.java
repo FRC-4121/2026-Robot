@@ -127,6 +127,13 @@ public class LumaCam {
                     double gyro = driveTrain.getCurrentGyro();
                     Pose2d newPose = new Pose2d(poseX, poseY, new Rotation2d(Math.toRadians(gyro)));
 
+                    // Put Values on Dashboard
+                    SmartDashboard.putNumber(camName + "X", poseX);
+                    SmartDashboard.putNumber(camName + "Y", poseY);
+                    Rotation3d poseRot = est.estimatedPose.getRotation();
+                    double poseYaw = Math.toDegrees(poseRot.getAngle());
+                    SmartDashboard.putNumber(camName + "Yaw", poseYaw);
+
                     // Add the pose to the drivetrain
                     driveTrain.addVisionMeasurement(newPose, est.timestampSeconds, estStdDevs);
 

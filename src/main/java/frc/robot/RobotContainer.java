@@ -41,6 +41,7 @@ import org.photonvision.PhotonCamera;
 import frc.robot.LumaHelpers;
 import java.util.Optional;
 import frc.robot.extras.LumaCam;
+import frc.robot.extras.ScoringCalcs;
 
 public class RobotContainer {
 
@@ -51,6 +52,7 @@ public class RobotContainer {
 
     //===Declare Subsystems===//
     public final CommandSwerveDrivetrain drivetrain;
+    private final Pigeon2 pigeon;
     private final Intake intake;
     private final Shooter shooter;
     private final Turret turret;
@@ -61,7 +63,7 @@ public class RobotContainer {
     //===Declare Commands===//
     private final Command RunIntakeCommand;
     private final Command LiftIntakeCommand;
-    //private final Command ShootBallCommand;
+    private final Command ShootBallCommand;
     private final Command AutoShootCommand;
     private final Command ManualLiftIntakeCommand;
     private final Command DisableAutoRotateCommand;
@@ -135,6 +137,7 @@ public class RobotContainer {
         shooter = new Shooter();
         turret = new Turret();
         indexer = new Indexer();
+        pigeon = new Pigeon2 (13);
 
         // Initialize controllers
         joystick = new CommandXboxController(0);
@@ -162,7 +165,7 @@ public class RobotContainer {
         //Initialize Commands
         RunIntakeCommand = new RunIntake(intake, MechanismConstants.kIntakeSpeed);
         LiftIntakeCommand = new LiftIntake(intake);
-        //ShootBallCommand = new ShootBall(shooter, indexer, intake, drivetrain, pigeon, myBallistics);
+        ShootBallCommand = new ShootBall(shooter, indexer, intake, drivetrain, pigeon, myBallistics);
         AutoShootCommand = new AutoShoot(shooter, indexer, intake, drivetrain, myBallistics);
         ManualLiftIntakeCommand = new ManualLiftIntake(intake, aux);
         DisableAutoRotateCommand = new DisableAutoRotate(false);
@@ -264,7 +267,7 @@ public class RobotContainer {
 
         //Subsystem Buttons on Main Driver Controller
         joystick.a().whileTrue(RunIntakeCommand);
-        //joystick.b().whileTrue(ShootBallCommand);
+        joystick.b().whileTrue(ShootBallCommand);
         joystick.y().onTrue(ChangeDrivingSpeedCommand);
 
         //Subsystem Buttons on Aux Controller
@@ -289,7 +292,7 @@ public class RobotContainer {
     public void getButtonState() {
 
         MechanismConstants.isDisableState = !DisableStateButton.getAsBoolean();
-        //MechanismConstants.isShooterMode = ShootingModeButton.getAsBoolean();
+        //MechanismConstants.isShooterMode = !ShootingModeButton.getAsBoolean();
         MechanismConstants.isRotateEnabled = !DisableAutoRotateButton.getAsBoolean();
         MechanismConstants.isIndexerOverride = IndexerOverrideButton.getAsBoolean();
 
@@ -331,6 +334,8 @@ public class RobotContainer {
         //frontCamera.updatePose();
         backCamera.updatePose();
         leftCamera.updatePose();
+        robotPose.setRobotPose(drivetrain.getCurrentPose());
+        ScoringCalcs.ShootingCalcs(robotPose);
 
     }
 
@@ -349,7 +354,6 @@ public class RobotContainer {
         SmartDashboard.putNumber("Intake Position", intake.getPosition());
         SmartDashboard.putNumber("Shooter Current", shooter.getShooterCurrent());
         SmartDashboard.putBoolean("Can Shoot?", MechanismConstants.canShoot);
-        robotPose.setRobotPose(drivetrain.getCurrentPose());
         SmartDashboard.putData("Robot Pose", robotPose);
         SmartDashboard.putNumber("Target Angle", MechanismConstants.targetGyroAngle);
         SmartDashboard.putBoolean("Blue Alliance", Mutables.blueAlliance);
@@ -372,7 +376,6 @@ public class RobotContainer {
         SmartDashboard.putBoolean("Shooter Spooling?", MechanismConstants.isShooterSpooling);
         SmartDashboard.putNumber("Velocity Output", MechanismConstants.velocityOutput);
         SmartDashboard.putNumber("Intake Lift Current", intake.getLiftCurrent());
-
 
     }
 

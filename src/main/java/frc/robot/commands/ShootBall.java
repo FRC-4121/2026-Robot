@@ -6,6 +6,8 @@ package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.Set;
+
 import frc.robot.subsystems.*;
 import frc.robot.RobotContainer;
 import frc.robot.extras.Ballistics2026;
@@ -13,8 +15,9 @@ import frc.robot.generated.TunerConstants;
 import edu.wpi.first.wpilibj2.command.Command;
 import com.ctre.phoenix6.hardware.*;
 import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentric;
-import com.ctre.phoenix6.swerve.SwerveRequest.*;
+import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentricFacingAngle;
 import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveRequest.*;
+//import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveRequest.FieldCentricFacingAngle;
 import com.ctre.phoenix6.swerve.*;
 import com.ctre.phoenix6.swerve.SwerveModule.*;
 
@@ -24,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.MechanismConstants;
 import frc.robot.Constants.Mutables;
+import frc.robot.Constants.GeneralConstants;
 
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -43,7 +47,7 @@ public class ShootBall extends Command {
 
   // ===Swerve Drive Variables===//
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-  private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+  private double MaxAngularRate = RotationsPerSecond.of(0.25).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
   //Drive swerve request
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -74,12 +78,8 @@ public class ShootBall extends Command {
     myIntake = intake;
     mySwerve = swerve;
     myPigeon = pigeon;
-    
-    if (MechanismConstants.isShooterMode) {
-      addRequirements(myShooter, myIndexer, myIntake, mySwerve);
-    } else {
-      addRequirements(myShooter, myIndexer, myIntake);
-    }
+
+    addRequirements(myShooter, myIndexer, myIntake, mySwerve);
     
   }
 
@@ -92,14 +92,12 @@ public class ShootBall extends Command {
     m_kD = MechanismConstants.kD_Rotate;
 
     m_myPIDControl = new PIDController(m_kP, m_kI, m_kD);
-    m_myPIDControl.setTolerance(0.25);
+    m_myPIDControl.setTolerance(0.5);
 
     percentVelocity = 0.99;
     MechanismConstants.hubDistance = MechanismConstants.targetDistance;
 
-    if (MechanismConstants.isShooterMode) {
-      mySwerve.setControl(idleRequest);
-    }
+    mySwerve.setControl(idleRequest);
 
     MechanismConstants.isMultApplied = false;
     isLiftUp = false;
@@ -112,20 +110,54 @@ public class ShootBall extends Command {
 
     if (MechanismConstants.isShooterMode) {
 
-      if (MechanismConstants.canShoot) {
+      //if (MechanismConstants.canShoot) {
 
-        if (MechanismConstants.targetYaw != 100) {
+      if (MechanismConstants.targetGyroAngle > 0) {
 
-          offset = MechanismConstants.targetYaw;
+        offset = MechanismConstants.currentGyro - MechanismConstants.targetGyroAngle;
+
+      } else {
+
+        offset = MechanismConstants.currentGyro - (MechanismConstants.targetGyroAngle + 360);
+
+      }
+
+      if (Mutables.blueAlliance == true) {
+
+        if (MechanismConstants.currentY < GeneralConstants.kBlueHub[1] && ((MechanismConstants.currentGyro > (MechanismConstants.targetGyroAngle + 180)) && MechanismConstants.currentGyro < 360)) {
+
+          output = 1.5;
+
+        } else  if (MechanismConstants.currentY > GeneralConstants.kBlueHub[1] && ((MechanismConstants.currentGyro < (MechanismConstants.targetGyroAngle + 180)) && MechanismConstants.currentGyro > 0)) {
+
+          output = -1.5;
 
         } else {
 
-          offset = 0;
+          output = m_myPIDControl.calculate(offset, 0);
 
         }
 
+    } else {
+
+        if (MechanismConstants.currentY > GeneralConstants.kBlueHub[1] && ((MechanismConstants.currentGyro > (MechanismConstants.targetGyroAngle + 180)) && MechanismConstants.currentGyro < 360)) {
+
+        output = 1.5;
+
+      } else  if (MechanismConstants.currentY < GeneralConstants.kBlueHub[1] && ((MechanismConstants.currentGyro < (MechanismConstants.targetGyroAngle + 180)) && MechanismConstants.currentGyro > 0)) {
+
+        output = -1.5;
+
+      } else {
+
         output = m_myPIDControl.calculate(offset, 0);
-        SmartDashboard.putNumber("Auto Rotate PID Output", output);
+
+      }
+
+    }
+
+        SmartDashboard.putNumber("Auto Rotate Output", output);
+        SmartDashboard.putNumber("Auto Rotate Offset", offset);
 
         MechanismConstants.targetVelocity = myBallistics.calculateLaunchVelcity(MechanismConstants.hubDistance,
             MechanismConstants.kShooterLaunchAngle);
@@ -135,12 +167,12 @@ public class ShootBall extends Command {
           MechanismConstants.isMultApplied = true;
         }
 
-        myShooter.runShooter(MechanismConstants.velocityOutput);
+        myShooter.runShooter(MechanismConstants.targetVelocity); //Change targetVelocity to velocityOutput
         shooterVelocity = myShooter.getShooterVelocity();
 
         if (MechanismConstants.isRotateEnabled) {
 
-          SwerveRequest.FieldCentric driveRequest = new FieldCentric()
+          FieldCentric driveRequest = new FieldCentric()
               .withVelocityX(0) // Drive forward with negative Y (forward)
               .withVelocityY(0) // Drive left with negative X (left)
               .withRotationalRate(output * MaxAngularRate); // Drive counterclockwise with negative X (left)
@@ -156,14 +188,18 @@ public class ShootBall extends Command {
             || MechanismConstants.targetYaw == 100)) {
 
           if (MechanismConstants.velocityOutput > MechanismConstants.targetVelocity) {
+
           MechanismConstants.velocityOutput = MechanismConstants.velocityOutput * MechanismConstants.kSubtractMult;
+
         } else if (MechanismConstants.velocityOutput < MechanismConstants.targetVelocity) {
+
           MechanismConstants.velocityOutput = MechanismConstants.targetVelocity;
         }
 
+
           mySwerve.setControl(parkRequest);
           myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
-          myIndexer.runFloor(MechanismConstants.kFloorSpeed);
+          //myIndexer.runFloor(MechanismConstants.kFloorSpeed);
 
           liftCurrent = myIntake.getLiftCurrent();
           liftPos = myIntake.getPosition();
@@ -176,7 +212,7 @@ public class ShootBall extends Command {
             isLiftUp = true;
           }
 
-          myIntake.runIntake(MechanismConstants.kIntakeSpeed / 4);
+          //myIntake.runIntake(MechanismConstants.kIntakeSpeed / 4);
 
         }
 
@@ -190,31 +226,31 @@ public class ShootBall extends Command {
         if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))
             || MechanismConstants.isIndexerOverride) {
           myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
-          myIndexer.runFloor(MechanismConstants.kFloorSpeed);
-          myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
-          myIntake.runIntake(MechanismConstants.kIntakeSpeed / 4);
+          //myIndexer.runFloor(MechanismConstants.kFloorSpeed);
+          //myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
+          //myIntake.runIntake(MechanismConstants.kIntakeSpeed / 4);
         }
 
       }
 
-    } else {
+    // } else {
 
-      MechanismConstants.targetVelocity = 50;
-      myShooter.runShooter(MechanismConstants.targetVelocity);
-      double shooterVelocity = myShooter.getShooterVelocity();
+    //   MechanismConstants.targetVelocity = 50;
+    //   myShooter.runShooter(MechanismConstants.targetVelocity);
+    //   double shooterVelocity = myShooter.getShooterVelocity();
 
-      //mySwerve.setControl(parkRequest);
+    //   //mySwerve.setControl(parkRequest);
 
-      if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))
-          || MechanismConstants.isIndexerOverride) {
+    //   if ((Math.abs(shooterVelocity) > Math.abs(percentVelocity * MechanismConstants.targetVelocity))
+    //       || MechanismConstants.isIndexerOverride) {
 
-        myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
-        myIndexer.runFloor(MechanismConstants.kFloorSpeed);
-        //myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
+    //     myIndexer.runIndexer(MechanismConstants.kIndexerSpeed);
+    //     //myIndexer.runFloor(MechanismConstants.kFloorSpeed);
+    //     //myIntake.runShootingIntakeLift(MechanismConstants.kIntakeShootingPos);
 
-      }
+    //   }
 
-    }
+    // }
 
   }
 
@@ -230,6 +266,13 @@ public class ShootBall extends Command {
     myIntake.stopIntake();
 
   }
+
+  // Command to adjust intake current limit when firing
+  // This allows more power to be diverted to shooter and relating mechanisms
+  // if (runShooter.isTrue) {
+  //    intakeCurrentLimit = 5;
+  // }
+
 
   // Returns true when the command should end.
   @Override

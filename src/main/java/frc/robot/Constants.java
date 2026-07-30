@@ -78,9 +78,9 @@ public final class Constants {
     public static final double kG_Shoot = 0;
 
     // Set auto rotate PID constants
-    public static final double kP_Rotate = 0.025;
-    public static final double kI_Rotate = 0.02;
-    public static final double kD_Rotate = 0.0001;
+    public static final double kP_Rotate = 0.1; //0.025
+    public static final double kI_Rotate = 0.0; //.02
+    public static final double kD_Rotate = 0.0; //.0001
 
     // Set shooter Motion Magic constants
     public static final double kMagicCruise = 200;
@@ -100,6 +100,7 @@ public final class Constants {
     public static boolean isMultApplied = false;
     public static double kSubtractMult = 0.9974;
     public static double velocityOutput = 0;
+    public static double currentY = 0;
 
     // Yaw lining up status booleans
     public static boolean yawLinedUp = false;
@@ -115,6 +116,7 @@ public final class Constants {
     public static double targetYaw = 0;
     public static final double gyroAccuracy = 3;
     public static double currentGyro = 0;
+    public static double hubAngle = 0;
 
     // Set hopper/indexer constants
     public static final double kFloorSpeed = 0.3;
